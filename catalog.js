@@ -107,5 +107,17 @@ window.XOTIICDUCK_RELEASES = [
     "audio": "music/earthquake.mp3",
     "cover": "covers/earthquake.png",
     "status": "published"
+  },
+  {
+    "id": "the-little-world-queen",
+    "title": "The Little World Queen",
+    "artist": "XotiicDuck",
+    "album": "Single",
+    "genre": "Anime J-Rock",
+    "releaseDate": "2026-08-01",
+    "duration": 298,
+    "audio": "music/the-little-world-queen.mp3",
+    "cover": "covers/the-little-world-queen.png",
+    "status": "published"
   }
 ];
