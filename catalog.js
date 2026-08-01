@@ -251,5 +251,17 @@ window.XOTIICDUCK_RELEASES = [
     "audio": "music/born-again.mp3",
     "cover": "covers/born-again.png",
     "status": "published"
+  },
+  {
+    "id": "names-commands",
+    "title": "Names & Commands",
+    "artist": "XotiicDuck",
+    "album": "Single",
+    "genre": "Anime J-Rock",
+    "releaseDate": "2026-08-01",
+    "duration": 272,
+    "audio": "music/names-commands.mp3",
+    "cover": "covers/names-commands.png",
+    "status": "published"
   }
 ];
