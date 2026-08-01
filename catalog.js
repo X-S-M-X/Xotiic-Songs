@@ -119,5 +119,17 @@ window.XOTIICDUCK_RELEASES = [
     "audio": "music/the-little-world-queen.mp3",
     "cover": "covers/the-little-world-queen.png",
     "status": "published"
+  },
+  {
+    "id": "sleeping-ruler",
+    "title": "Sleeping Ruler",
+    "artist": "XotiicDuck",
+    "album": "Single",
+    "genre": "Anime J-Rock",
+    "releaseDate": "2026-08-01",
+    "duration": 290,
+    "audio": "music/sleeping-ruler.mp3",
+    "cover": "covers/sleeping-ruler.png",
+    "status": "published"
   }
 ];
