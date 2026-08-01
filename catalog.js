@@ -143,5 +143,17 @@ window.XOTIICDUCK_RELEASES = [
     "audio": "music/twilight-valentine.mp3",
     "cover": "covers/twilight-valentine.png",
     "status": "published"
+  },
+  {
+    "id": "platinum-fallen",
+    "title": "Platinum Fallen",
+    "artist": "XotiicDuck",
+    "album": "Single",
+    "genre": "Anime J-Rock",
+    "releaseDate": "2026-08-01",
+    "duration": 300,
+    "audio": "music/platinum-fallen.mp3",
+    "cover": "covers/platinum-fallen.png",
+    "status": "published"
   }
 ];
