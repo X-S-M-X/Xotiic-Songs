@@ -11,12 +11,12 @@
     <meta name="apple-mobile-web-app-title" content="XotiicDuck" />
     <meta name="format-detection" content="telephone=no" />
     <title>XotiicDuck Music — Anime Worlds. Original Sound.</title>
-    <link rel="manifest" href="./manifest.webmanifest?v=5" />
-    <link rel="icon" href="./favicon.svg?v=5" />
-    <link rel="apple-touch-icon" href="./apple-touch-icon.png?v=5" />
-    <link rel="stylesheet" href="./styles.css?v=5" />
-    <script src="./catalog.js?v=5" defer></script>
-    <script src="./app.js?v=5" defer></script>
+    <link rel="manifest" href="./manifest.webmanifest?v=6" />
+    <link rel="icon" href="./favicon.svg?v=6" />
+    <link rel="apple-touch-icon" href="./apple-touch-icon.png?v=6" />
+    <link rel="stylesheet" href="./styles.css?v=6" />
+    <script src="./catalog.js?v=6" defer></script>
+    <script src="./app.js?v=6" defer></script>
   </head>
   <body>
     <div id="app" class="app-shell catalog-empty">
@@ -101,8 +101,9 @@
           </section>
 
           <section class="view-panel page-section" data-panel="library" hidden>
-            <div class="page-title library-title"><div><p class="section-kicker">SAVED ON THIS DEVICE</p><h1>Your library</h1><p>Favorites stay in this browser until account syncing is introduced.</p></div></div>
-            <div id="library-catalog"></div>
+            <div class="page-title library-title"><div><p class="section-kicker">SAVED ON THIS DEVICE</p><h1>Your library</h1><p>Favorites and playlists stay on this device. Your music files remain in the official catalog.</p></div><button class="library-create" data-playlist-create><span>＋</span>Create playlist</button></div>
+            <section class="library-section"><div class="library-section-heading"><p class="section-kicker">YOUR PLAYLISTS</p><h2>Playlists</h2></div><div id="playlist-library"></div></section>
+            <section class="library-section liked-library-section"><div class="library-section-heading"><p class="section-kicker">QUICK COLLECTION</p><h2>Liked songs</h2></div><div id="library-catalog"></div></section>
           </section>
 
           <footer class="site-footer">
@@ -123,9 +124,10 @@
       </aside>
 
       <footer id="player" class="player-bar" hidden>
-        <div class="player-track"><div id="player-art"></div><div><strong id="player-title"></strong><span id="player-artist"></span></div><button id="player-favorite" aria-label="Save current track">♡</button></div>
+        <span class="mini-player-progress-track" aria-hidden="true"><span id="mini-progress"></span></span>
+        <div class="player-track"><button id="player-open" class="player-open" aria-label="Open Now Playing"><span id="player-art"></span><span class="player-copy"><strong id="player-title"></strong><span id="player-artist"></span></span></button><button id="player-favorite" aria-label="Save current track">♡</button></div>
         <div class="player-controls">
-          <div class="control-buttons"><button id="shuffle" aria-label="Enable shuffle">⌘</button><button id="previous" aria-label="Previous track">◀</button><button id="play" class="main-play" aria-label="Play">▶</button><button id="next" aria-label="Next track">▶</button><button id="repeat" class="repeat-control" aria-label="Repeat mode: off">↻</button></div>
+          <div class="control-buttons"><button id="shuffle" aria-label="Turn shuffle on" aria-pressed="false">⇄</button><button id="previous" aria-label="Previous track or restart">◀</button><button id="play" class="main-play" aria-label="Play">▶</button><button id="next" aria-label="Next track">▶</button><button id="repeat" class="repeat-control" aria-label="Repeat mode: off" aria-pressed="false">↻</button></div>
           <div class="progress-row"><span id="elapsed">0:00</span><input id="progress" type="range" min="0" max="1" step="0.1" value="0" aria-label="Track progress" /><span id="duration">0:00</span></div>
         </div>
         <div class="player-extras"><button id="queue-open" aria-label="Open queue">☷</button><span>◕</span><input id="volume" type="range" min="0" max="1" step="0.01" value="0.72" aria-label="Volume" /></div>
@@ -138,6 +140,36 @@
         <button data-search-open><span>⌕</span><span>Search</span></button>
       </nav>
 
+      <div id="now-playing-layer" class="now-playing-layer" role="dialog" aria-modal="true" aria-label="Now Playing" hidden>
+        <section class="now-playing-surface">
+          <header id="now-playing-header" class="now-playing-header">
+            <button id="now-playing-close" type="button" aria-label="Close Now Playing">⌄</button>
+            <div><span>NOW PLAYING</span><strong id="now-playing-context">All tracks</strong></div>
+            <span class="now-playing-header-space" aria-hidden="true"></span>
+          </header>
+          <div class="now-playing-body">
+            <div id="now-playing-art" class="now-playing-art"></div>
+            <div class="now-playing-details">
+              <div class="now-playing-title-row"><div><h2 id="now-playing-title"></h2><p id="now-playing-artist"></p><small id="now-playing-album"></small></div><button id="now-playing-favorite" type="button" aria-label="Save current track">♡</button></div>
+              <div class="now-playing-progress"><input id="now-playing-progress" type="range" min="0" max="1" step="0.1" value="0" aria-label="Track progress" /><div><span id="now-playing-elapsed">0:00</span><span id="now-playing-duration">0:00</span></div></div>
+              <div class="now-playing-controls">
+                <button id="now-playing-shuffle" class="mode-control" type="button" aria-label="Turn shuffle on" aria-pressed="false"><span>⇄</span><small id="now-playing-shuffle-state">Off</small></button>
+                <button id="now-playing-previous" type="button" aria-label="Previous track or restart">◀</button>
+                <button id="now-playing-play" class="now-playing-main-play" type="button" aria-label="Play">▶</button>
+                <button id="now-playing-next" type="button" aria-label="Next track">▶</button>
+                <button id="now-playing-repeat" class="mode-control" type="button" aria-label="Repeat mode: off" aria-pressed="false"><span id="now-playing-repeat-icon">↻</span><small id="now-playing-repeat-state">Off</small></button>
+              </div>
+              <div class="now-playing-actions">
+                <button id="now-playing-add-playlist" type="button"><span>＋</span><small>Add to playlist</small></button>
+                <button id="now-playing-queue" type="button"><span>☷</span><small>Queue</small></button>
+                <button id="now-playing-lyrics-toggle" type="button" aria-expanded="false" hidden><span>≡</span><small>Lyrics</small></button>
+              </div>
+              <section id="lyrics-panel" class="lyrics-panel" hidden><div><p class="section-kicker">LYRICS</p><span>Available for this release</span></div><div id="lyrics-copy" class="lyrics-copy"></div></section>
+            </div>
+          </div>
+        </section>
+      </div>
+
       <div id="search-layer" class="modal-layer search-layer" role="dialog" aria-modal="true" aria-label="Search music" hidden>
         <button class="modal-backdrop" data-modal-close aria-label="Close search"></button>
         <div class="search-modal"><div class="search-input-wrap"><span>⌕</span><input id="search-input" placeholder="Search the XotiicDuck catalog" /><button data-modal-close aria-label="Close">×</button></div><p id="search-label" class="result-label">OFFICIAL RELEASES</p><div id="search-results" class="search-results"></div></div>
@@ -145,7 +177,34 @@
 
       <div id="queue-layer" class="modal-layer" role="dialog" aria-modal="true" aria-label="Playback queue" hidden>
         <button class="modal-backdrop" data-modal-close aria-label="Close queue"></button>
-        <div class="queue-modal"><div class="queue-modal-heading"><div><p class="section-kicker">PLAYBACK ORDER</p><h2>Queue</h2></div><button data-modal-close aria-label="Close">×</button></div><div id="queue-list" class="queue-modal-list"></div></div>
+        <div class="queue-modal"><div class="queue-modal-heading"><div><p class="section-kicker">PLAYBACK ORDER · <span id="queue-context">All tracks</span></p><h2>Queue</h2></div><button data-modal-close aria-label="Close">×</button></div><div id="queue-list" class="queue-modal-list"></div></div>
+      </div>
+
+      <div id="playlist-layer" class="modal-layer" role="dialog" aria-modal="true" aria-label="Playlist" hidden>
+        <button class="modal-backdrop" data-modal-close aria-label="Close playlist"></button>
+        <article class="playlist-modal">
+          <header class="playlist-modal-header"><div id="playlist-detail-cover" class="playlist-detail-cover"></div><div><p class="section-kicker">PLAYLIST</p><h2 id="playlist-detail-title"></h2><span id="playlist-detail-count"></span></div><button data-modal-close aria-label="Close playlist">×</button></header>
+          <div class="playlist-modal-actions"><button id="playlist-detail-play" class="playlist-primary">▶ Play</button><button id="playlist-detail-shuffle">⇄ Shuffle</button><button id="playlist-detail-rename">Rename</button><button id="playlist-detail-delete" class="playlist-danger">Delete</button></div>
+          <div id="playlist-detail-list" class="playlist-detail-list"></div>
+        </article>
+      </div>
+
+      <div id="playlist-picker-layer" class="modal-layer" role="dialog" aria-modal="true" aria-label="Add song to playlist" hidden>
+        <button class="modal-backdrop" data-modal-close aria-label="Close playlist chooser"></button>
+        <article class="playlist-picker-modal">
+          <header><div><p class="section-kicker">ADD TO PLAYLIST</p><h2 id="playlist-picker-track"></h2></div><button data-modal-close aria-label="Close playlist chooser">×</button></header>
+          <button class="playlist-new-row" data-playlist-create-current><span>＋</span><div><strong>New playlist</strong><small>Create one with this song</small></div><b>›</b></button>
+          <div id="playlist-picker-list" class="playlist-picker-list"></div>
+        </article>
+      </div>
+
+      <div id="playlist-editor-layer" class="modal-layer" role="dialog" aria-modal="true" aria-label="Playlist editor" hidden>
+        <button class="modal-backdrop" data-modal-close aria-label="Close playlist editor"></button>
+        <form id="playlist-editor-form" class="playlist-editor-modal">
+          <button class="modal-close" type="button" data-modal-close aria-label="Close playlist editor">×</button><p id="playlist-editor-label" class="section-kicker">NEW PLAYLIST</p><h2 id="playlist-editor-title">Create a playlist</h2>
+          <label for="playlist-name">Playlist name</label><input id="playlist-name" maxlength="60" autocomplete="off" required placeholder="e.g. Final Battle Anthems" />
+          <button id="playlist-editor-submit" class="playlist-editor-submit" type="submit">Create playlist</button>
+        </form>
       </div>
 
       <div id="info-layer" class="modal-layer" role="dialog" aria-modal="true" aria-label="Information" hidden>

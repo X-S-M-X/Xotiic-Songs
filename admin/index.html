@@ -12,14 +12,14 @@
     <meta name="format-detection" content="telephone=no" />
     <meta name="robots" content="noindex, nofollow, noarchive" />
     <title>Xotiic Upload — Artist Console</title>
-    <link rel="manifest" href="./manifest.webmanifest?v=5" />
-    <link rel="icon" href="../favicon.svg?v=5" />
-    <link rel="apple-touch-icon" href="../apple-touch-icon.png?v=5" />
-    <link rel="stylesheet" href="./styles.css?v=5" />
-    <script src="./config.js?v=5" defer></script>
-    <script src="./crypto.js?v=5" defer></script>
-    <script src="./github.js?v=5" defer></script>
-    <script src="./app.js?v=5" defer></script>
+    <link rel="manifest" href="./manifest.webmanifest?v=6" />
+    <link rel="icon" href="../favicon.svg?v=6" />
+    <link rel="apple-touch-icon" href="../apple-touch-icon.png?v=6" />
+    <link rel="stylesheet" href="./styles.css?v=6" />
+    <script src="./config.js?v=6" defer></script>
+    <script src="./crypto.js?v=6" defer></script>
+    <script src="./github.js?v=6" defer></script>
+    <script src="./app.js?v=6" defer></script>
   </head>
   <body>
     <div class="ambient ambient-one"></div>
@@ -156,6 +156,7 @@
                       <label class="field"><span>Duration</span><input id="release-duration" inputmode="numeric" readonly placeholder="Detected from MP3" /></label>
                       <label class="field"><span>Release ID</span><input id="release-id" required pattern="[a-z0-9]+(?:-[a-z0-9]+)*" maxlength="80" placeholder="generated-from-title" /><small>Lowercase letters, numbers and hyphens.</small></label>
                       <label class="field field-wide"><span>Short description <small>optional</small></span><textarea id="release-description" maxlength="280" rows="4" placeholder="A short line about the track or matchup."></textarea><small><span id="description-count">0</span>/280</small></label>
+                      <label class="field field-wide"><span>Lyrics <small>optional · can be added later</small></span><textarea id="release-lyrics" maxlength="30000" rows="8" placeholder="Paste the final lyrics here whenever you want them available in Now Playing."></textarea><small><span id="lyrics-count">0</span>/30,000 · Leave empty to hide the Lyrics button.</small></label>
                     </div>
                   </div>
                   <div class="safety-strip"><span>◇</span><div><strong>Owner-only publishing</strong><p>The console verifies your GitHub identity before every session. Your token is decrypted only while this page is unlocked.</p></div></div>

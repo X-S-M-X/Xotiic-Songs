@@ -439,6 +439,7 @@
     $("#summary-art").style.backgroundImage = "";
     $("#review-cover").style.backgroundImage = "";
     $("#description-count").textContent = "0";
+    $("#lyrics-count").textContent = "0";
     updateReleaseSummary();
   };
 
@@ -453,6 +454,7 @@
   const buildPendingRelease = () => {
     const id = $("#release-id").value.trim();
     const description = $("#release-description").value.trim();
+    const lyrics = $("#release-lyrics").value.trim();
     const release = {
       id,
       title: $("#release-title").value.trim(),
@@ -466,6 +468,7 @@
       status: $("#publish-now").checked ? "published" : "draft",
     };
     if (description) release.description = description;
+    if (lyrics) release.lyrics = lyrics;
     return release;
   };
 
@@ -746,6 +749,7 @@
     event.target.value = slugify(event.target.value);
   });
   $("#release-description").addEventListener("input", (event) => { $("#description-count").textContent = String(event.target.value.length); });
+  $("#release-lyrics").addEventListener("input", (event) => { $("#lyrics-count").textContent = String(event.target.value.length); });
   $("#publish-now").addEventListener("change", updateReleaseSummary);
 
   document.addEventListener("click", async (event) => {

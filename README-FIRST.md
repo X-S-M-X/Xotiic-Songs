@@ -33,6 +33,10 @@ Open Xotiic Upload, unlock it, select the MP3 from Files, select the square cove
 
 Both apps adapt from 320-pixel phones through large tablets, including portrait and landscape layouts. Navigation, the music player, upload forms, dialogs, and safe areas for notches/home indicators are handled separately from the desktop layout.
 
+On phones and tablets, tap the compact player above the navigation bar to open **Now Playing**. The expanded view includes the square cover, elapsed and total time, touch seeking, restart/previous, play/pause, next, shuffle, repeat Off/All/One, queue access, favorites, and local playlists. Playlist names and song choices are saved only in that browser; the MP3 files remain in the official catalog.
+
+Lyrics are optional. The Lyrics control appears only when a published catalog entry contains lyric text, so releases without lyrics keep a clean player.
+
 - **Android/Chrome or Edge:** the Install button opens the browser prompt when available; otherwise follow its menu instructions.
 - **Samsung Internet:** use **☰ → Add page to → Home screen**, or **Install app** when shown.
 - **iPhone/iPad:** open in Safari, choose **Share → Add to Home Screen**, enable **Open as Web App**, and tap **Add**.

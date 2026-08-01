@@ -48,4 +48,4 @@ git commit -m "Update XotiicDuck Music"
 git push origin main
 ```
 
-Change the two example paths before running the copy. After GitHub Pages finishes, close and reopen the website or refresh it once. This package uses a new offline-cache version so previously opened phones and installed copies receive the corrected install guide and icon files.
+Change the two example paths before running the copy. After GitHub Pages finishes, close and reopen the website or refresh it once. This package uses a new offline-cache version so previously opened phones and installed copies receive Now Playing, touch seeking, playlists, shuffle/repeat improvements, optional lyrics support, and the earlier installation fixes.

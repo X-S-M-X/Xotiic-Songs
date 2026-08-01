@@ -16,6 +16,6 @@ Create a fine-grained personal access token with access to only `Xotiic-Songs` a
 
 ## Publishing behavior
 
-The console validates the MP3, verifies square artwork, reads the latest `catalog.js`, creates Git blobs, and publishes the MP3, cover, and catalog as one atomic commit. GitHub Pages then updates the public player.
+The console validates the MP3, verifies square artwork, accepts optional lyrics, reads the latest `catalog.js`, creates Git blobs, and publishes the MP3, cover, and catalog as one atomic commit. GitHub Pages then updates the public player.
 
 The console supports publishing hidden drafts, making drafts public, hiding live releases, deleting current release files, renewing the GitHub token, and a 30-minute idle lock.
