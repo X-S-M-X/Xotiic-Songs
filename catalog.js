@@ -179,5 +179,17 @@ window.XOTIICDUCK_RELEASES = [
     "audio": "music/red-fang-promise.mp3",
     "cover": "covers/red-fang-promise.png",
     "status": "published"
+  },
+  {
+    "id": "crimson-axis",
+    "title": "Crimson Axis",
+    "artist": "XotiicDuck",
+    "album": "Single",
+    "genre": "Anime J-Rock",
+    "releaseDate": "2026-08-01",
+    "duration": 343,
+    "audio": "music/crimson-axis.mp3",
+    "cover": "covers/crimson-axis.png",
+    "status": "published"
   }
 ];
