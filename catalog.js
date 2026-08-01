@@ -215,5 +215,17 @@ window.XOTIICDUCK_RELEASES = [
     "audio": "music/violet-verdict.mp3",
     "cover": "covers/violet-verdict.png",
     "status": "published"
+  },
+  {
+    "id": "gold-collapse",
+    "title": "Gold Collapse",
+    "artist": "XotiicDuck",
+    "album": "Single",
+    "genre": "Anime J-Rock",
+    "releaseDate": "2026-08-01",
+    "duration": 346,
+    "audio": "music/gold-collapse.mp3",
+    "cover": "covers/gold-collapse.png",
+    "status": "published"
   }
 ];
