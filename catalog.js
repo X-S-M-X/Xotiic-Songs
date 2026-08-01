@@ -203,5 +203,17 @@ window.XOTIICDUCK_RELEASES = [
     "audio": "music/oath-of-noir.mp3",
     "cover": "covers/oath-of-noir.png",
     "status": "published"
+  },
+  {
+    "id": "violet-verdict",
+    "title": "Violet Verdict",
+    "artist": "XotiicDuck",
+    "album": "Single",
+    "genre": "Anime J-Rock",
+    "releaseDate": "2026-08-01",
+    "duration": 319,
+    "audio": "music/violet-verdict.mp3",
+    "cover": "covers/violet-verdict.png",
+    "status": "published"
   }
 ];
