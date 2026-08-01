@@ -287,5 +287,17 @@ window.XOTIICDUCK_RELEASES = [
     "audio": "music/wrath-meets-tempest.mp3",
     "cover": "covers/wrath-meets-tempest.png",
     "status": "published"
+  },
+  {
+    "id": "primordial-anthem",
+    "title": "Primordial Anthem",
+    "artist": "XotiicDuck",
+    "album": "Single",
+    "genre": "Anime J-Rock",
+    "releaseDate": "2026-08-02",
+    "duration": 235,
+    "audio": "music/primordial-anthem.mp3",
+    "cover": "covers/primordial-anthem.png",
+    "status": "published"
   }
 ];
