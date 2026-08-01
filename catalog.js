@@ -83,5 +83,17 @@ window.XOTIICDUCK_RELEASES = [
     "audio": "music/misfit-crown.mp3",
     "cover": "covers/misfit-crown.png",
     "status": "published"
+  },
+  {
+    "id": "rise",
+    "title": "Rise",
+    "artist": "XotiicDuck",
+    "album": "Single",
+    "genre": "Anime J-Rock",
+    "releaseDate": "2026-08-01",
+    "duration": 282,
+    "audio": "music/rise.mp3",
+    "cover": "covers/rise.png",
+    "status": "published"
   }
 ];
