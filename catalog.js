@@ -263,5 +263,17 @@ window.XOTIICDUCK_RELEASES = [
     "audio": "music/names-commands.mp3",
     "cover": "covers/names-commands.png",
     "status": "published"
+  },
+  {
+    "id": "blade-beside-the-throne",
+    "title": "Blade Beside The Throne",
+    "artist": "XotiicDuck",
+    "album": "Single",
+    "genre": "Anime J-Rock",
+    "releaseDate": "2026-08-01",
+    "duration": 255,
+    "audio": "music/blade-beside-the-throne.mp3",
+    "cover": "covers/blade-beside-the-throne.png",
+    "status": "published"
   }
 ];
