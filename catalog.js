@@ -167,5 +167,17 @@ window.XOTIICDUCK_RELEASES = [
     "audio": "music/starborn-catastrophe.mp3",
     "cover": "covers/starborn-catastrophe.png",
     "status": "published"
+  },
+  {
+    "id": "red-fang-promise",
+    "title": "Red Fang Promise",
+    "artist": "XotiicDuck",
+    "album": "Single",
+    "genre": "Anime J-Rock",
+    "releaseDate": "2026-08-01",
+    "duration": 396,
+    "audio": "music/red-fang-promise.mp3",
+    "cover": "covers/red-fang-promise.png",
+    "status": "published"
   }
 ];
