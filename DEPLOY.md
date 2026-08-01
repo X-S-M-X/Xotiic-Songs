@@ -29,3 +29,14 @@ Push the complete package and wait for GitHub Pages to finish before creating th
 ## Future updates
 
 Music published through Xotiic Upload is committed directly to `main`. GitHub Pages will redeploy automatically. Source changes made in VS Code can still be committed and pushed normally.
+
+To publish a replacement package over an existing local checkout, copy the replacement files into that checkout and run:
+
+```powershell
+git add .
+git commit -m "Improve mobile layout and installation"
+git pull --rebase origin main
+git push origin main
+```
+
+After GitHub Pages finishes, refresh the website once. This package uses a new offline-cache version so previously opened phones and installed copies receive the responsive layout and corrected install flow.

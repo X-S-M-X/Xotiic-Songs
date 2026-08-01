@@ -2,16 +2,21 @@
 <html lang="en">
   <head>
     <meta charset="UTF-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
+    <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover, interactive-widget=resizes-content" />
     <meta name="theme-color" content="#050705" />
     <meta name="description" content="The official home of XotiicDuck Music." />
+    <meta name="application-name" content="XotiicDuck Music" />
+    <meta name="apple-mobile-web-app-capable" content="yes" />
+    <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent" />
+    <meta name="apple-mobile-web-app-title" content="XotiicDuck" />
+    <meta name="format-detection" content="telephone=no" />
     <title>XotiicDuck Music — Anime Worlds. Original Sound.</title>
-    <link rel="manifest" href="./manifest.webmanifest" />
+    <link rel="manifest" href="./manifest.webmanifest?v=4" />
     <link rel="icon" href="./favicon.svg" />
     <link rel="apple-touch-icon" href="./icon-192.png" />
-    <link rel="stylesheet" href="./styles.css" />
-    <script src="./catalog.js?v=2" defer></script>
-    <script src="./app.js?v=2" defer></script>
+    <link rel="stylesheet" href="./styles.css?v=4" />
+    <script src="./catalog.js?v=4" defer></script>
+    <script src="./app.js?v=4" defer></script>
   </head>
   <body>
     <div id="app" class="app-shell catalog-empty">
@@ -36,18 +41,17 @@
         <div class="install-card">
           <span class="install-icon">▯</span>
           <div><strong>Take it with you</strong><p>Install the player on this device.</p></div>
-          <button data-install aria-label="Install app">⇩</button>
+          <button data-install aria-label="Install XotiicDuck Music"><span data-install-icon aria-hidden="true">⇩</span></button>
         </div>
-        <a class="channel-link" href="https://www.youtube.com/@XotiicDuck" target="_blank" rel="noreferrer"><span>▶</span><span>@XotiicDuck</span><span>↗</span></a>
+        <a class="channel-link" href="https://www.youtube.com/@XotiicDuck" target="_blank" rel="noreferrer"><span aria-hidden="true">▶</span><span>@XotiicDuck on YouTube</span></a>
       </aside>
 
       <main class="main-content">
         <header class="topbar">
-          <div class="mobile-brand"><span class="brand-mark"><span>XD</span></span><strong>XOTIIC</strong></div>
+          <div class="mobile-brand"><span class="brand-mark"><span>XD</span></span><strong>XOTIICDUCK</strong></div>
           <button class="search-trigger" data-search-open><span>⌕</span><span>Search the official catalog...</span><kbd>/</kbd></button>
           <div class="top-actions">
-            <a class="round-button" href="https://www.youtube.com/@XotiicDuck" target="_blank" rel="noreferrer" aria-label="Open XotiicDuck on YouTube">▶</a>
-            <button class="profile-button" data-install><span>▯</span><span>Install</span></button>
+            <button class="profile-button" data-install aria-label="Install XotiicDuck Music"><span data-install-icon aria-hidden="true">⇩</span><span data-install-label>Install app</span></button>
           </div>
         </header>
 
@@ -60,7 +64,7 @@
                 <p class="hero-description">High-impact tracks inspired by the stories, rivalries, and final battles that refuse to leave your head.</p>
                 <div class="hero-actions">
                   <a id="hero-primary" class="primary-button" href="https://www.youtube.com/@XotiicDuck" target="_blank" rel="noreferrer">▶ Open YouTube</a>
-                  <button class="secondary-button" data-install>⇩ Install player</button>
+                  <button class="secondary-button" data-install><span data-install-icon aria-hidden="true">⇩</span><span data-install-label>Install player</span></button>
                 </div>
                 <div class="hero-stats">
                   <div><strong id="live-count">00</strong><span>LIVE TRACKS</span></div>
@@ -86,7 +90,7 @@
             <section class="signal-banner">
               <div class="signal-icon">♫</div>
               <div><p class="section-kicker">BUILT FOR LISTENERS</p><h2>No ads. No algorithms. Just the music.</h2><p>Install the web app, keep your library close, and hear every XotiicDuck release from one focused home.</p></div>
-              <button data-install>Install app ⇩</button>
+              <button data-install><span data-install-label>Install app</span><span data-install-icon aria-hidden="true">⇩</span></button>
             </section>
           </section>
 

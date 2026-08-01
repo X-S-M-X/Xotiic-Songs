@@ -53,6 +53,7 @@
   let shuffleEnabled = false;
   let repeatMode = "off";
   let installPrompt = null;
+  let installAccepted = false;
   let toastTimer = null;
   let favorites = new Set();
 
@@ -217,13 +218,17 @@
   };
 
   const updateMediaSession = () => {
-    if (!("mediaSession" in navigator) || !currentTrack) return;
-    navigator.mediaSession.metadata = new MediaMetadata({
-      title: currentTrack.title,
-      artist: currentTrack.artist,
-      album: currentTrack.album,
-      artwork: [{ src: currentTrack.cover, sizes: "1200x1200" }],
-    });
+    if (!("mediaSession" in navigator) || !("MediaMetadata" in window) || !currentTrack) return;
+    try {
+      navigator.mediaSession.metadata = new MediaMetadata({
+        title: currentTrack.title,
+        artist: currentTrack.artist,
+        album: currentTrack.album,
+        artwork: [{ src: currentTrack.cover, sizes: "1200x1200" }],
+      });
+    } catch {
+      // Playback still works in browsers with partial Media Session support.
+    }
   };
 
   const setTrack = async (track, autoplay = true) => {
@@ -266,6 +271,108 @@
 
   const closeModals = () => {
     for (const layer of [$("#search-layer"), $("#queue-layer"), $("#info-layer")]) layer.hidden = true;
+    document.body.classList.remove("modal-open");
+  };
+
+  const isStandalone = () => window.matchMedia("(display-mode: standalone)").matches
+    || window.navigator.standalone === true
+    || document.referrer.startsWith("android-app://");
+
+  const device = (() => {
+    const ua = navigator.userAgent || "";
+    const ipad = /iPad/i.test(ua) || (navigator.platform === "MacIntel" && navigator.maxTouchPoints > 1);
+    const ios = /iPhone|iPod/i.test(ua) || ipad;
+    return {
+      ios,
+      ipad,
+      android: /Android/i.test(ua),
+      samsung: /SamsungBrowser/i.test(ua),
+      firefox: /Firefox|FxiOS/i.test(ua),
+      edge: /EdgA|EdgiOS|Edg/i.test(ua),
+    };
+  })();
+
+  installAccepted = isStandalone();
+
+  const installSteps = (steps) => `<ol class="install-steps">${steps.map((step) => `<li>${step}</li>`).join("")}</ol>`;
+
+  const installGuide = (status = "manual") => {
+    if (isStandalone() || installAccepted || status === "installed" || status === "accepted") {
+      return {
+        eyebrow: "PLAYER READY",
+        title: status === "accepted" ? "Installation accepted." : "XotiicDuck Music is installed.",
+        copy: `<div class="install-result success"><span aria-hidden="true">✓</span><div><h3>${status === "accepted" ? "Check your Home screen or app list" : "Open it like any other app"}</h3><p>${status === "accepted" ? "Your browser accepted the install. Leave the browser and look for XotiicDuck Music on your Home screen or in your apps. Some devices take a few seconds to place the icon." : "You are currently using the installed player, or this browser completed the installation during this visit."}</p></div></div><section><h3>If you cannot find the icon</h3><p>Use your device search for “XotiicDuck.” If it is still missing, return to the website in your browser and follow the install guide again.</p></section>`,
+      };
+    }
+
+    const cancelled = status === "dismissed"
+      ? `<div class="install-result notice"><span aria-hidden="true">!</span><div><h3>Nothing was installed</h3><p>The browser prompt was closed. You can try the Install button again whenever you are ready.</p></div></div>`
+      : "";
+
+    if (device.ios) {
+      return {
+        eyebrow: device.ipad ? "INSTALL ON IPAD" : "INSTALL ON IPHONE",
+        title: "Add the player from Safari.",
+        copy: `${cancelled}${installSteps([
+          "Open this page in <strong>Safari</strong>.",
+          "Tap the <strong>Share</strong> button.",
+          "Choose <strong>Add to Home Screen</strong>.",
+          "Turn on <strong>Open as Web App</strong>, then tap <strong>Add</strong>.",
+        ])}<p class="install-note">Apple devices do not give websites the same automatic install prompt as Chrome. These steps are the real installation route on iPhone and iPad.</p>`,
+      };
+    }
+
+    if (device.samsung) {
+      return {
+        eyebrow: "INSTALL ON SAMSUNG INTERNET",
+        title: "Add the player to your Galaxy.",
+        copy: `${cancelled}${installSteps([
+          "Open the Samsung Internet menu <strong>☰</strong>.",
+          "Tap <strong>Add page to</strong>.",
+          "Choose <strong>Home screen</strong>. If Samsung shows <strong>Install app</strong>, choose that instead.",
+          "Confirm, then open XotiicDuck Music from the new icon.",
+        ])}<p class="install-note">If the browser has already added it, search your Home screen and app list for “XotiicDuck.”</p>`,
+      };
+    }
+
+    if (device.android) {
+      const browserName = device.firefox ? "Firefox" : device.edge ? "Microsoft Edge" : "Chrome";
+      return {
+        eyebrow: "INSTALL ON ANDROID",
+        title: `Install from ${browserName}.`,
+        copy: `${cancelled}${installSteps([
+          `Open the ${browserName} browser menu <strong>⋮</strong>.`,
+          "Choose <strong>Install app</strong> or <strong>Add to Home screen</strong>.",
+          "Tap <strong>Install</strong> or <strong>Add</strong> to confirm.",
+          "Open XotiicDuck Music from your Home screen or app list.",
+        ])}<p class="install-note">If your browser does not show an install option yet, refresh once and wait a few seconds for the player files to finish saving.</p>`,
+      };
+    }
+
+    return {
+      eyebrow: "INSTALL THE PLAYER",
+      title: "Keep XotiicDuck Music one click away.",
+      copy: `${cancelled}${installSteps([
+        "Open this page in Chrome or Microsoft Edge.",
+        "Use the install icon in the address bar, or open the browser menu and choose <strong>Install XotiicDuck Music</strong>.",
+        "Confirm the installation, then launch it from your apps or desktop.",
+      ])}<p class="install-note">Safari on Mac uses <strong>File → Add to Dock</strong>. Browsers that do not support web-app installation can still use the full website normally.</p>`,
+    };
+  };
+
+  const updateInstallButtons = () => {
+    const installed = isStandalone() || installAccepted;
+    app.classList.toggle("app-installed", installed);
+    for (const button of $$('[data-install]')) {
+      const label = button.querySelector("[data-install-label]");
+      const icon = button.querySelector("[data-install-icon]");
+      if (label && !button.dataset.installLabel) button.dataset.installLabel = label.textContent.trim();
+      if (label) label.textContent = installed ? "Installed" : button.dataset.installLabel;
+      if (icon) icon.textContent = installed ? "✓" : "⇩";
+      button.classList.toggle("is-installed", installed);
+      button.setAttribute("aria-label", installed ? "XotiicDuck Music is installed" : "Install XotiicDuck Music");
+      button.title = installed ? "Already installed — tap for details" : "Install XotiicDuck Music";
+    }
   };
 
   const infoContent = {
@@ -274,11 +381,7 @@
       title: "Music built from anime-sized moments.",
       copy: `<section><h3>Direct from XotiicDuck</h3><p>This player keeps the catalog focused on one artist, with no unrelated recommendation feed and no audio pulled from somebody else’s channel.</p></section><section><h3>Complete releases only</h3><p>Every public track is paired with its final master, square cover, title, release date, and credits before it becomes playable.</p></section>`,
     },
-    install: {
-      eyebrow: "INSTALL THE PLAYER",
-      title: "Keep XotiicDuck Music one tap away.",
-      copy: `<section><h3>Android</h3><p>Open this site in Chrome, open the browser menu, and choose Install app or Add to Home screen.</p></section><section><h3>Desktop</h3><p>Chrome and Microsoft Edge can install the player from the address bar.</p></section><section><h3>APK safety</h3><p>A direct APK should be offered only after release signing, checksum publication, background-playback testing, and a physical-phone safety test.</p></section>`,
-    },
+    install: installGuide(),
     privacy: {
       eyebrow: "PRIVACY",
       title: "A small player should collect very little.",
@@ -291,24 +394,42 @@
     },
   };
 
-  const openInfo = (name) => {
-    const content = infoContent[name];
+  const openInfo = (name, installStatus = "manual") => {
+    const content = name === "install" ? installGuide(installStatus) : infoContent[name];
     if (!content) return;
     $("#info-eyebrow").textContent = content.eyebrow;
     $("#info-title").textContent = content.title;
     $("#info-copy").innerHTML = content.copy;
     $("#info-layer").hidden = false;
+    document.body.classList.add("modal-open");
   };
 
   const requestInstall = async () => {
-    if (!installPrompt) {
-      showToast("Open your browser menu and choose ‘Install app’ or ‘Add to Home screen’.");
+    if (isStandalone() || installAccepted) {
+      openInfo("install", "installed");
       return;
     }
-    await installPrompt.prompt();
-    const choice = await installPrompt.userChoice;
-    if (choice.outcome === "accepted") showToast("XotiicDuck Music installed.");
+
+    if (!installPrompt) {
+      openInfo("install", "manual");
+      return;
+    }
+
+    const prompt = installPrompt;
     installPrompt = null;
+    try {
+      await prompt.prompt();
+      const choice = await prompt.userChoice;
+      if (choice.outcome === "accepted") {
+        installAccepted = true;
+        updateInstallButtons();
+        openInfo("install", "accepted");
+      } else {
+        openInfo("install", "dismissed");
+      }
+    } catch {
+      openInfo("install", "manual");
+    }
   };
 
   document.addEventListener("click", (event) => {
@@ -318,7 +439,7 @@
     if (target.dataset.play) { event.preventDefault(); setTrack(byId(target.dataset.play)); closeModals(); }
     if (target.dataset.favorite) { event.preventDefault(); toggleFavorite(target.dataset.favorite); }
     if (target.hasAttribute("data-install")) { event.preventDefault(); requestInstall(); }
-    if (target.hasAttribute("data-search-open")) { event.preventDefault(); renderSearch(); $("#search-layer").hidden = false; setTimeout(() => $("#search-input").focus(), 0); }
+    if (target.hasAttribute("data-search-open")) { event.preventDefault(); renderSearch(); $("#search-layer").hidden = false; document.body.classList.add("modal-open"); setTimeout(() => $("#search-input").focus(), 0); }
     if (target.hasAttribute("data-modal-close")) { event.preventDefault(); closeModals(); }
     if (target.dataset.info) { event.preventDefault(); openInfo(target.dataset.info); }
     if (target.dataset.genre) { selectedGenre = target.dataset.genre; renderDiscover(); }
@@ -342,15 +463,15 @@
     $("#repeat").textContent = repeatMode === "one" ? "↻¹" : "↻";
     $("#repeat").setAttribute("aria-label", `Repeat mode: ${repeatMode}`);
   });
-  $("#queue-open").addEventListener("click", () => { renderQueue(); $("#queue-layer").hidden = false; });
+  $("#queue-open").addEventListener("click", () => { renderQueue(); $("#queue-layer").hidden = false; document.body.classList.add("modal-open"); });
   $("#now-favorite").addEventListener("click", () => currentTrack && toggleFavorite(currentTrack.id));
   $("#player-favorite").addEventListener("click", () => currentTrack && toggleFavorite(currentTrack.id));
   $("#volume").addEventListener("input", (event) => { audio.volume = Number(event.target.value); });
   $("#progress").addEventListener("input", (event) => { audio.currentTime = Number(event.target.value); });
   $("#search-input").addEventListener("input", (event) => renderSearch(event.target.value));
 
-  audio.addEventListener("play", () => { $("#play").textContent = "Ⅱ"; $("#play").setAttribute("aria-label", "Pause"); renderHome(); if ("mediaSession" in navigator) navigator.mediaSession.playbackState = "playing"; });
-  audio.addEventListener("pause", () => { $("#play").textContent = "▶"; $("#play").setAttribute("aria-label", "Play"); renderHome(); if ("mediaSession" in navigator) navigator.mediaSession.playbackState = "paused"; });
+  audio.addEventListener("play", () => { $("#play").textContent = "Ⅱ"; $("#play").setAttribute("aria-label", "Pause"); renderHome(); if ("mediaSession" in navigator) { try { navigator.mediaSession.playbackState = "playing"; } catch { /* Partial support. */ } } });
+  audio.addEventListener("pause", () => { $("#play").textContent = "▶"; $("#play").setAttribute("aria-label", "Play"); renderHome(); if ("mediaSession" in navigator) { try { navigator.mediaSession.playbackState = "paused"; } catch { /* Partial support. */ } } });
   audio.addEventListener("timeupdate", () => { $("#elapsed").textContent = formatTime(audio.currentTime); $("#progress").value = String(audio.currentTime); });
   audio.addEventListener("loadedmetadata", () => { const duration = Number.isFinite(audio.duration) ? audio.duration : currentTrack?.duration || 0; $("#progress").max = String(duration || 1); $("#duration").textContent = formatTime(duration); });
   audio.addEventListener("ended", () => {
@@ -360,22 +481,41 @@
     skip(1);
   });
 
-  window.addEventListener("beforeinstallprompt", (event) => { event.preventDefault(); installPrompt = event; });
+  window.addEventListener("beforeinstallprompt", (event) => {
+    event.preventDefault();
+    installPrompt = event;
+    installAccepted = false;
+    updateInstallButtons();
+  });
+  window.addEventListener("appinstalled", () => {
+    installPrompt = null;
+    installAccepted = true;
+    updateInstallButtons();
+    showToast("Installed — open XotiicDuck Music from your Home screen or apps.");
+  });
+  window.addEventListener("pageshow", updateInstallButtons);
   window.addEventListener("keydown", (event) => {
     const typing = ["INPUT", "TEXTAREA"].includes(document.activeElement?.tagName);
-    if (event.key === "/" && !typing) { event.preventDefault(); renderSearch(); $("#search-layer").hidden = false; setTimeout(() => $("#search-input").focus(), 0); }
+    if (event.key === "/" && !typing) { event.preventDefault(); renderSearch(); $("#search-layer").hidden = false; document.body.classList.add("modal-open"); setTimeout(() => $("#search-input").focus(), 0); }
     if (event.key === "Escape") closeModals();
   });
 
   if ("mediaSession" in navigator) {
-    navigator.mediaSession.setActionHandler("play", () => audio.play());
-    navigator.mediaSession.setActionHandler("pause", () => audio.pause());
-    navigator.mediaSession.setActionHandler("nexttrack", () => skip(1));
-    navigator.mediaSession.setActionHandler("previoustrack", () => skip(-1));
+    const mediaActions = [
+      ["play", () => audio.play()],
+      ["pause", () => audio.pause()],
+      ["nexttrack", () => skip(1)],
+      ["previoustrack", () => skip(-1)],
+    ];
+    for (const [action, handler] of mediaActions) {
+      try { navigator.mediaSession.setActionHandler(action, handler); } catch { /* Partial support. */ }
+    }
   }
 
   if ("serviceWorker" in navigator && location.protocol.startsWith("http")) {
-    navigator.serviceWorker.register("./sw.js").catch(() => undefined);
+    navigator.serviceWorker.register("./sw.js", { updateViaCache: "none" })
+      .then((registration) => registration.update())
+      .catch(() => undefined);
   }
 
   $("#year").textContent = String(new Date().getFullYear());
@@ -387,4 +527,5 @@
   }
   renderAll();
   switchView(currentView);
+  updateInstallButtons();
 })();

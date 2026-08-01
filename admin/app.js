@@ -24,6 +24,7 @@
     idTouched: false,
     pendingRelease: null,
     installPrompt: null,
+    installAccepted: false,
     toastTimer: null,
     idleTimer: null,
     hiddenAt: 0,
@@ -110,6 +111,118 @@
     toast.classList.toggle("error", type === "error");
     toast.hidden = false;
     state.toastTimer = setTimeout(() => { toast.hidden = true; }, 4200);
+  };
+
+  const isStandalone = () => window.matchMedia("(display-mode: standalone)").matches
+    || window.navigator.standalone === true
+    || document.referrer.startsWith("android-app://");
+
+  const installDevice = (() => {
+    const ua = navigator.userAgent || "";
+    const ipad = /iPad/i.test(ua) || (navigator.platform === "MacIntel" && navigator.maxTouchPoints > 1);
+    return {
+      ios: /iPhone|iPod/i.test(ua) || ipad,
+      ipad,
+      android: /Android/i.test(ua),
+      samsung: /SamsungBrowser/i.test(ua),
+    };
+  })();
+
+  state.installAccepted = isStandalone();
+
+  const updateInstallButton = () => {
+    const installed = isStandalone() || state.installAccepted;
+    const button = $("[data-install]");
+    const label = button?.querySelector("[data-install-label]");
+    const icon = button?.querySelector("[data-install-icon]");
+    if (label) label.textContent = installed ? "Installed" : "Install";
+    if (icon) icon.textContent = installed ? "✓" : "⇩";
+    if (button) {
+      button.classList.toggle("is-installed", installed);
+      button.setAttribute("aria-label", installed ? "Xotiic Upload is installed" : "Install Xotiic Upload");
+      button.title = installed ? "Already installed — tap for details" : "Install Xotiic Upload";
+    }
+  };
+
+  const installHelp = (status = "manual") => {
+    if (isStandalone() || state.installAccepted || status === "accepted" || status === "installed") {
+      return {
+        label: "CONSOLE READY",
+        title: status === "accepted" ? "Installation accepted" : "Xotiic Upload is installed",
+        steps: ["Leave the browser and search your Home screen or app list for <strong>Xotiic Upload</strong>.", "Open it from that icon whenever you need to publish a song."],
+        note: "The encrypted owner setup is stored separately in each browser/app installation. Complete setup once inside the installed console if it asks again.",
+      };
+    }
+    if (installDevice.ios) {
+      return {
+        label: installDevice.ipad ? "INSTALL ON IPAD" : "INSTALL ON IPHONE",
+        title: "Add the console from Safari",
+        steps: ["Open this page in <strong>Safari</strong>.", "Tap <strong>Share</strong>, then <strong>Add to Home Screen</strong>.", "Turn on <strong>Open as Web App</strong> and tap <strong>Add</strong>."],
+        note: "Apple does not show the same automatic web-app prompt as Chrome, so the Safari steps are required.",
+      };
+    }
+    if (installDevice.samsung) {
+      return {
+        label: "INSTALL ON SAMSUNG INTERNET",
+        title: "Add the console to your Galaxy",
+        steps: ["Open the Samsung Internet menu <strong>☰</strong>.", "Tap <strong>Add page to</strong>.", "Choose <strong>Home screen</strong> or <strong>Install app</strong>, then confirm."],
+        note: "After it is added, search the Home screen or app list for Xotiic Upload.",
+      };
+    }
+    if (installDevice.android) {
+      return {
+        label: "INSTALL ON ANDROID",
+        title: "Add the console from your browser",
+        steps: ["Open the browser menu <strong>⋮</strong>.", "Choose <strong>Install app</strong> or <strong>Add to Home screen</strong>.", "Confirm, then open Xotiic Upload from the new icon."],
+        note: "If the option is missing, refresh once and wait a few seconds for the console files to finish saving.",
+      };
+    }
+    return {
+      label: "INSTALL ARTIST CONSOLE",
+      title: "Add Xotiic Upload to this device",
+      steps: ["Open this page in Chrome or Microsoft Edge.", "Use the install icon in the address bar or choose <strong>Install Xotiic Upload</strong> from the browser menu.", "Confirm and launch it from your apps."],
+      note: "Safari on Mac uses File → Add to Dock. The console still works in browsers without installation support.",
+    };
+  };
+
+  const openInstallHelp = (status = "manual") => {
+    const content = installHelp(status);
+    $("#install-help-label").textContent = content.label;
+    $("#install-help-title").textContent = content.title;
+    $("#install-help-copy").innerHTML = `<ol>${content.steps.map((step) => `<li>${step}</li>`).join("")}</ol><p>${content.note}</p>`;
+    $("#install-help-layer").hidden = false;
+    document.body.classList.add("modal-open");
+  };
+
+  const closeInstallHelp = () => {
+    $("#install-help-layer").hidden = true;
+    document.body.classList.remove("modal-open");
+  };
+
+  const requestInstall = async () => {
+    if (isStandalone() || state.installAccepted) {
+      openInstallHelp("installed");
+      return;
+    }
+    if (!state.installPrompt) {
+      openInstallHelp("manual");
+      return;
+    }
+    const prompt = state.installPrompt;
+    state.installPrompt = null;
+    try {
+      await prompt.prompt();
+      const choice = await prompt.userChoice;
+      if (choice.outcome === "accepted") {
+        state.installAccepted = true;
+        updateInstallButton();
+        openInstallHelp("accepted");
+      } else {
+        openInstallHelp("manual");
+      }
+    } catch {
+      openInstallHelp("manual");
+    }
   };
 
   const makePublisher = (token) => new GitHubPublisher({
@@ -645,15 +758,10 @@
     }
     if (target.dataset.adminPanel) selectAdminPanel(target.dataset.adminPanel);
     if (target.hasAttribute("data-review-close")) closeReview();
+    if (target.hasAttribute("data-install-close")) closeInstallHelp();
     if (target.hasAttribute("data-install")) {
       event.preventDefault();
-      if (state.installPrompt) {
-        await state.installPrompt.prompt();
-        await state.installPrompt.userChoice;
-        state.installPrompt = null;
-      } else {
-        showToast("Open the browser menu and choose Install app or Add to Home screen.");
-      }
+      await requestInstall();
     }
     if (target.dataset.releaseToggle) {
       if (state.busy) return;
@@ -699,7 +807,16 @@
   window.addEventListener("beforeinstallprompt", (event) => {
     event.preventDefault();
     state.installPrompt = event;
+    state.installAccepted = false;
+    updateInstallButton();
   });
+  window.addEventListener("appinstalled", () => {
+    state.installPrompt = null;
+    state.installAccepted = true;
+    updateInstallButton();
+    showToast("Installed — open Xotiic Upload from your Home screen or apps.");
+  });
+  window.addEventListener("pageshow", updateInstallButton);
   window.addEventListener("online", () => state.token && setConnection(true));
   window.addEventListener("offline", () => state.token && setConnection(false, "OFFLINE"));
   for (const eventName of ["pointerdown", "keydown", "touchstart"]) {
@@ -712,7 +829,9 @@
   });
 
   if ("serviceWorker" in navigator && location.protocol.startsWith("http")) {
-    navigator.serviceWorker.register("./sw.js").catch(() => undefined);
+    navigator.serviceWorker.register("./sw.js", { updateViaCache: "none" })
+      .then((registration) => registration.update())
+      .catch(() => undefined);
   }
 
   $("#release-date").value = localDate();
@@ -725,4 +844,5 @@
   } else {
     setView("setup");
   }
+  updateInstallButton();
 })();

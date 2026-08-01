@@ -21,12 +21,22 @@ There are no demo songs or fake covers. The public catalog remains empty until a
 2. Create a fine-grained GitHub token limited to only `Xotiic-Songs`, with **Contents: Read and write** permission.
 3. Choose the console username and a password of at least 12 characters.
 4. Paste the token once. The console verifies the `x-s-m-x` owner and encrypts the token locally.
-5. Install Xotiic Upload from the browser menu on each authorized phone or computer.
+5. Use the console's **Install** button on each authorized phone or computer. It opens the native prompt when the browser provides one, or shows the correct steps for that device.
 
 Each device has its own encrypted vault. Resetting a device vault does not delete music from GitHub.
 
 ## Publishing from a phone
 
 Open Xotiic Upload, unlock it, select the MP3 from Files, select the square cover from Gallery, enter the release information, and publish. The console commits the MP3, cover, and `catalog.js` together. GitHub Pages updates the player shortly afterward.
+
+## Phone and tablet support
+
+Both apps adapt from 320-pixel phones through large tablets, including portrait and landscape layouts. Navigation, the music player, upload forms, dialogs, and safe areas for notches/home indicators are handled separately from the desktop layout.
+
+- **Android/Chrome or Edge:** the Install button opens the browser prompt when available; otherwise follow its menu instructions.
+- **Samsung Internet:** use **☰ → Add page to → Home screen**, or **Install app** when shown.
+- **iPhone/iPad:** open in Safari, choose **Share → Add to Home Screen**, enable **Open as Web App**, and tap **Add**.
+
+Installation support belongs to the browser. On browsers without installable-web-app support, the complete website still works normally.
 
 See `ADMIN-SETUP.md` for the complete security and token instructions.

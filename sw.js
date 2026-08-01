@@ -1,12 +1,13 @@
-const CACHE_NAME = "xotiicduck-portable-v2";
+const CACHE_NAME = "xotiicduck-portable-v4";
 const scoped = (file) => new URL(file, self.registration.scope).href;
 const CATALOG_URL = scoped("./catalog.js");
 const SHELL = [
   "./",
   "./index.html",
-  "./styles.css",
-  "./app.js?v=2",
-  "./manifest.webmanifest",
+  "./styles.css?v=4",
+  "./catalog.js",
+  "./app.js?v=4",
+  "./manifest.webmanifest?v=4",
   "./favicon.svg",
   "./icon-192.png",
   "./icon-512.png",

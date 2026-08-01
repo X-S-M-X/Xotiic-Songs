@@ -1,14 +1,14 @@
-const CACHE_NAME = "xotiic-upload-v3";
+const CACHE_NAME = "xotiic-upload-v4";
 const scoped = (file) => new URL(file, self.registration.scope).href;
 const SHELL = [
   "./",
   "./index.html",
-  "./styles.css?v=3",
-  "./config.js?v=3",
-  "./crypto.js?v=3",
-  "./github.js?v=3",
-  "./app.js?v=3",
-  "./manifest.webmanifest",
+  "./styles.css?v=4",
+  "./config.js?v=4",
+  "./crypto.js?v=4",
+  "./github.js?v=4",
+  "./app.js?v=4",
+  "./manifest.webmanifest?v=4",
   "../favicon.svg",
   "../icon-192.png",
   "../icon-512.png"
