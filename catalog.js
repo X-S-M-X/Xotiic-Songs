@@ -275,5 +275,17 @@ window.XOTIICDUCK_RELEASES = [
     "audio": "music/blade-beside-the-throne.mp3",
     "cover": "covers/blade-beside-the-throne.png",
     "status": "published"
+  },
+  {
+    "id": "wrath-meets-tempest",
+    "title": "Wrath Meets Tempest",
+    "artist": "XotiicDuck",
+    "album": "Single",
+    "genre": "Anime J-Rock",
+    "releaseDate": "2026-08-01",
+    "duration": 385,
+    "audio": "music/wrath-meets-tempest.mp3",
+    "cover": "covers/wrath-meets-tempest.png",
+    "status": "published"
   }
 ];
