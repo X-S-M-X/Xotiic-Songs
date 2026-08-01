@@ -239,5 +239,17 @@ window.XOTIICDUCK_RELEASES = [
     "audio": "music/white-crown-scarlet-lake.mp3",
     "cover": "covers/white-crown-scarlet-lake.png",
     "status": "published"
+  },
+  {
+    "id": "born-again",
+    "title": "Born Again",
+    "artist": "XotiicDuck",
+    "album": "Single",
+    "genre": "Anime J-Rock",
+    "releaseDate": "2026-08-01",
+    "duration": 425,
+    "audio": "music/born-again.mp3",
+    "cover": "covers/born-again.png",
+    "status": "published"
   }
 ];
