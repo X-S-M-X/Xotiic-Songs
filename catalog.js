@@ -23,5 +23,17 @@ window.XOTIICDUCK_RELEASES = [
     "audio": "music/beyond-the-last-tomorrow.mp3",
     "cover": "covers/beyond-the-last-tomorrow.png",
     "status": "published"
+  },
+  {
+    "id": "silent-storm",
+    "title": "Silent Storm",
+    "artist": "XotiicDuck",
+    "album": "Single",
+    "genre": "Anime J-Rock",
+    "releaseDate": "2026-08-01",
+    "duration": 418,
+    "audio": "music/silent-storm.mp3",
+    "cover": "covers/silent-storm.png",
+    "status": "published"
   }
 ];
