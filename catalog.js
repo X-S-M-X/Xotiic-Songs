@@ -95,5 +95,17 @@ window.XOTIICDUCK_RELEASES = [
     "audio": "music/rise.mp3",
     "cover": "covers/rise.png",
     "status": "published"
+  },
+  {
+    "id": "earthquake",
+    "title": "Earthquake",
+    "artist": "XotiicDuck",
+    "album": "Single",
+    "genre": "Anime J-Rock",
+    "releaseDate": "2026-08-01",
+    "duration": 447,
+    "audio": "music/earthquake.mp3",
+    "cover": "covers/earthquake.png",
+    "status": "published"
   }
 ];
