@@ -35,5 +35,17 @@ window.XOTIICDUCK_RELEASES = [
     "audio": "music/silent-storm.mp3",
     "cover": "covers/silent-storm.png",
     "status": "published"
+  },
+  {
+    "id": "ghost-of-the-uchiha",
+    "title": "Ghost Of The Uchiha",
+    "artist": "XotiicDuck",
+    "album": "Single",
+    "genre": "Anime J-Rock",
+    "releaseDate": "2026-08-01",
+    "duration": 326,
+    "audio": "music/ghost-of-the-uchiha.mp3",
+    "cover": "covers/ghost-of-the-uchiha.png",
+    "status": "published"
   }
 ];
