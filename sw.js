@@ -1,19 +1,19 @@
-const CACHE_NAME = "xotiicduck-portable-v6";
+const CACHE_NAME = "xotiicduck-portable-v7";
 const scoped = (file) => new URL(file, self.registration.scope).href;
 const CATALOG_URL = scoped("./catalog.js");
 const SHELL = [
   "./",
   "./index.html",
-  "./styles.css?v=6",
+  "./styles.css?v=7",
   "./catalog.js",
-  "./app.js?v=6",
-  "./manifest.webmanifest?v=6",
-  "./favicon.svg?v=6",
-  "./apple-touch-icon.png?v=6",
-  "./icon-192.png?v=6",
-  "./icon-512.png?v=6",
-  "./icon-maskable-192.png?v=6",
-  "./icon-maskable-512.png?v=6",
+  "./app.js?v=7",
+  "./manifest.webmanifest?v=7",
+  "./favicon.svg?v=7",
+  "./apple-touch-icon.png?v=7",
+  "./icon-192.png?v=7",
+  "./icon-512.png?v=7",
+  "./icon-maskable-192.png?v=7",
+  "./icon-maskable-512.png?v=7",
 ].map(scoped);
 
 self.addEventListener("install", (event) => {

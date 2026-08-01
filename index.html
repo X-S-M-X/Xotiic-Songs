@@ -11,12 +11,12 @@
     <meta name="apple-mobile-web-app-title" content="XotiicDuck" />
     <meta name="format-detection" content="telephone=no" />
     <title>XotiicDuck Music — Anime Worlds. Original Sound.</title>
-    <link rel="manifest" href="./manifest.webmanifest?v=6" />
-    <link rel="icon" href="./favicon.svg?v=6" />
-    <link rel="apple-touch-icon" href="./apple-touch-icon.png?v=6" />
-    <link rel="stylesheet" href="./styles.css?v=6" />
-    <script src="./catalog.js?v=6" defer></script>
-    <script src="./app.js?v=6" defer></script>
+    <link rel="manifest" href="./manifest.webmanifest?v=7" />
+    <link rel="icon" href="./favicon.svg?v=7" />
+    <link rel="apple-touch-icon" href="./apple-touch-icon.png?v=7" />
+    <link rel="stylesheet" href="./styles.css?v=7" />
+    <script src="./catalog.js?v=7" defer></script>
+    <script src="./app.js?v=7" defer></script>
   </head>
   <body>
     <div id="app" class="app-shell catalog-empty">
@@ -212,7 +212,7 @@
         <article class="portable-info-modal"><button class="modal-close" data-modal-close aria-label="Close">×</button><p id="info-eyebrow" class="section-kicker"></p><h2 id="info-title"></h2><div id="info-copy"></div></article>
       </div>
 
-      <div id="toast" class="toast" hidden><span>✓</span><span id="toast-copy"></span></div>
+      <div id="toast" class="toast" role="status" aria-live="polite" aria-atomic="true" hidden><span class="toast-icon" aria-hidden="true">✓</span><span id="toast-copy" class="toast-copy"></span></div>
     </div>
   </body>
 </html>
