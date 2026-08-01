@@ -191,5 +191,17 @@ window.XOTIICDUCK_RELEASES = [
     "audio": "music/crimson-axis.mp3",
     "cover": "covers/crimson-axis.png",
     "status": "published"
+  },
+  {
+    "id": "oath-of-noir",
+    "title": "Oath Of Noir",
+    "artist": "XotiicDuck",
+    "album": "Single",
+    "genre": "Anime J-Rock",
+    "releaseDate": "2026-08-01",
+    "duration": 316,
+    "audio": "music/oath-of-noir.mp3",
+    "cover": "covers/oath-of-noir.png",
+    "status": "published"
   }
 ];
