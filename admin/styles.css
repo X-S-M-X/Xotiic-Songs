@@ -220,6 +220,8 @@ button:focus-visible, a:focus-visible, input:focus-visible, select:focus-visible
 .install-help-modal ol { list-style: none; counter-reset: admin-install; display: grid; gap: 10px; margin: 23px 0 0; padding: 0; }
 .install-help-modal li { counter-increment: admin-install; min-height: 50px; display: grid; grid-template-columns: 32px minmax(0, 1fr); align-items: center; gap: 12px; padding: 10px 12px; border: 1px solid var(--line); border-radius: 12px; background: rgba(255, 255, 255, 0.022); color: #b8c1ba; font-size: 11px; line-height: 1.55; }
 .install-help-modal li::before { content: counter(admin-install); width: 30px; height: 30px; border-radius: 9px; display: grid; place-items: center; background: rgba(184, 255, 61, 0.12); color: var(--acid); font-weight: 900; }
+.install-help-modal .install-step-copy { min-width: 0; display: block; overflow-wrap: break-word; }
+.install-help-modal .install-step-copy strong { display: inline; color: #e7ede8; font-weight: 850; }
 .install-help-modal #install-help-copy > p { margin: 16px 0 0; padding: 13px 14px; border: 1px solid var(--line-strong); border-radius: 12px; background: rgba(184, 255, 61, 0.055); color: #89948b; font-size: 10px; line-height: 1.6; }
 .modal-close { position: absolute; top: 15px; right: 15px; width: 34px; height: 34px; border: 1px solid var(--line); border-radius: 9px; background: transparent; color: #849087; cursor: pointer; }
 .review-modal h2 { margin: 9px 0 22px; font-size: 27px; letter-spacing: -0.04em; }

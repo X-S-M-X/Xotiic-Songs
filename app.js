@@ -294,7 +294,7 @@
 
   installAccepted = isStandalone();
 
-  const installSteps = (steps) => `<ol class="install-steps">${steps.map((step) => `<li>${step}</li>`).join("")}</ol>`;
+  const installSteps = (steps) => `<ol class="install-steps">${steps.map((step) => `<li><span class="install-step-copy">${step}</span></li>`).join("")}</ol>`;
 
   const installGuide = (status = "manual") => {
     if (isStandalone() || installAccepted || status === "installed" || status === "accepted") {

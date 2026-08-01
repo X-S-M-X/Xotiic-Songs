@@ -2776,6 +2776,18 @@ input[type="range"]:focus::-webkit-slider-thumb {
   font-weight: 900;
 }
 
+.install-step-copy {
+  min-width: 0;
+  display: block;
+  overflow-wrap: break-word;
+}
+
+.install-step-copy strong {
+  display: inline;
+  color: #e7ede8;
+  font-weight: 850;
+}
+
 .install-note {
   margin-top: 16px !important;
   padding: 13px 14px;

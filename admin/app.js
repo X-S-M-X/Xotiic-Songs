@@ -189,7 +189,7 @@
     const content = installHelp(status);
     $("#install-help-label").textContent = content.label;
     $("#install-help-title").textContent = content.title;
-    $("#install-help-copy").innerHTML = `<ol>${content.steps.map((step) => `<li>${step}</li>`).join("")}</ol><p>${content.note}</p>`;
+    $("#install-help-copy").innerHTML = `<ol>${content.steps.map((step) => `<li><span class="install-step-copy">${step}</span></li>`).join("")}</ol><p>${content.note}</p>`;
     $("#install-help-layer").hidden = false;
     document.body.classList.add("modal-open");
   };

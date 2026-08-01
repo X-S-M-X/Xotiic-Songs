@@ -30,13 +30,22 @@ Push the complete package and wait for GitHub Pages to finish before creating th
 
 Music published through Xotiic Upload is committed directly to `main`. GitHub Pages will redeploy automatically. Source changes made in VS Code can still be committed and pushed normally.
 
-To publish a replacement package over an existing local checkout, copy the replacement files into that checkout and run:
+Before copying a replacement package, pull the newest catalog and songs that Xotiic Upload may already have published. Then copy only the app files, leaving `.git`, `catalog.js`, `music/`, and `covers/` untouched:
 
 ```powershell
-git add .
-git commit -m "Improve mobile layout and installation"
+cd "C:\path\to\your\existing\XotiicDuck-Music-Portable"
 git pull --rebase origin main
+
+$repo = "C:\path\to\your\existing\XotiicDuck-Music-Portable"
+$update = "C:\path\to\the\newly-extracted\XotiicDuck-Music-Portable"
+Get-ChildItem -LiteralPath $update -Force |
+  Where-Object { $_.Name -notin @(".git", "catalog.js", "music", "covers") } |
+  Copy-Item -Destination $repo -Recurse -Force
+
+cd $repo
+git add -A
+git commit -m "Update XotiicDuck Music"
 git push origin main
 ```
 
-After GitHub Pages finishes, refresh the website once. This package uses a new offline-cache version so previously opened phones and installed copies receive the responsive layout and corrected install flow.
+Change the two example paths before running the copy. After GitHub Pages finishes, close and reopen the website or refresh it once. This package uses a new offline-cache version so previously opened phones and installed copies receive the corrected install guide and icon files.
