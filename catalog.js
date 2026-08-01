@@ -131,5 +131,17 @@ window.XOTIICDUCK_RELEASES = [
     "audio": "music/sleeping-ruler.mp3",
     "cover": "covers/sleeping-ruler.png",
     "status": "published"
+  },
+  {
+    "id": "twilight-valentine",
+    "title": "Twilight Valentine",
+    "artist": "XotiicDuck",
+    "album": "Single",
+    "genre": "Anime J-Rock",
+    "releaseDate": "2026-08-01",
+    "duration": 337,
+    "audio": "music/twilight-valentine.mp3",
+    "cover": "covers/twilight-valentine.png",
+    "status": "published"
   }
 ];
