@@ -1,0 +1,16 @@
+{
+  "name": "XotiicDuck Music",
+  "short_name": "XotiicDuck",
+  "description": "Original anime-inspired music by XotiicDuck.",
+  "start_url": "./",
+  "scope": "./",
+  "display": "standalone",
+  "background_color": "#050705",
+  "theme_color": "#050705",
+  "orientation": "any",
+  "categories": ["music", "entertainment"],
+  "icons": [
+    { "src": "./icon-192.png", "sizes": "192x192", "type": "image/png", "purpose": "any maskable" },
+    { "src": "./icon-512.png", "sizes": "512x512", "type": "image/png", "purpose": "any maskable" }
+  ]
+}

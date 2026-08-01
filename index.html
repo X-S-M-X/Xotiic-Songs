@@ -1,0 +1,155 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
+    <meta name="theme-color" content="#050705" />
+    <meta name="description" content="The official home of XotiicDuck Music." />
+    <title>XotiicDuck Music — Anime Worlds. Original Sound.</title>
+    <link rel="manifest" href="./manifest.webmanifest" />
+    <link rel="icon" href="./favicon.svg" />
+    <link rel="apple-touch-icon" href="./icon-192.png" />
+    <link rel="stylesheet" href="./styles.css" />
+    <script src="./catalog.js?v=2" defer></script>
+    <script src="./app.js?v=2" defer></script>
+  </head>
+  <body>
+    <div id="app" class="app-shell catalog-empty">
+      <audio id="audio" preload="metadata"></audio>
+
+      <aside class="sidebar">
+        <button class="brand" data-view="home" aria-label="XotiicDuck Music home">
+          <span class="brand-mark"><span>XD</span></span>
+          <span class="brand-copy"><strong>XOTIICDUCK</strong><small>MUSIC SYSTEM</small></span>
+        </button>
+        <nav class="primary-nav" aria-label="Primary navigation">
+          <p class="nav-label">BROWSE</p>
+          <button class="active" data-view="home"><span class="nav-symbol">⌂</span><span>Home</span></button>
+          <button data-view="discover"><span class="nav-symbol">◉</span><span>Discover</span></button>
+          <button data-view="library"><span class="nav-symbol">▥</span><span>Your library</span></button>
+        </nav>
+        <div class="sidebar-section">
+          <p class="nav-label">MY COLLECTION</p>
+          <button data-view="library"><span class="mini-tile liked">♥</span><span>Liked songs</span></button>
+        </div>
+        <div class="sidebar-spacer"></div>
+        <div class="install-card">
+          <span class="install-icon">▯</span>
+          <div><strong>Take it with you</strong><p>Install the player on this device.</p></div>
+          <button data-install aria-label="Install app">⇩</button>
+        </div>
+        <a class="channel-link" href="https://www.youtube.com/@XotiicDuck" target="_blank" rel="noreferrer"><span>▶</span><span>@XotiicDuck</span><span>↗</span></a>
+      </aside>
+
+      <main class="main-content">
+        <header class="topbar">
+          <div class="mobile-brand"><span class="brand-mark"><span>XD</span></span><strong>XOTIIC</strong></div>
+          <button class="search-trigger" data-search-open><span>⌕</span><span>Search the official catalog...</span><kbd>/</kbd></button>
+          <div class="top-actions">
+            <a class="round-button" href="https://www.youtube.com/@XotiicDuck" target="_blank" rel="noreferrer" aria-label="Open XotiicDuck on YouTube">▶</a>
+            <button class="profile-button" data-install><span>▯</span><span>Install</span></button>
+          </div>
+        </header>
+
+        <div class="content-wrap">
+          <section class="view-panel" data-panel="home">
+            <section class="hero">
+              <div class="hero-copy">
+                <p class="eyebrow"><span></span> OFFICIAL XOTIICDUCK MUSIC</p>
+                <h1>ANIME WORLDS.<br /><em>ORIGINAL SOUND.</em></h1>
+                <p class="hero-description">High-impact tracks inspired by the stories, rivalries, and final battles that refuse to leave your head.</p>
+                <div class="hero-actions">
+                  <a id="hero-primary" class="primary-button" href="https://www.youtube.com/@XotiicDuck" target="_blank" rel="noreferrer">▶ Open YouTube</a>
+                  <button class="secondary-button" data-install>⇩ Install player</button>
+                </div>
+                <div class="hero-stats">
+                  <div><strong id="live-count">00</strong><span>LIVE TRACKS</span></div>
+                  <div><strong>PWA</strong><span>INSTALLABLE</span></div>
+                  <div><strong>XD</strong><span>DIRECT FROM ARTIST</span></div>
+                </div>
+              </div>
+              <div class="hero-visual">
+                <div class="hero-halo"></div>
+                <div class="hero-brand-art" aria-hidden="true">
+                  <span class="hero-record"><strong>XD</strong><i></i></span>
+                  <span class="hero-wave"><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i></span>
+                </div>
+                <div class="hero-track-tag"><span>OFFICIAL PLAYER</span><strong>XotiicDuck Music</strong><small>Direct from the artist</small></div>
+              </div>
+            </section>
+
+            <section class="section-block">
+              <div class="section-heading"><div><p class="section-kicker">OFFICIAL CATALOG</p><h2 id="catalog-heading">The catalog opens with the first release</h2></div><button id="view-all" data-view="discover" hidden>View all ›</button></div>
+              <div id="home-catalog"></div>
+            </section>
+
+            <section class="signal-banner">
+              <div class="signal-icon">♫</div>
+              <div><p class="section-kicker">BUILT FOR LISTENERS</p><h2>No ads. No algorithms. Just the music.</h2><p>Install the web app, keep your library close, and hear every XotiicDuck release from one focused home.</p></div>
+              <button data-install>Install app ⇩</button>
+            </section>
+          </section>
+
+          <section class="view-panel page-section" data-panel="discover" hidden>
+            <div class="page-title"><p class="section-kicker">THE FULL ARCHIVE</p><h1>Discover</h1><p>Every released world, battle, and anthem in one place.</p></div>
+            <div id="genre-row" class="genre-row"></div>
+            <div id="discover-catalog"></div>
+          </section>
+
+          <section class="view-panel page-section" data-panel="library" hidden>
+            <div class="page-title library-title"><div><p class="section-kicker">SAVED ON THIS DEVICE</p><h1>Your library</h1><p>Favorites stay in this browser until account syncing is introduced.</p></div></div>
+            <div id="library-catalog"></div>
+          </section>
+
+          <footer class="site-footer">
+            <div><strong>XOTIICDUCK MUSIC</strong><span>Independent music. Direct from the artist.</span></div>
+            <nav><button data-info="about">About</button><button data-info="install">Install</button><button data-info="privacy">Privacy</button><button data-info="terms">Terms</button><a href="./admin/" rel="nofollow">Artist access</a></nav>
+            <span>© <span id="year"></span> XotiicDuck</span>
+          </footer>
+        </div>
+      </main>
+
+      <aside id="now-panel" class="now-panel" hidden>
+        <div class="panel-heading"><div><span class="live-dot"></span> NOW PLAYING</div></div>
+        <div id="now-art"></div>
+        <div class="now-copy"><div><h2 id="now-title"></h2><p id="now-artist"></p></div><button id="now-favorite" aria-label="Save current track">♡</button></div>
+        <div class="now-context"><p>◉ RELEASE</p><strong id="now-album"></strong><span id="now-year"></span></div>
+        <div class="queue-heading"><span>UP NEXT</span><span>☷</span></div>
+        <div id="side-queue" class="queue-list"></div>
+      </aside>
+
+      <footer id="player" class="player-bar" hidden>
+        <div class="player-track"><div id="player-art"></div><div><strong id="player-title"></strong><span id="player-artist"></span></div><button id="player-favorite" aria-label="Save current track">♡</button></div>
+        <div class="player-controls">
+          <div class="control-buttons"><button id="shuffle" aria-label="Enable shuffle">⌘</button><button id="previous" aria-label="Previous track">◀</button><button id="play" class="main-play" aria-label="Play">▶</button><button id="next" aria-label="Next track">▶</button><button id="repeat" class="repeat-control" aria-label="Repeat mode: off">↻</button></div>
+          <div class="progress-row"><span id="elapsed">0:00</span><input id="progress" type="range" min="0" max="1" step="0.1" value="0" aria-label="Track progress" /><span id="duration">0:00</span></div>
+        </div>
+        <div class="player-extras"><button id="queue-open" aria-label="Open queue">☷</button><span>◕</span><input id="volume" type="range" min="0" max="1" step="0.01" value="0.72" aria-label="Volume" /></div>
+      </footer>
+
+      <nav class="mobile-nav" aria-label="Mobile navigation">
+        <button class="active" data-view="home"><span>⌂</span><span>Home</span></button>
+        <button data-view="discover"><span>◉</span><span>Discover</span></button>
+        <button data-view="library"><span>▥</span><span>Library</span></button>
+        <button data-search-open><span>⌕</span><span>Search</span></button>
+      </nav>
+
+      <div id="search-layer" class="modal-layer search-layer" role="dialog" aria-modal="true" aria-label="Search music" hidden>
+        <button class="modal-backdrop" data-modal-close aria-label="Close search"></button>
+        <div class="search-modal"><div class="search-input-wrap"><span>⌕</span><input id="search-input" placeholder="Search the XotiicDuck catalog" /><button data-modal-close aria-label="Close">×</button></div><p id="search-label" class="result-label">OFFICIAL RELEASES</p><div id="search-results" class="search-results"></div></div>
+      </div>
+
+      <div id="queue-layer" class="modal-layer" role="dialog" aria-modal="true" aria-label="Playback queue" hidden>
+        <button class="modal-backdrop" data-modal-close aria-label="Close queue"></button>
+        <div class="queue-modal"><div class="queue-modal-heading"><div><p class="section-kicker">PLAYBACK ORDER</p><h2>Queue</h2></div><button data-modal-close aria-label="Close">×</button></div><div id="queue-list" class="queue-modal-list"></div></div>
+      </div>
+
+      <div id="info-layer" class="modal-layer" role="dialog" aria-modal="true" aria-label="Information" hidden>
+        <button class="modal-backdrop" data-modal-close aria-label="Close information"></button>
+        <article class="portable-info-modal"><button class="modal-close" data-modal-close aria-label="Close">×</button><p id="info-eyebrow" class="section-kicker"></p><h2 id="info-title"></h2><div id="info-copy"></div></article>
+      </div>
+
+      <div id="toast" class="toast" hidden><span>✓</span><span id="toast-copy"></span></div>
+    </div>
+  </body>
+</html>
