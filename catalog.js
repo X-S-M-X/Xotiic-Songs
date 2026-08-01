@@ -299,5 +299,17 @@ window.XOTIICDUCK_RELEASES = [
     "audio": "music/primordial-anthem.mp3",
     "cover": "covers/primordial-anthem.png",
     "status": "published"
+  },
+  {
+    "id": "blue-inferno-protocol",
+    "title": "Blue Inferno Protocol",
+    "artist": "XotiicDuck",
+    "album": "Single",
+    "genre": "Anime J-Rock",
+    "releaseDate": "2026-08-02",
+    "duration": 317,
+    "audio": "music/blue-inferno-protocol.mp3",
+    "cover": "covers/blue-inferno-protocol.png",
+    "status": "published"
   }
 ];
