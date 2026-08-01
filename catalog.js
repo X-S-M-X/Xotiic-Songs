@@ -59,5 +59,17 @@ window.XOTIICDUCK_RELEASES = [
     "audio": "music/storm-dragon-unleashed.mp3",
     "cover": "covers/storm-dragon-unleashed.png",
     "status": "published"
+  },
+  {
+    "id": "tempest-garage",
+    "title": "Tempest Garage",
+    "artist": "XotiicDuck",
+    "album": "Single",
+    "genre": "Anime J-Rock",
+    "releaseDate": "2026-08-01",
+    "duration": 345,
+    "audio": "music/tempest-garage.mp3",
+    "cover": "covers/tempest-garage.png",
+    "status": "published"
   }
 ];
