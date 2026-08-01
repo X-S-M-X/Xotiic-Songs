@@ -47,5 +47,17 @@ window.XOTIICDUCK_RELEASES = [
     "audio": "music/ghost-of-the-uchiha.mp3",
     "cover": "covers/ghost-of-the-uchiha.png",
     "status": "published"
+  },
+  {
+    "id": "storm-dragon-unleashed",
+    "title": "Storm Dragon Unleashed",
+    "artist": "XotiicDuck",
+    "album": "Single",
+    "genre": "Anime J-Rock",
+    "releaseDate": "2026-08-01",
+    "duration": 332,
+    "audio": "music/storm-dragon-unleashed.mp3",
+    "cover": "covers/storm-dragon-unleashed.png",
+    "status": "published"
   }
 ];
