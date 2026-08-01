@@ -227,5 +227,17 @@ window.XOTIICDUCK_RELEASES = [
     "audio": "music/gold-collapse.mp3",
     "cover": "covers/gold-collapse.png",
     "status": "published"
+  },
+  {
+    "id": "white-crown-scarlet-lake",
+    "title": "White Crown, Scarlet Lake",
+    "artist": "XotiicDuck",
+    "album": "Single",
+    "genre": "Anime J-Rock",
+    "releaseDate": "2026-08-01",
+    "duration": 310,
+    "audio": "music/white-crown-scarlet-lake.mp3",
+    "cover": "covers/white-crown-scarlet-lake.png",
+    "status": "published"
   }
 ];
