@@ -155,5 +155,17 @@ window.XOTIICDUCK_RELEASES = [
     "audio": "music/platinum-fallen.mp3",
     "cover": "covers/platinum-fallen.png",
     "status": "published"
+  },
+  {
+    "id": "starborn-catastrophe",
+    "title": "Starborn Catastrophe",
+    "artist": "XotiicDuck",
+    "album": "Single",
+    "genre": "Anime J-Rock",
+    "releaseDate": "2026-08-01",
+    "duration": 432,
+    "audio": "music/starborn-catastrophe.mp3",
+    "cover": "covers/starborn-catastrophe.png",
+    "status": "published"
   }
 ];
