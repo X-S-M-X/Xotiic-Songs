@@ -71,5 +71,17 @@ window.XOTIICDUCK_RELEASES = [
     "audio": "music/tempest-garage.mp3",
     "cover": "covers/tempest-garage.png",
     "status": "published"
+  },
+  {
+    "id": "misfit-crown",
+    "title": "Misfit Crown",
+    "artist": "XotiicDuck",
+    "album": "Single",
+    "genre": "Anime J-Rock",
+    "releaseDate": "2026-08-01",
+    "duration": 315,
+    "audio": "music/misfit-crown.mp3",
+    "cover": "covers/misfit-crown.png",
+    "status": "published"
   }
 ];
