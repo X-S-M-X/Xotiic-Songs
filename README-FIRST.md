@@ -33,7 +33,11 @@ Open Xotiic Upload, unlock it, select the MP3 from Files, select the square cove
 
 Both apps adapt from 320-pixel phones through large tablets, including portrait and landscape layouts. Navigation, the music player, upload forms, dialogs, and safe areas for notches/home indicators are handled separately from the desktop layout.
 
-On phones and tablets, tap the compact player above the navigation bar to open **Now Playing**. The expanded view includes the square cover, elapsed and total time, touch seeking, restart/previous, play/pause, next, shuffle, repeat Off/All/One, queue access, favorites, and local playlists. Playlist names and song choices are saved only in that browser; the MP3 files remain in the official catalog.
+On phones and tablets, tap the compact player above the navigation bar to open **Now Playing**. The expanded view includes the square cover, elapsed and total time, touch seeking, restart/previous, play/pause, next, shuffle, repeat Off/All/One, editable queue, favorites, sharing, local playlists, and an explicit **Save offline** control. Playback position, volume, and the current queue resume on the same device.
+
+To listen without internet, open a song while online and choose **Save offline**. The player downloads that song's complete MP3 and cover and shows it under **Library → Offline songs**. Offline seeking works because the service worker serves byte ranges from the saved complete file. Browser storage can still be removed by the operating system, private-browsing mode, or a user clearing site data; the app requests persistent storage where the browser supports it, but no website can promise permanent device storage.
+
+Favorites and playlists can be backed up from **Your library → Back up** and restored from the JSON file. That small backup contains playlist names, track IDs, and favorites—not MP3s, covers, passwords, or GitHub access.
 
 Lyrics are optional. The Lyrics control appears only when a published catalog entry contains lyric text, so releases without lyrics keep a clean player.
 
@@ -42,5 +46,19 @@ Lyrics are optional. The Lyrics control appears only when a published catalog en
 - **iPhone/iPad:** open in Safari, choose **Share → Add to Home Screen**, enable **Open as Web App**, and tap **Add**.
 
 Installation support belongs to the browser. On browsers without installable-web-app support, the complete website still works normally.
+
+Background controls use the browser Media Session API where supported, so installed copies can continue audio when the app is in the background and provide lock-screen controls. Force-closing the browser/PWA or an operating-system battery rule can still stop playback.
+
+## What Update 9 adds
+
+- User-selected offline MP3 and cover downloads, storage usage, removal, and offline seeking.
+- Resume of song, position, volume, queue, and playback context.
+- Editable queue order, **Play next**, remove, clear-upcoming, and playlist song reordering.
+- Shareable song links and optional release description/date/YouTube metadata.
+- Listener Library backup/restore, visible buffering/error states, retry controls, and safer update prompts.
+- Artist-side release editing, optional MP3/cover replacement, phone cover optimization, and encrypted vault backup/restore.
+- Automated tests that run on GitHub Actions for range handling, catalog formatting, vault encryption, manifests, and required controls.
+
+To run the same dependency-free validation locally, open this folder in the VS Code terminal and run `npm test`. GitHub also runs it automatically after a push through `.github/workflows/validate.yml`.
 
 See `ADMIN-SETUP.md` for the complete security and token instructions.

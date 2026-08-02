@@ -190,6 +190,53 @@
       return { ...result, releases: nextReleases };
     }
 
+    async updateRelease({ id, release, audioFile = null, coverFile = null, onStep }) {
+      onStep?.("catalog", 0.06, "Reading the latest release");
+      const { headSha, treeSha } = await this.getHeadContext();
+      const { releases } = await this.getCatalogAt(headSha);
+      const index = releases.findIndex((entry) => entry.id === id);
+      if (index < 0) throw new GitHubError("That release is no longer in the catalog.", { code: "RELEASE_MISSING" });
+      if (release.id !== id) throw new GitHubError("A release ID cannot be changed after publishing.", { code: "RELEASE_ID_CHANGED" });
+      const previous = releases[index];
+      const entries = [];
+
+      if (audioFile) {
+        onStep?.("audio-read", 0.13, "Preparing the replacement MP3");
+        const content = await readFileAsBase64(audioFile, (ratio) => onStep?.("audio-read", 0.13 + ratio * 0.13, "Preparing the replacement MP3"));
+        onStep?.("audio-upload", 0.3, "Uploading the replacement MP3");
+        const sha = await this.createBlob(content, "base64");
+        entries.push({ path: release.audio, mode: "100644", type: "blob", sha });
+        if (previous.audio !== release.audio && /^(music|covers)\/[a-zA-Z0-9._/-]+$/.test(previous.audio || "") && !previous.audio.includes("..")) {
+          entries.push({ path: previous.audio, mode: "100644", type: "blob", sha: null });
+        }
+      }
+
+      if (coverFile) {
+        onStep?.("cover-read", 0.47, "Preparing the replacement cover");
+        const content = await readFileAsBase64(coverFile, (ratio) => onStep?.("cover-read", 0.47 + ratio * 0.08, "Preparing the replacement cover"));
+        onStep?.("cover-upload", 0.58, "Uploading the replacement cover");
+        const sha = await this.createBlob(content, "base64");
+        entries.push({ path: release.cover, mode: "100644", type: "blob", sha });
+        if (previous.cover !== release.cover && /^(music|covers)\/[a-zA-Z0-9._/-]+$/.test(previous.cover || "") && !previous.cover.includes("..")) {
+          entries.push({ path: previous.cover, mode: "100644", type: "blob", sha: null });
+        }
+      }
+
+      const nextReleases = releases.map((entry, entryIndex) => entryIndex === index ? release : entry);
+      onStep?.("catalog-upload", 0.73, "Updating release details");
+      const catalogSha = await this.createBlob(formatCatalog(nextReleases), "utf-8");
+      entries.push({ path: "catalog.js", mode: "100644", type: "blob", sha: catalogSha });
+      onStep?.("commit", 0.88, "Saving one atomic release update");
+      const result = await this.finalizeCommit({
+        headSha,
+        treeSha,
+        message: `Update ${release.title}`,
+        entries,
+      });
+      onStep?.("done", 1, "Release updated");
+      return { ...result, releases: nextReleases };
+    }
+
     async setReleaseStatus(id, status) {
       const { headSha, treeSha } = await this.getHeadContext();
       const { releases } = await this.getCatalogAt(headSha);
@@ -231,4 +278,5 @@
 
   const api = { GitHubPublisher, GitHubError, parseCatalog, formatCatalog, readFileAsBase64 };
   globalThis.XotiicGitHub = api;
+  if (typeof module !== "undefined" && module.exports) module.exports = api;
 })();

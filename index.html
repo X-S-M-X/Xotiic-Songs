@@ -3,6 +3,8 @@
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover, interactive-widget=resizes-content" />
+    <meta http-equiv="Content-Security-Policy" content="default-src 'self'; base-uri 'self'; object-src 'none'; script-src 'self'; style-src 'self' 'unsafe-inline'; img-src 'self' blob: data:; media-src 'self' blob:; connect-src 'self'; manifest-src 'self'; worker-src 'self'; form-action 'self'; upgrade-insecure-requests" />
+    <meta name="referrer" content="strict-origin-when-cross-origin" />
     <meta name="theme-color" content="#050705" />
     <meta name="description" content="The official home of XotiicDuck Music." />
     <meta name="application-name" content="XotiicDuck Music" />
@@ -11,12 +13,13 @@
     <meta name="apple-mobile-web-app-title" content="XotiicDuck" />
     <meta name="format-detection" content="telephone=no" />
     <title>XotiicDuck Music — Anime Worlds. Original Sound.</title>
-    <link rel="manifest" href="./manifest.webmanifest?v=8" />
-    <link rel="icon" href="./favicon.svg?v=8" />
-    <link rel="apple-touch-icon" href="./apple-touch-icon.png?v=8" />
-    <link rel="stylesheet" href="./styles.css?v=8" />
-    <script src="./catalog.js?v=8" defer></script>
-    <script src="./app.js?v=8" defer></script>
+    <link rel="manifest" href="./manifest.webmanifest?v=9" />
+    <link rel="icon" href="./favicon.svg?v=9" />
+    <link rel="apple-touch-icon" href="./apple-touch-icon.png?v=9" />
+    <link rel="stylesheet" href="./styles.css?v=9" />
+    <script src="./catalog.js?v=9" defer></script>
+    <script src="./offline.js?v=9" defer></script>
+    <script src="./app.js?v=9" defer></script>
   </head>
   <body>
     <svg class="icon-sprite" aria-hidden="true" focusable="false">
@@ -44,9 +47,15 @@
       <symbol id="icon-check" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><path d="m5 12 4 4L19 6"></path></symbol>
       <symbol id="icon-clock" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="9"></circle><path d="M12 7v5l3 2"></path></symbol>
       <symbol id="icon-chevron-right" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="m9 5 7 7-7 7"></path></symbol>
+      <symbol id="icon-share" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="18" cy="5" r="3"></circle><circle cx="6" cy="12" r="3"></circle><circle cx="18" cy="19" r="3"></circle><path d="m8.7 10.7 6.6-4.1M8.7 13.3l6.6 4.1"></path></symbol>
+      <symbol id="icon-refresh" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M20 7v5h-5"></path><path d="M18.5 16a8 8 0 1 1 .9-7"></path></symbol>
+      <symbol id="icon-upload" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 21V9"></path><path d="m7 14 5-5 5 5"></path><path d="M4 4h16"></path></symbol>
+      <symbol id="icon-arrow-up" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="m7 14 5-5 5 5"></path></symbol>
+      <symbol id="icon-arrow-down" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="m7 10 5 5 5-5"></path></symbol>
+      <symbol id="icon-play-next" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M4 6h10M4 12h7M4 18h6"></path><path d="m15 13 5 3-5 3v-6Z"></path></symbol>
     </svg>
     <div id="app" class="app-shell catalog-empty">
-      <audio id="audio" preload="metadata"></audio>
+      <audio id="audio" preload="metadata" crossorigin="anonymous"></audio>
 
       <aside class="sidebar">
         <button class="brand" data-view="home" aria-label="XotiicDuck Music home">
@@ -127,9 +136,10 @@
           </section>
 
           <section class="view-panel page-section" data-panel="library" hidden>
-            <div class="page-title library-title"><div><p class="section-kicker">SAVED ON THIS DEVICE</p><h1>Your library</h1><p>Favorites and playlists stay on this device. Your music files remain in the official catalog.</p></div><button class="library-create" data-playlist-create><span class="icon-frame"><svg class="ui-icon" aria-hidden="true"><use href="#icon-plus"></use></svg></span>Create playlist</button></div>
+            <div class="page-title library-title"><div><p class="section-kicker">SAVED ON THIS DEVICE</p><h1>Your library</h1><p>Favorites, playlists, and offline songs stay on this device.</p></div><div class="library-title-actions"><button class="library-create" data-playlist-create><span class="icon-frame"><svg class="ui-icon" aria-hidden="true"><use href="#icon-plus"></use></svg></span>Create playlist</button><button id="library-export" type="button"><span class="icon-frame"><svg class="ui-icon" aria-hidden="true"><use href="#icon-download"></use></svg></span>Back up</button><button id="library-import" type="button"><span class="icon-frame"><svg class="ui-icon" aria-hidden="true"><use href="#icon-upload"></use></svg></span>Restore</button><input id="library-import-file" type="file" accept="application/json,.json" hidden /></div></div>
             <section class="library-section"><div class="library-section-heading"><p class="section-kicker">YOUR PLAYLISTS</p><h2>Playlists</h2></div><div id="playlist-library"></div></section>
             <section class="library-section liked-library-section"><div class="library-section-heading"><p class="section-kicker">QUICK COLLECTION</p><h2>Liked songs</h2></div><div id="library-catalog"></div></section>
+            <section class="library-section offline-library-section"><div class="library-section-heading offline-heading"><div><p class="section-kicker">AVAILABLE WITHOUT INTERNET</p><h2>Offline songs</h2></div><span id="offline-storage-copy">Checking storage…</span></div><div id="offline-catalog"></div></section>
           </section>
 
           <footer class="site-footer">
@@ -151,6 +161,7 @@
 
       <footer id="player" class="player-bar" hidden>
         <span class="mini-player-progress-track" aria-hidden="true"><span id="mini-progress"></span></span>
+        <div id="player-status" class="player-status" role="status" aria-live="polite" hidden><span class="status-spinner" aria-hidden="true"></span><span id="player-status-copy"></span></div>
         <div class="player-track"><button id="player-open" class="player-open" aria-label="Open Now Playing"><span id="player-art"></span><span class="player-copy"><strong id="player-title"></strong><span id="player-artist"></span></span></button><button id="player-favorite" class="icon-only-button" aria-label="Save current track"><svg class="ui-icon" aria-hidden="true"><use href="#icon-heart"></use></svg></button></div>
         <div class="player-controls">
           <div class="control-buttons"><button id="shuffle" class="icon-only-button" aria-label="Turn shuffle on" aria-pressed="false"><svg class="ui-icon" aria-hidden="true"><use href="#icon-shuffle"></use></svg></button><button id="previous" class="icon-only-button" aria-label="Previous track or restart"><svg class="ui-icon" aria-hidden="true"><use href="#icon-previous"></use></svg></button><button id="play" class="main-play icon-only-button" aria-label="Play"><svg class="ui-icon" aria-hidden="true"><use href="#icon-play"></use></svg></button><button id="next" class="icon-only-button" aria-label="Next track"><svg class="ui-icon" aria-hidden="true"><use href="#icon-next"></use></svg></button><button id="repeat" class="repeat-control icon-only-button" aria-label="Repeat mode: off" aria-pressed="false"><svg class="ui-icon" aria-hidden="true"><use href="#icon-repeat"></use></svg></button></div>
@@ -177,6 +188,7 @@
             <div id="now-playing-art" class="now-playing-art"></div>
             <div class="now-playing-details">
               <div class="now-playing-title-row"><div><h2 id="now-playing-title"></h2><p id="now-playing-artist"></p><small id="now-playing-album"></small></div><button id="now-playing-favorite" class="icon-only-button" type="button" aria-label="Save current track"><svg class="ui-icon" aria-hidden="true"><use href="#icon-heart"></use></svg></button></div>
+              <div id="playback-status" class="playback-status" role="status" aria-live="polite" hidden><span class="status-spinner" aria-hidden="true"></span><span id="playback-status-copy"></span><button id="retry-track" type="button" hidden><svg class="ui-icon" aria-hidden="true"><use href="#icon-refresh"></use></svg><span>Retry</span></button></div>
               <div class="now-playing-progress"><input id="now-playing-progress" type="range" min="0" max="1" step="0.1" value="0" aria-label="Track progress" /><div><span id="now-playing-elapsed">0:00</span><span id="now-playing-duration">0:00</span></div></div>
               <div class="now-playing-controls">
                 <button id="now-playing-shuffle" class="mode-control" type="button" aria-label="Turn shuffle on" aria-pressed="false"><span class="mode-icon"><svg class="ui-icon" aria-hidden="true"><use href="#icon-shuffle"></use></svg></span><small id="now-playing-shuffle-state">Off</small></button>
@@ -188,8 +200,11 @@
               <div class="now-playing-actions">
                 <button id="now-playing-add-playlist" type="button"><span class="icon-frame"><svg class="ui-icon" aria-hidden="true"><use href="#icon-plus"></use></svg></span><small>Add to playlist</small></button>
                 <button id="now-playing-queue" type="button"><span class="icon-frame"><svg class="ui-icon" aria-hidden="true"><use href="#icon-queue"></use></svg></span><small>Queue</small></button>
+                <button id="now-playing-offline" type="button"><span class="icon-frame"><svg class="ui-icon" aria-hidden="true"><use href="#icon-download"></use></svg></span><small id="now-playing-offline-label">Save offline</small></button>
+                <button id="now-playing-share" type="button"><span class="icon-frame"><svg class="ui-icon" aria-hidden="true"><use href="#icon-share"></use></svg></span><small>Share</small></button>
                 <button id="now-playing-lyrics-toggle" type="button" aria-expanded="false" hidden><span class="icon-frame"><svg class="ui-icon" aria-hidden="true"><use href="#icon-lyrics"></use></svg></span><small>Lyrics</small></button>
               </div>
+              <section id="track-about" class="track-about" hidden><div><p class="section-kicker">ABOUT THIS RELEASE</p><span id="track-release-date"></span></div><p id="track-description"></p><a id="track-youtube" href="#" target="_blank" rel="noreferrer" hidden><svg class="ui-icon" aria-hidden="true"><use href="#icon-play"></use></svg><span>Watch on YouTube</span></a></section>
               <section id="lyrics-panel" class="lyrics-panel" hidden><div><p class="section-kicker">LYRICS</p><span>Available for this release</span></div><div id="lyrics-copy" class="lyrics-copy"></div></section>
             </div>
           </div>
@@ -198,12 +213,12 @@
 
       <div id="search-layer" class="modal-layer search-layer" role="dialog" aria-modal="true" aria-label="Search music" hidden>
         <button class="modal-backdrop" data-modal-close aria-label="Close search"></button>
-        <div class="search-modal"><div class="search-input-wrap"><span class="icon-frame"><svg class="ui-icon" aria-hidden="true"><use href="#icon-search"></use></svg></span><input id="search-input" placeholder="Search the XotiicDuck catalog" /><button class="icon-only-button" data-modal-close aria-label="Close"><svg class="ui-icon" aria-hidden="true"><use href="#icon-close"></use></svg></button></div><p id="search-label" class="result-label">OFFICIAL RELEASES</p><div id="search-results" class="search-results"></div></div>
+        <div class="search-modal"><div class="search-input-wrap"><span class="icon-frame"><svg class="ui-icon" aria-hidden="true"><use href="#icon-search"></use></svg></span><label class="sr-only" for="search-input">Search the XotiicDuck catalog</label><input id="search-input" type="search" autocomplete="off" placeholder="Search the XotiicDuck catalog" /><button class="icon-only-button" data-modal-close aria-label="Close"><svg class="ui-icon" aria-hidden="true"><use href="#icon-close"></use></svg></button></div><p id="search-label" class="result-label">OFFICIAL RELEASES</p><div id="search-results" class="search-results"></div></div>
       </div>
 
       <div id="queue-layer" class="modal-layer" role="dialog" aria-modal="true" aria-label="Playback queue" hidden>
         <button class="modal-backdrop" data-modal-close aria-label="Close queue"></button>
-        <div class="queue-modal"><div class="queue-modal-heading"><div><p class="section-kicker">PLAYBACK ORDER · <span id="queue-context">All tracks</span></p><h2>Queue</h2></div><button class="icon-only-button" data-modal-close aria-label="Close"><svg class="ui-icon" aria-hidden="true"><use href="#icon-close"></use></svg></button></div><div id="queue-list" class="queue-modal-list"></div></div>
+        <div class="queue-modal"><div class="queue-modal-heading"><div><p class="section-kicker">PLAYBACK ORDER · <span id="queue-context">All tracks</span></p><h2>Queue</h2></div><div class="queue-heading-actions"><button id="queue-clear" type="button">Clear upcoming</button><button class="icon-only-button" data-modal-close aria-label="Close"><svg class="ui-icon" aria-hidden="true"><use href="#icon-close"></use></svg></button></div></div><div id="queue-list" class="queue-modal-list"></div></div>
       </div>
 
       <div id="playlist-layer" class="modal-layer" role="dialog" aria-modal="true" aria-label="Playlist" hidden>
@@ -238,6 +253,8 @@
         <article class="portable-info-modal"><button class="modal-close icon-only-button" data-modal-close aria-label="Close"><svg class="ui-icon" aria-hidden="true"><use href="#icon-close"></use></svg></button><p id="info-eyebrow" class="section-kicker"></p><h2 id="info-title"></h2><div id="info-copy"></div></article>
       </div>
 
+      <div id="network-banner" class="network-banner" role="status" aria-live="polite" hidden><span class="status-dot"></span><span>You are offline. Saved songs remain playable.</span></div>
+      <div id="update-banner" class="update-banner" role="status" aria-live="polite" hidden><span><strong>Player update ready</strong><small>Refresh when you are ready.</small></span><button id="apply-update" type="button">Refresh</button><button id="dismiss-update" class="icon-only-button" type="button" aria-label="Dismiss update"><svg class="ui-icon" aria-hidden="true"><use href="#icon-close"></use></svg></button></div>
       <div id="toast" class="toast" role="status" aria-live="polite" aria-atomic="true" hidden><span class="toast-icon" aria-hidden="true"><svg class="ui-icon"><use href="#icon-check"></use></svg></span><span id="toast-copy" class="toast-copy"></span></div>
     </div>
   </body>

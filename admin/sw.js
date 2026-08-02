@@ -1,34 +1,37 @@
-const CACHE_NAME = "xotiic-upload-v8";
+const CACHE_NAME = "xotiic-upload-v9";
 const scoped = (file) => new URL(file, self.registration.scope).href;
 const SHELL = [
   "./",
   "./index.html",
-  "./styles.css?v=8",
-  "./config.js?v=8",
-  "./crypto.js?v=8",
-  "./github.js?v=8",
-  "./app.js?v=8",
-  "./manifest.webmanifest?v=8",
-  "../favicon.svg?v=8",
-  "../apple-touch-icon.png?v=8",
-  "../icon-192.png?v=8",
-  "../icon-512.png?v=8",
-  "../icon-maskable-192.png?v=8",
-  "../icon-maskable-512.png?v=8"
+  "./styles.css?v=9",
+  "./config.js?v=9",
+  "./crypto.js?v=9",
+  "./github.js?v=9",
+  "./app.js?v=9",
+  "./manifest.webmanifest?v=9",
+  "../favicon.svg?v=9",
+  "../apple-touch-icon.png?v=9",
+  "../icon-192.png?v=9",
+  "../icon-512.png?v=9",
+  "../icon-maskable-192.png?v=9",
+  "../icon-maskable-512.png?v=9"
 ].map(scoped);
 
 self.addEventListener("install", (event) => {
   event.waitUntil(caches.open(CACHE_NAME).then((cache) => cache.addAll(SHELL)));
-  self.skipWaiting();
 });
 
 self.addEventListener("activate", (event) => {
-  event.waitUntil(
+  event.waitUntil(Promise.all([
     caches.keys().then((keys) => Promise.all(
       keys.filter((key) => key.startsWith("xotiic-upload-") && key !== CACHE_NAME).map((key) => caches.delete(key))
-    ))
-  );
-  self.clients.claim();
+    )),
+    self.clients.claim(),
+  ]));
+});
+
+self.addEventListener("message", (event) => {
+  if (event.data?.type === "SKIP_WAITING") self.skipWaiting();
 });
 
 self.addEventListener("fetch", (event) => {

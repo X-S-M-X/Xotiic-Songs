@@ -18,11 +18,13 @@
 4. Paste the fine-grained token.
 5. Complete setup and install the admin PWA from Chrome's menu.
 
-The token is encrypted locally with PBKDF2-SHA256 and AES-256-GCM. The token is decrypted only into memory after a successful login. The console locks after 30 minutes without activity.
+The token is encrypted locally with PBKDF2-SHA256 and AES-256-GCM. The token is decrypted only into memory after a successful login. The console locks after 30 minutes without activity. The `/admin/` page itself is public because GitHub Pages is public, but publishing still requires the encrypted local vault, its username/password, a valid GitHub token belonging to the required owner, and repository write permission.
 
 ## Add another phone or computer
 
-Open the admin address on that device and repeat first-time setup using a valid fine-grained token. Device vaults are separate. They may use the same console username and password if desired.
+Open the admin address on that device and repeat first-time setup using a valid fine-grained token. Alternatively, download the already-encrypted file from **Security → Back up this device vault**, restore it on the new device, then enter its existing username and password. Device vaults remain separate after restoration.
+
+Treat the encrypted backup as sensitive. It does not expose the token by itself, but someone who obtains both the backup and its password could unlock the token. Do not commit a vault backup to GitHub.
 
 ## Lost password or removed phone
 
@@ -34,4 +36,5 @@ Open the admin address on that device and repeat first-time setup using a valid 
 
 - MP3: 40 MB maximum in the phone uploader.
 - Cover: 10 MB maximum, JPG/PNG/WebP, within 3% of a square aspect ratio.
+- Covers over 1600 pixels or 2 MB are reduced to at most 1400 × 1400 and encoded as high-quality WebP before upload.
 - GitHub repository blobs have an absolute 100 MB limit, but the lower console limit is safer for mobile memory and uploads.

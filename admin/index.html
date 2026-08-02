@@ -3,6 +3,8 @@
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover, interactive-widget=resizes-content" />
+    <meta http-equiv="Content-Security-Policy" content="default-src 'self'; base-uri 'self'; object-src 'none'; script-src 'self'; style-src 'self' 'unsafe-inline'; img-src 'self' blob: data:; media-src 'self' blob:; connect-src 'self' https://api.github.com; manifest-src 'self'; worker-src 'self'; form-action 'self'; upgrade-insecure-requests" />
+    <meta name="referrer" content="strict-origin-when-cross-origin" />
     <meta name="theme-color" content="#070a08" />
     <meta name="description" content="Private release publishing for XotiicDuck Music." />
     <meta name="application-name" content="Xotiic Upload" />
@@ -12,14 +14,14 @@
     <meta name="format-detection" content="telephone=no" />
     <meta name="robots" content="noindex, nofollow, noarchive" />
     <title>Xotiic Upload — Artist Console</title>
-    <link rel="manifest" href="./manifest.webmanifest?v=8" />
-    <link rel="icon" href="../favicon.svg?v=8" />
-    <link rel="apple-touch-icon" href="../apple-touch-icon.png?v=8" />
-    <link rel="stylesheet" href="./styles.css?v=8" />
-    <script src="./config.js?v=8" defer></script>
-    <script src="./crypto.js?v=8" defer></script>
-    <script src="./github.js?v=8" defer></script>
-    <script src="./app.js?v=8" defer></script>
+    <link rel="manifest" href="./manifest.webmanifest?v=9" />
+    <link rel="icon" href="../favicon.svg?v=9" />
+    <link rel="apple-touch-icon" href="../apple-touch-icon.png?v=9" />
+    <link rel="stylesheet" href="./styles.css?v=9" />
+    <script src="./config.js?v=9" defer></script>
+    <script src="./crypto.js?v=9" defer></script>
+    <script src="./github.js?v=9" defer></script>
+    <script src="./app.js?v=9" defer></script>
   </head>
   <body>
     <svg class="icon-sprite" aria-hidden="true" focusable="false">
@@ -36,6 +38,7 @@
       <symbol id="admin-icon-shield" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 3 5 6v5c0 4.5 2.8 8 7 10 4.2-2 7-5.5 7-10V6l-7-3Z"></path><path d="m9 12 2 2 4-4"></path></symbol>
       <symbol id="admin-icon-lock" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="5" y="10" width="14" height="11" rx="2"></rect><path d="M8 10V7a4 4 0 0 1 8 0v3"></path></symbol>
       <symbol id="admin-icon-plus" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M12 5v14M5 12h14"></path></symbol>
+      <symbol id="admin-icon-edit" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M4 20h4l11-11-4-4L4 16v4Z"></path><path d="m13.5 6.5 4 4"></path></symbol>
     </svg>
     <div class="ambient ambient-one"></div>
     <div class="ambient ambient-two"></div>
@@ -170,6 +173,7 @@
                       <label class="field"><span>Release date</span><input id="release-date" type="date" required /></label>
                       <label class="field"><span>Duration</span><input id="release-duration" inputmode="numeric" readonly placeholder="Detected from MP3" /></label>
                       <label class="field"><span>Release ID</span><input id="release-id" required pattern="[a-z0-9]+(?:-[a-z0-9]+)*" maxlength="80" placeholder="generated-from-title" /><small>Lowercase letters, numbers and hyphens.</small></label>
+                      <label class="field field-wide"><span>YouTube link <small>optional</small></span><input id="release-youtube" type="url" maxlength="500" inputmode="url" placeholder="https://www.youtube.com/watch?v=..." /><small>Only youtube.com and youtu.be links are accepted.</small></label>
                       <label class="field field-wide"><span>Short description <small>optional</small></span><textarea id="release-description" maxlength="280" rows="4" placeholder="A short line about the track or matchup."></textarea><small><span id="description-count">0</span>/280</small></label>
                       <label class="field field-wide"><span>Lyrics <small>optional · can be added later</small></span><textarea id="release-lyrics" maxlength="30000" rows="8" placeholder="Paste the final lyrics here whenever you want them available in Now Playing."></textarea><small><span id="lyrics-count">0</span>/30,000 · Leave empty to hide the Lyrics button.</small></label>
                     </div>
@@ -197,6 +201,11 @@
                     <label class="field"><span>New fine-grained token</span><span class="password-field"><input id="replace-token" type="password" autocomplete="off" required spellcheck="false" /><button class="icon-only-button" type="button" data-password-toggle="replace-token" aria-label="Show token"><svg class="ui-icon" aria-hidden="true"><use href="#admin-icon-eye"></use></svg></button></span></label>
                     <button class="secondary-action" type="submit">Verify and replace token</button>
                   </form>
+                </article>
+                <article class="panel-card vault-backup-card">
+                  <div class="panel-heading"><div><p class="section-label">RECOVERY COPY</p><h2>Back up this device vault</h2></div></div>
+                  <p class="card-copy">Download the already-encrypted vault so you can restore owner access in another browser. The backup still requires your console username and password.</p>
+                  <div class="vault-backup-actions"><button id="export-vault" class="secondary-action" type="button">Download encrypted backup</button><button id="import-vault" type="button">Restore encrypted backup</button><input id="import-vault-file" type="file" accept="application/json,.json" hidden /></div>
                 </article>
                 <article class="panel-card danger-card"><p class="section-label">DEVICE RESET</p><h2>Remove owner access here</h2><p>This deletes the encrypted vault only from this browser. Published songs and the GitHub repository remain unchanged.</p><button id="reset-vault-button" type="button">Reset this device</button></article>
               </div>
@@ -231,6 +240,27 @@
       </article>
     </div>
 
+    <div id="edit-release-modal" class="modal-layer" hidden>
+      <button class="modal-backdrop" type="button" data-edit-close aria-label="Close release editor"></button>
+      <form id="edit-release-form" class="edit-release-modal" role="dialog" aria-modal="true" aria-labelledby="edit-release-title">
+        <button class="modal-close icon-only-button" type="button" data-edit-close aria-label="Close"><svg class="ui-icon" aria-hidden="true"><use href="#admin-icon-close"></use></svg></button>
+        <p class="section-label">EDIT EXISTING RELEASE</p><h2 id="edit-release-title">Update release</h2><p id="edit-release-id" class="edit-release-id"></p>
+        <div class="edit-field-grid">
+          <label class="field field-wide"><span>Song title</span><input id="edit-title" required maxlength="100" /></label>
+          <label class="field"><span>Artist</span><input id="edit-artist" required maxlength="80" /></label>
+          <label class="field"><span>Release type</span><select id="edit-album"><option>Single</option><option>EP</option><option>Album</option><option>Soundtrack</option></select></label>
+          <label class="field"><span>Genre</span><input id="edit-genre" required maxlength="60" /></label>
+          <label class="field"><span>Release date</span><input id="edit-date" type="date" required /></label>
+          <label class="field field-wide"><span>YouTube link <small>optional</small></span><input id="edit-youtube" type="url" maxlength="500" inputmode="url" /></label>
+          <label class="field field-wide"><span>Short description <small>optional</small></span><textarea id="edit-description" maxlength="280" rows="3"></textarea></label>
+          <label class="field field-wide"><span>Lyrics <small>optional</small></span><textarea id="edit-lyrics" maxlength="30000" rows="7"></textarea></label>
+          <label class="field"><span>Replacement MP3 <small>optional</small></span><input id="edit-audio-file" type="file" accept=".mp3,audio/mpeg" /><small id="edit-audio-copy">Keep current MP3</small></label>
+          <label class="field"><span>Replacement square cover <small>optional</small></span><input id="edit-cover-file" type="file" accept="image/jpeg,image/png,image/webp" /><small id="edit-cover-copy">Keep current cover</small></label>
+        </div>
+        <div class="modal-actions"><button class="ghost-action" type="button" data-edit-close>Cancel</button><button id="save-release-edit" class="primary-action" type="submit"><span>Save release update</span><span class="icon-frame"><svg class="ui-icon" aria-hidden="true"><use href="#admin-icon-upload"></use></svg></span></button></div>
+      </form>
+    </div>
+
     <div id="install-help-layer" class="modal-layer" hidden>
       <button class="modal-backdrop" type="button" data-install-close aria-label="Close install guide"></button>
       <article class="install-help-modal" role="dialog" aria-modal="true" aria-labelledby="install-help-title">
@@ -241,6 +271,7 @@
       </article>
     </div>
 
+    <div id="admin-update-banner" class="admin-update-banner" role="status" aria-live="polite" hidden><span><strong>Console update ready</strong><small>Refresh before your next publish.</small></span><button id="admin-apply-update" type="button">Refresh</button><button id="admin-dismiss-update" class="icon-only-button" type="button" aria-label="Dismiss update"><svg class="ui-icon" aria-hidden="true"><use href="#admin-icon-close"></use></svg></button></div>
     <div id="toast" class="toast" role="status" aria-live="polite" aria-atomic="true" hidden><span id="toast-icon"><svg class="ui-icon" aria-hidden="true"><use href="#admin-icon-check"></use></svg></span><span id="toast-copy"></span></div>
   </body>
 </html>

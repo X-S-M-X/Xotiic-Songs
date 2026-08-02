@@ -12,6 +12,17 @@
     return `./${cleaned.split("/").map(encodeURIComponent).join("/")}`;
   };
 
+  const safeYouTubeUrl = (value) => {
+    if (typeof value !== "string" || !value.trim()) return "";
+    try {
+      const url = new URL(value.trim());
+      const host = url.hostname.toLowerCase().replace(/^www\./, "");
+      return url.protocol === "https:" && (host === "youtube.com" || host.endsWith(".youtube.com") || host === "youtu.be") ? url.href : "";
+    } catch {
+      return "";
+    }
+  };
+
   const text = (value) => String(value ?? "");
   const escapeHtml = (value) => text(value)
     .replaceAll("&", "&amp;")
@@ -43,12 +54,14 @@
       artist: text(entry.artist),
       album: text(entry.album || entry.release || "Single"),
       genre: text(entry.genre || "Music"),
+      releaseDate: /^\d{4}-\d{2}-\d{2}$/.test(text(entry.releaseDate)) ? text(entry.releaseDate) : "",
       year: /^\d{4}/.test(text(entry.releaseDate)) ? text(entry.releaseDate).slice(0, 4) : "",
       duration: Number(entry.duration),
       audio: safePath(entry.audio),
       cover: safePath(entry.cover),
       description: text(entry.description).trim(),
       lyrics: typeof entry.lyrics === "string" ? entry.lyrics.trim().slice(0, 30000) : "",
+      youtubeUrl: safeYouTubeUrl(entry.youtubeUrl || entry.youtube),
     }));
 
   const byId = (id) => tracks.find((track) => track.id === id);
@@ -56,14 +69,28 @@
   const $$ = (selector) => [...document.querySelectorAll(selector)];
   const audio = $("#audio");
   const app = $("#app");
-  let currentTrack = tracks[0] || null;
-  let currentView = "home";
+  const FAVORITES_KEY = "xotiicduck-favorites";
+  const PLAYLISTS_KEY = "xotiicduck-playlists-v1";
+  const PLAYBACK_KEY = "xotiicduck-playback-v1";
+  const SESSION_KEY = "xotiicduck-session-v1";
+  const BACKUP_VERSION = 1;
+  const offlineApi = globalThis.XotiicOffline;
+  const params = new URLSearchParams(location.search);
+  let restoredSession = {};
+  try { restoredSession = JSON.parse(localStorage.getItem(SESSION_KEY) || "{}"); } catch { restoredSession = {}; }
+  const sharedTrack = byId(params.get("track"));
+  const restoredTrack = byId(restoredSession.trackId);
+  let currentTrack = sharedTrack || restoredTrack || tracks[0] || null;
+  let currentView = ["home", "discover", "library"].includes(params.get("view")) ? params.get("view") : "home";
   let selectedGenre = "All tracks";
   let shuffleEnabled = false;
   let repeatMode = "off";
-  let activeQueueIds = tracks.map((track) => track.id);
-  let playbackContextLabel = "All tracks";
-  let activeQueuePlaylistId = null;
+  let activeQueueIds = Array.isArray(restoredSession.queueIds)
+    ? [...new Set(restoredSession.queueIds.filter((id) => byId(id)))]
+    : tracks.map((track) => track.id);
+  if (currentTrack && !activeQueueIds.includes(currentTrack.id)) activeQueueIds.unshift(currentTrack.id);
+  let playbackContextLabel = typeof restoredSession.context === "string" && restoredSession.context.trim() ? restoredSession.context.slice(0, 80) : "All tracks";
+  let activeQueuePlaylistId = typeof restoredSession.playlistId === "string" ? restoredSession.playlistId : null;
   let shuffleBag = [];
   let shuffleHistory = [];
   let playlists = [];
@@ -75,10 +102,14 @@
   let installAccepted = false;
   let toastTimer = null;
   let favorites = new Set();
-
-  const FAVORITES_KEY = "xotiicduck-favorites";
-  const PLAYLISTS_KEY = "xotiicduck-playlists-v1";
-  const PLAYBACK_KEY = "xotiicduck-playback-v1";
+  let offlineIds = new Set(offlineApi?.readIndex?.() || []);
+  let pendingRestorePosition = Number(restoredSession.position) > 0 ? Number(restoredSession.position) : 0;
+  let lastSessionWrite = 0;
+  let activeModal = null;
+  let modalReturnFocus = null;
+  let serviceWorkerRegistration = null;
+  let reloadingForUpdate = false;
+  const downloadingIds = new Set();
 
   try {
     favorites = new Set(JSON.parse(localStorage.getItem(FAVORITES_KEY) || "[]"));
@@ -122,6 +153,25 @@
     try { localStorage.setItem(PLAYBACK_KEY, JSON.stringify({ shuffle: shuffleEnabled, repeat: repeatMode })); } catch { /* Listening still works when storage is unavailable. */ }
   };
 
+  const saveSession = (force = false) => {
+    const now = Date.now();
+    if (!force && now - lastSessionWrite < 4000) return;
+    lastSessionWrite = now;
+    try {
+      localStorage.setItem(SESSION_KEY, JSON.stringify({
+        trackId: currentTrack?.id || null,
+        position: Number.isFinite(audio.currentTime) ? Math.round(audio.currentTime * 10) / 10 : 0,
+        volume: Number.isFinite(audio.volume) ? audio.volume : 0.72,
+        queueIds: activeQueueIds.filter((id) => byId(id)),
+        context: playbackContextLabel,
+        playlistId: activeQueuePlaylistId,
+        updatedAt: now,
+      }));
+    } catch {
+      // Playback remains available when private browser storage is blocked.
+    }
+  };
+
   const formatTime = (seconds) => {
     if (!Number.isFinite(seconds) || seconds < 0) return "0:00";
     const minutes = Math.floor(seconds / 60);
@@ -129,9 +179,26 @@
     return `${minutes}:${remainder}`;
   };
 
+  const formatDate = (value) => {
+    if (!value) return "";
+    const date = new Date(`${value}T00:00:00`);
+    if (Number.isNaN(date.getTime())) return "";
+    return new Intl.DateTimeFormat(undefined, { year: "numeric", month: "long", day: "numeric" }).format(date);
+  };
+
+  const formatBytes = (bytes) => {
+    const amount = Number(bytes) || 0;
+    if (amount < 1024) return `${amount} B`;
+    const units = ["KB", "MB", "GB", "TB"];
+    let value = amount / 1024;
+    let index = 0;
+    while (value >= 1024 && index < units.length - 1) { value /= 1024; index += 1; }
+    return `${value >= 10 ? value.toFixed(0) : value.toFixed(1)} ${units[index]}`;
+  };
+
   const artwork = (track, compact = false) => `
     <div class="artwork uploaded-artwork${compact ? " artwork-compact" : ""}">
-      <img src="${escapeHtml(track.cover)}" alt="${escapeHtml(track.title)} cover" />
+      <img src="${escapeHtml(track.cover)}" alt="${escapeHtml(track.title)} cover" loading="lazy" decoding="async" />
     </div>`;
 
   const emptyCatalog = () => `
@@ -154,7 +221,7 @@
   const playlistArtwork = (playlist) => {
     const entries = playlistTracks(playlist).slice(0, 4);
     if (!entries.length) return `<span class="playlist-cover-empty" aria-hidden="true">${iconMarkup("music")}</span>`;
-    return `<span class="playlist-cover-grid count-${entries.length}">${entries.map((track) => `<img src="${escapeHtml(track.cover)}" alt="" />`).join("")}</span>`;
+    return `<span class="playlist-cover-grid count-${entries.length}">${entries.map((track) => `<img src="${escapeHtml(track.cover)}" alt="" loading="lazy" decoding="async" />`).join("")}</span>`;
   };
 
   const playlistCard = (playlist) => {
@@ -172,6 +239,7 @@
     <article class="release-card">
       <button class="release-art-button" data-play="${escapeHtml(track.id)}" data-play-context="all" aria-label="Play ${escapeHtml(track.title)}">
         ${artwork(track)}
+        ${offlineIds.has(track.id) ? `<span class="offline-badge" title="Available offline">${iconMarkup("check")}<span>Offline</span></span>` : ""}
         <span class="card-play">${iconMarkup(currentTrack?.id === track.id && !audio.paused ? "pause" : "play")}</span>
       </button>
       <div class="release-meta">
@@ -208,8 +276,93 @@
       : emptyCatalog();
   };
 
+  const updateStorageCopy = async () => {
+    const copy = $("#offline-storage-copy");
+    if (!copy) return;
+    if (!offlineApi?.supported?.()) {
+      copy.textContent = "Offline storage unavailable";
+      return;
+    }
+    const { usage, quota } = await offlineApi.estimate();
+    const count = offlineIds.size;
+    copy.textContent = quota
+      ? `${count} saved · ${formatBytes(usage)} of ${formatBytes(quota)} device storage used`
+      : `${count} song${count === 1 ? "" : "s"} saved on this device`;
+  };
+
+  const updateOfflineButton = (progressValue = null) => {
+    const button = $("#now-playing-offline");
+    const label = $("#now-playing-offline-label");
+    if (!button || !label || !currentTrack) return;
+    const downloading = downloadingIds.has(currentTrack.id);
+    const saved = offlineIds.has(currentTrack.id);
+    button.disabled = downloading || !offlineApi?.supported?.();
+    button.classList.toggle("active", saved);
+    button.classList.toggle("downloading", downloading);
+    button.setAttribute("aria-pressed", String(saved));
+    setIcon(button, saved ? "check" : "download");
+    if (downloading) label.textContent = `Saving ${Math.round((progressValue || 0) * 100)}%`;
+    else if (!offlineApi?.supported?.()) label.textContent = "Unavailable";
+    else label.textContent = saved ? "Remove offline" : "Save offline";
+  };
+
+  const refreshOfflineState = async () => {
+    if (!offlineApi?.supported?.()) {
+      offlineIds = new Set();
+      renderLibrary();
+      updateOfflineButton();
+      return;
+    }
+    try { offlineIds = new Set(await offlineApi.reconcile(tracks)); } catch { offlineIds = new Set(offlineApi.readIndex?.() || []); }
+    renderLibrary();
+    updateOfflineButton();
+    updateStorageCopy();
+  };
+
+  const toggleOffline = async (track) => {
+    if (!track || downloadingIds.has(track.id)) return;
+    if (!offlineApi?.supported?.()) {
+      showToast("Offline saving is unavailable in this browser.");
+      return;
+    }
+    if (offlineIds.has(track.id)) {
+      if (!window.confirm(`Remove “${track.title}” from offline songs on this device?`)) return;
+      try {
+        await offlineApi.remove(track);
+        offlineIds.delete(track.id);
+        renderAll();
+        updateStorageCopy();
+        showToast(`${track.title} was removed from offline songs.`);
+      } catch {
+        showToast("The saved files could not be removed. Try again.");
+      }
+      return;
+    }
+
+    if (!navigator.onLine) {
+      showToast("Connect to the internet once to save this song offline.");
+      return;
+    }
+    downloadingIds.add(track.id);
+    if (currentTrack?.id === track.id) updateOfflineButton(0);
+    try {
+      await offlineApi.save(track, ({ ratio }) => {
+        if (currentTrack?.id === track.id) updateOfflineButton(ratio);
+      });
+      offlineIds.add(track.id);
+      showToast(`${track.title} is ready offline.`);
+    } catch (error) {
+      showToast(error?.message || "This song could not be saved offline.");
+    } finally {
+      downloadingIds.delete(track.id);
+      renderAll();
+      updateStorageCopy();
+    }
+  };
+
   const renderLibrary = () => {
     const liked = tracks.filter((track) => favorites.has(track.id));
+    const saved = tracks.filter((track) => offlineIds.has(track.id));
     $("#playlist-library").innerHTML = playlists.length
       ? `<div class="playlist-grid">${playlists.map(playlistCard).join("")}</div>`
       : `<div class="playlist-empty"><span aria-hidden="true">${iconMarkup("plus")}</span><div><strong>Create your first playlist</strong><p>Build your own listening order from the XotiicDuck catalog.</p></div><button data-playlist-create>Create playlist</button></div>`;
@@ -219,6 +372,13 @@
           ${liked.map((track, index) => `<button class="track-row" data-play="${escapeHtml(track.id)}" data-play-context="favorites"><span class="track-number">${index + 1}</span><span class="track-name">${artwork(track, true)}<span><strong>${escapeHtml(track.title)}</strong><small>${escapeHtml(track.artist)}</small></span></span><span class="track-album">${escapeHtml(track.album)}</span><span class="track-duration">${formatTime(track.duration)}</span></button>`).join("")}
         </div>`
       : emptyFavorites();
+    $("#offline-catalog").innerHTML = saved.length
+      ? `<div class="offline-track-list">${saved.map((track) => `<article class="offline-track-row">
+          <button class="offline-track-main" data-play="${escapeHtml(track.id)}" data-play-context="offline">${artwork(track, true)}<span><strong>${escapeHtml(track.title)}</strong><small>${escapeHtml(track.artist)} · ${formatTime(track.duration)}</small></span><span class="offline-ready">${iconMarkup("check")}<span>Ready</span></span></button>
+          <button class="offline-remove icon-only-button" data-offline-toggle="${escapeHtml(track.id)}" aria-label="Remove ${escapeHtml(track.title)} from offline songs">${iconMarkup("close")}</button>
+        </article>`).join("")}</div>`
+      : `<div class="offline-empty"><span>${iconMarkup("download")}</span><div><strong>No offline songs yet</strong><p>Open a song, then choose “Save offline.” Download it once and it can play without internet on this device.</p></div></div>`;
+    updateStorageCopy();
   };
 
   const currentQueue = () => activeQueueIds.map(byId).filter(Boolean);
@@ -231,6 +391,7 @@
     shuffleBag = [];
     shuffleHistory = [];
     $("#now-playing-context").textContent = playbackContextLabel;
+    saveSession(true);
   };
 
   const renderSideQueue = () => {
@@ -274,12 +435,21 @@
       button.classList.toggle("is-favorite", favorites.has(currentTrack.id));
       button.setAttribute("aria-label", favorites.has(currentTrack.id) ? `Remove ${currentTrack.title} from favorites` : `Save ${currentTrack.title} to favorites`);
     }
+    const releaseDate = formatDate(currentTrack.releaseDate);
+    const hasAbout = Boolean(releaseDate || currentTrack.description || currentTrack.youtubeUrl);
+    $("#track-about").hidden = !hasAbout;
+    $("#track-release-date").textContent = releaseDate ? `Released ${releaseDate}` : "";
+    $("#track-description").textContent = currentTrack.description;
+    $("#track-description").hidden = !currentTrack.description;
+    $("#track-youtube").hidden = !currentTrack.youtubeUrl;
+    if (currentTrack.youtubeUrl) $("#track-youtube").href = currentTrack.youtubeUrl;
     const hasLyrics = Boolean(currentTrack.lyrics);
     $("#now-playing-lyrics-toggle").hidden = !hasLyrics;
     $("#lyrics-panel").hidden = !hasLyrics || !lyricsExpanded;
     $("#lyrics-copy").textContent = hasLyrics ? currentTrack.lyrics : "";
     $("#now-playing-lyrics-toggle").classList.toggle("active", hasLyrics && lyricsExpanded);
     $("#now-playing-lyrics-toggle").setAttribute("aria-expanded", String(hasLyrics && lyricsExpanded));
+    updateOfflineButton();
     updatePlaybackControls();
     updateProgressUI();
     renderSideQueue();
@@ -287,16 +457,23 @@
 
   const renderQueue = () => {
     const naturalQueue = currentQueue();
-    if (shuffleEnabled && !shuffleBag.length && !shuffleHistory.length && naturalQueue.length > 1) buildShuffleBag();
-    const queue = shuffleEnabled
-      ? [currentTrack, ...shuffleBag.slice().reverse().map(byId)].filter((track, index, list) => track && list.findIndex((entry) => entry.id === track.id) === index)
-      : naturalQueue;
     $("#queue-context").textContent = playbackContextLabel;
-    $("#queue-list").innerHTML = queue.map((track, index) => `
-      <button data-queue-play="${escapeHtml(track.id)}" class="${track.id === currentTrack?.id ? "active" : ""}">
-        <span class="queue-position">${index + 1}</span>${artwork(track, true)}
-        <span><strong>${escapeHtml(track.title)}</strong><small>${escapeHtml(track.artist)} · ${formatTime(track.duration)}</small></span><span class="trailing-icon">${iconMarkup("play")}</span>
-      </button>`).join("") || `<div class="queue-empty"><strong>The queue is empty</strong><span>Add music to a playlist or play from the catalog.</span></div>`;
+    $("#queue-clear").disabled = naturalQueue.length <= 1;
+    $("#queue-list").innerHTML = naturalQueue.map((track, index) => {
+      const current = track.id === currentTrack?.id;
+      return `<article class="queue-row${current ? " active" : ""}">
+        <button class="queue-row-main" data-queue-play="${escapeHtml(track.id)}">
+          <span class="queue-position">${index + 1}</span>${artwork(track, true)}
+          <span><strong>${escapeHtml(track.title)}</strong><small>${escapeHtml(track.artist)} · ${formatTime(track.duration)}${current ? " · Playing" : ""}</small></span><span class="trailing-icon">${iconMarkup(current ? "music" : "play")}</span>
+        </button>
+        <div class="queue-row-actions" aria-label="Queue actions for ${escapeHtml(track.title)}">
+          <button class="icon-only-button" data-queue-next="${escapeHtml(track.id)}" aria-label="Play ${escapeHtml(track.title)} next" ${current ? "disabled" : ""}>${iconMarkup("play-next")}</button>
+          <button class="icon-only-button" data-queue-move="${escapeHtml(track.id)}" data-direction="-1" aria-label="Move ${escapeHtml(track.title)} up" ${index === 0 ? "disabled" : ""}>${iconMarkup("arrow-up")}</button>
+          <button class="icon-only-button" data-queue-move="${escapeHtml(track.id)}" data-direction="1" aria-label="Move ${escapeHtml(track.title)} down" ${index === naturalQueue.length - 1 ? "disabled" : ""}>${iconMarkup("arrow-down")}</button>
+          <button class="icon-only-button" data-queue-remove="${escapeHtml(track.id)}" aria-label="Remove ${escapeHtml(track.title)} from queue" ${current ? "disabled" : ""}>${iconMarkup("close")}</button>
+        </div>
+      </article>`;
+    }).join("") || `<div class="queue-empty"><strong>The queue is empty</strong><span>Add music to a playlist or play from the catalog.</span></div>`;
   };
 
   const renderSearch = (query = "") => {
@@ -323,17 +500,28 @@
             <span class="queue-position">${index + 1}</span>${artwork(track, true)}
             <span><strong>${escapeHtml(track.title)}</strong><small>${escapeHtml(track.artist)} · ${formatTime(track.duration)}</small></span><span class="trailing-icon">${iconMarkup("play")}</span>
           </button>
-          <button class="playlist-remove icon-only-button" data-playlist-remove="${escapeHtml(track.id)}" data-playlist-id="${escapeHtml(playlist.id)}" aria-label="Remove ${escapeHtml(track.title)} from ${escapeHtml(playlist.name)}">${iconMarkup("close")}</button>
+          <div class="playlist-row-actions"><button class="icon-only-button" data-playlist-move="${escapeHtml(track.id)}" data-playlist-id="${escapeHtml(playlist.id)}" data-direction="-1" aria-label="Move ${escapeHtml(track.title)} up" ${index === 0 ? "disabled" : ""}>${iconMarkup("arrow-up")}</button><button class="icon-only-button" data-playlist-move="${escapeHtml(track.id)}" data-playlist-id="${escapeHtml(playlist.id)}" data-direction="1" aria-label="Move ${escapeHtml(track.title)} down" ${index === entries.length - 1 ? "disabled" : ""}>${iconMarkup("arrow-down")}</button><button class="playlist-remove icon-only-button" data-playlist-remove="${escapeHtml(track.id)}" data-playlist-id="${escapeHtml(playlist.id)}" aria-label="Remove ${escapeHtml(track.title)} from ${escapeHtml(playlist.name)}">${iconMarkup("close")}</button></div>
         </div>`).join("")
       : `<div class="playlist-detail-empty"><span>${iconMarkup("music")}</span><strong>This playlist is empty</strong><p>Open a song and choose “Add to playlist.”</p></div>`;
+  };
+
+  const modalLayers = () => [$("#search-layer"), $("#queue-layer"), $("#info-layer"), $("#playlist-layer"), $("#playlist-picker-layer"), $("#playlist-editor-layer")];
+
+  const openModal = (layer, focusSelector = "button:not([disabled]), input, select, textarea, a[href]") => {
+    if (!layer) return;
+    if (!activeModal) modalReturnFocus = document.activeElement instanceof HTMLElement ? document.activeElement : null;
+    for (const candidate of modalLayers()) candidate.hidden = candidate !== layer;
+    activeModal = layer;
+    layer.hidden = false;
+    document.body.classList.add("modal-open");
+    requestAnimationFrame(() => layer.querySelector(focusSelector)?.focus());
   };
 
   const openPlaylist = (id) => {
     if (!playlists.some((playlist) => playlist.id === id)) return;
     activePlaylistId = id;
     renderPlaylistDetail();
-    $("#playlist-layer").hidden = false;
-    document.body.classList.add("modal-open");
+    openModal($("#playlist-layer"), "[data-modal-close]");
   };
 
   const renderPlaylistPicker = () => {
@@ -353,8 +541,7 @@
   const openPlaylistPicker = () => {
     if (!currentTrack) return;
     renderPlaylistPicker();
-    $("#playlist-picker-layer").hidden = false;
-    document.body.classList.add("modal-open");
+    openModal($("#playlist-picker-layer"), "[data-modal-close]");
   };
 
   const openPlaylistEditor = ({ playlistId = null, trackId = null } = {}) => {
@@ -365,9 +552,7 @@
     $("#playlist-editor-title").textContent = playlist ? "Rename playlist" : "Create a playlist";
     $("#playlist-name").value = playlist?.name || "";
     $("#playlist-editor-submit").textContent = playlist ? "Save name" : "Create playlist";
-    $("#playlist-editor-layer").hidden = false;
-    document.body.classList.add("modal-open");
-    setTimeout(() => $("#playlist-name").focus(), 0);
+    openModal($("#playlist-editor-layer"), "#playlist-name");
   };
 
   const playPlaylist = (id, shuffled = false) => {
@@ -403,6 +588,136 @@
     showToast(exists ? `Removed from ${playlist.name}.` : `Added to ${playlist.name}.`);
   };
 
+  const movePlaylistItem = (playlistId, trackId, direction) => {
+    const playlist = playlists.find((entry) => entry.id === playlistId);
+    if (!playlist) return;
+    const from = playlist.trackIds.indexOf(trackId);
+    const to = Math.min(playlist.trackIds.length - 1, Math.max(0, from + Number(direction)));
+    if (from < 0 || from === to) return;
+    [playlist.trackIds[from], playlist.trackIds[to]] = [playlist.trackIds[to], playlist.trackIds[from]];
+    playlist.updatedAt = Date.now();
+    if (activeQueuePlaylistId === playlist.id) activeQueueIds = playlist.trackIds.filter((id) => byId(id));
+    shuffleBag = [];
+    shuffleHistory = [];
+    savePlaylists();
+    saveSession(true);
+    renderPlaylistDetail();
+    renderLibrary();
+  };
+
+  const moveQueueItem = (trackId, direction) => {
+    const from = activeQueueIds.indexOf(trackId);
+    const to = Math.min(activeQueueIds.length - 1, Math.max(0, from + Number(direction)));
+    if (from < 0 || from === to) return;
+    [activeQueueIds[from], activeQueueIds[to]] = [activeQueueIds[to], activeQueueIds[from]];
+    shuffleBag = [];
+    shuffleHistory = [];
+    activeQueuePlaylistId = null;
+    playbackContextLabel = "Custom queue";
+    saveSession(true);
+    renderQueue();
+    renderSideQueue();
+    $("#now-playing-context").textContent = playbackContextLabel;
+  };
+
+  const playNext = (trackId) => {
+    if (!byId(trackId) || trackId === currentTrack?.id) return;
+    const without = activeQueueIds.filter((id) => id !== trackId);
+    const currentIndex = Math.max(0, without.indexOf(currentTrack?.id));
+    without.splice(currentIndex + 1, 0, trackId);
+    activeQueueIds = without;
+    shuffleBag = [];
+    shuffleHistory = [];
+    activeQueuePlaylistId = null;
+    playbackContextLabel = "Custom queue";
+    saveSession(true);
+    renderQueue();
+    renderSideQueue();
+    $("#now-playing-context").textContent = playbackContextLabel;
+    showToast(`${byId(trackId).title} will play next.`);
+  };
+
+  const removeQueueItem = (trackId) => {
+    if (trackId === currentTrack?.id) return;
+    activeQueueIds = activeQueueIds.filter((id) => id !== trackId);
+    shuffleBag = [];
+    shuffleHistory = [];
+    activeQueuePlaylistId = null;
+    playbackContextLabel = "Custom queue";
+    saveSession(true);
+    renderQueue();
+    renderSideQueue();
+  };
+
+  const clearUpcoming = () => {
+    if (!currentTrack) return;
+    activeQueueIds = [currentTrack.id];
+    shuffleBag = [];
+    shuffleHistory = [];
+    activeQueuePlaylistId = null;
+    playbackContextLabel = "Current song";
+    saveSession(true);
+    renderQueue();
+    renderSideQueue();
+    $("#now-playing-context").textContent = playbackContextLabel;
+    showToast("Upcoming songs cleared.");
+  };
+
+  const exportLibrary = async () => {
+    const payload = {
+      app: "XotiicDuck Music",
+      version: BACKUP_VERSION,
+      exportedAt: new Date().toISOString(),
+      favorites: [...favorites].filter((id) => byId(id)),
+      playlists: playlists.map((playlist) => ({
+        id: playlist.id,
+        name: playlist.name,
+        trackIds: playlist.trackIds.filter((id) => byId(id)),
+        createdAt: playlist.createdAt,
+        updatedAt: playlist.updatedAt,
+      })),
+    };
+    const file = new File([JSON.stringify(payload, null, 2)], `xotiicduck-library-${new Date().toISOString().slice(0, 10)}.json`, { type: "application/json" });
+    if (navigator.canShare?.({ files: [file] }) && navigator.share) {
+      try { await navigator.share({ title: "XotiicDuck Music library backup", files: [file] }); return; } catch (error) { if (error?.name === "AbortError") return; }
+    }
+    const url = URL.createObjectURL(file);
+    const link = document.createElement("a");
+    link.href = url;
+    link.download = file.name;
+    link.click();
+    setTimeout(() => URL.revokeObjectURL(url), 1000);
+    showToast("Library backup downloaded.");
+  };
+
+  const importLibrary = async (file) => {
+    if (!file) return;
+    if (file.size > 1024 * 1024) { showToast("That backup is too large to be valid."); return; }
+    try {
+      const payload = JSON.parse(await file.text());
+      if (payload?.app !== "XotiicDuck Music" || payload.version !== BACKUP_VERSION || !Array.isArray(payload.favorites) || !Array.isArray(payload.playlists)) throw new Error("Invalid backup");
+      const nextFavorites = new Set(payload.favorites.filter((id) => typeof id === "string" && byId(id)));
+      const nextPlaylists = payload.playlists.slice(0, 100).filter((entry) => entry && typeof entry.name === "string").map((entry, index) => ({
+        id: typeof entry.id === "string" && /^[a-z0-9-]{1,100}$/i.test(entry.id) ? entry.id : `restored-${Date.now().toString(36)}-${index}`,
+        name: entry.name.trim().slice(0, 60) || "Untitled playlist",
+        trackIds: [...new Set(Array.isArray(entry.trackIds) ? entry.trackIds.filter((id) => typeof id === "string" && byId(id)) : [])],
+        createdAt: Number(entry.createdAt) || Date.now(),
+        updatedAt: Number(entry.updatedAt) || Date.now(),
+      }));
+      if (!window.confirm(`Restore ${nextPlaylists.length} playlist${nextPlaylists.length === 1 ? "" : "s"} and ${nextFavorites.size} liked song${nextFavorites.size === 1 ? "" : "s"}? This replaces the current local library.`)) return;
+      favorites = nextFavorites;
+      playlists = nextPlaylists;
+      saveFavorites();
+      savePlaylists();
+      renderAll();
+      showToast("Library restored on this device.");
+    } catch {
+      showToast("That file is not a valid XotiicDuck Music backup.");
+    } finally {
+      $("#library-import-file").value = "";
+    }
+  };
+
   const renderAll = () => {
     renderHome();
     renderDiscover();
@@ -420,10 +735,15 @@
   const switchView = (view) => {
     currentView = view;
     $$('[data-panel]').forEach((panel) => { panel.hidden = panel.dataset.panel !== view; });
-    $$('[data-view]').forEach((button) => button.classList.toggle("active", button.dataset.view === view));
+    $$('[data-view]').forEach((button) => {
+      const active = button.dataset.view === view;
+      button.classList.toggle("active", active);
+      if (active) button.setAttribute("aria-current", "page");
+      else button.removeAttribute("aria-current");
+    });
     if (view === "discover") renderDiscover();
     if (view === "library") renderLibrary();
-    window.scrollTo({ top: 0, behavior: "smooth" });
+    window.scrollTo({ top: 0, behavior: window.matchMedia("(prefers-reduced-motion: reduce)").matches ? "auto" : "smooth" });
   };
 
   const playbackDuration = () => Number.isFinite(audio.duration) && audio.duration > 0
@@ -520,11 +840,14 @@
     currentTrack = track;
     if (changed) {
       lyricsExpanded = false;
+      pendingRestorePosition = 0;
+      setPlaybackStatus("loading", "Loading song…");
       audio.src = track.audio;
       audio.load();
     }
     renderAll();
     updateMediaSession();
+    saveSession(true);
     if (autoplay) {
       try {
         await audio.play();
@@ -582,9 +905,58 @@
     renderAll();
   };
 
+  const shareCurrentTrack = async () => {
+    if (!currentTrack) return;
+    const url = new URL(location.href);
+    url.search = "";
+    url.hash = "";
+    url.searchParams.set("track", currentTrack.id);
+    const shareData = { title: `${currentTrack.title} — XotiicDuck`, text: `Listen to ${currentTrack.title} by ${currentTrack.artist}.`, url: url.href };
+    if (navigator.share) {
+      try { await navigator.share(shareData); return; } catch (error) { if (error?.name === "AbortError") return; }
+    }
+    try {
+      await navigator.clipboard.writeText(url.href);
+      showToast("Song link copied.");
+    } catch {
+      const input = document.createElement("textarea");
+      input.value = url.href;
+      input.setAttribute("readonly", "");
+      input.style.position = "fixed";
+      input.style.opacity = "0";
+      document.body.append(input);
+      input.select();
+      document.execCommand("copy");
+      input.remove();
+      showToast("Song link copied.");
+    }
+  };
+
+  const setPlaybackStatus = (state = "", message = "") => {
+    for (const status of [$("#player-status"), $("#playback-status")]) {
+      status.hidden = !state;
+      status.classList.toggle("error", state === "error");
+      status.classList.toggle("busy", state === "loading");
+    }
+    $("#player-status-copy").textContent = message;
+    $("#playback-status-copy").textContent = message;
+    $("#retry-track").hidden = state !== "error";
+  };
+
+  const retryCurrentTrack = async () => {
+    if (!currentTrack) return;
+    setPlaybackStatus("loading", "Trying again…");
+    audio.load();
+    try { await audio.play(); } catch { setPlaybackStatus("error", "This song still could not load. Check your connection."); }
+  };
+
   const closeModals = () => {
-    for (const layer of [$("#search-layer"), $("#queue-layer"), $("#info-layer"), $("#playlist-layer"), $("#playlist-picker-layer"), $("#playlist-editor-layer")]) layer.hidden = true;
+    for (const layer of modalLayers()) layer.hidden = true;
+    activeModal = null;
     document.body.classList.remove("modal-open");
+    const returnTarget = modalReturnFocus;
+    modalReturnFocus = null;
+    if (returnTarget?.isConnected && !returnTarget.closest("[hidden]")) requestAnimationFrame(() => returnTarget.focus({ preventScroll: true }));
   };
 
   const openNowPlaying = () => {
@@ -736,8 +1108,7 @@
     $("#info-eyebrow").textContent = content.eyebrow;
     $("#info-title").textContent = content.title;
     $("#info-copy").innerHTML = content.copy;
-    $("#info-layer").hidden = false;
-    document.body.classList.add("modal-open");
+    openModal($("#info-layer"), "[data-modal-close]");
   };
 
   const requestInstall = async () => {
@@ -794,8 +1165,12 @@
 
   const openQueue = () => {
     renderQueue();
-    $("#queue-layer").hidden = false;
-    document.body.classList.add("modal-open");
+    openModal($("#queue-layer"), "[data-modal-close]");
+  };
+
+  const openSearch = () => {
+    renderSearch($("#search-input").value);
+    openModal($("#search-layer"), "#search-input");
   };
 
   document.addEventListener("click", (event) => {
@@ -805,7 +1180,9 @@
     if (target.dataset.play) {
       event.preventDefault();
       const favoriteIds = tracks.filter((track) => favorites.has(track.id)).map((track) => track.id);
+      const offlineTrackIds = tracks.filter((track) => offlineIds.has(track.id)).map((track) => track.id);
       if (target.dataset.playContext === "favorites" && favoriteIds.length) setPlaybackQueue(favoriteIds, "Liked songs");
+      else if (target.dataset.playContext === "offline" && offlineTrackIds.length) setPlaybackQueue(offlineTrackIds, "Offline songs");
       else setPlaybackQueue(tracks.map((track) => track.id), "All tracks");
       setTrack(byId(target.dataset.play));
       closeModals();
@@ -823,12 +1200,17 @@
       }
     }
     if (target.dataset.playlistRemove) { event.preventDefault(); toggleTrackInPlaylist(target.dataset.playlistId, target.dataset.playlistRemove); }
+    if (target.dataset.playlistMove) { event.preventDefault(); movePlaylistItem(target.dataset.playlistId, target.dataset.playlistMove, target.dataset.direction); }
     if (target.dataset.playlistToggle) { event.preventDefault(); toggleTrackInPlaylist(target.dataset.playlistToggle, currentTrack?.id); }
+    if (target.dataset.queueNext) { event.preventDefault(); playNext(target.dataset.queueNext); }
+    if (target.dataset.queueMove) { event.preventDefault(); moveQueueItem(target.dataset.queueMove, target.dataset.direction); }
+    if (target.dataset.queueRemove) { event.preventDefault(); removeQueueItem(target.dataset.queueRemove); }
+    if (target.dataset.offlineToggle) { event.preventDefault(); toggleOffline(byId(target.dataset.offlineToggle)); }
     if (target.hasAttribute("data-playlist-create")) { event.preventDefault(); openPlaylistEditor(); }
     if (target.hasAttribute("data-playlist-create-current")) { event.preventDefault(); openPlaylistEditor({ trackId: currentTrack?.id }); }
     if (target.dataset.favorite) { event.preventDefault(); toggleFavorite(target.dataset.favorite); }
     if (target.hasAttribute("data-install")) { event.preventDefault(); requestInstall(); }
-    if (target.hasAttribute("data-search-open")) { event.preventDefault(); renderSearch(); $("#search-layer").hidden = false; document.body.classList.add("modal-open"); setTimeout(() => $("#search-input").focus(), 0); }
+    if (target.hasAttribute("data-search-open")) { event.preventDefault(); openSearch(); }
     if (target.hasAttribute("data-modal-close")) { event.preventDefault(); closeModals(); }
     if (target.dataset.info) { event.preventDefault(); openInfo(target.dataset.info); }
     if (target.dataset.genre) { selectedGenre = target.dataset.genre; renderDiscover(); }
@@ -846,8 +1228,15 @@
   $("#player-open").addEventListener("click", openNowPlaying);
   $("#now-playing-close").addEventListener("click", closeNowPlaying);
   $("#now-playing-add-playlist").addEventListener("click", openPlaylistPicker);
+  $("#now-playing-offline").addEventListener("click", () => currentTrack && toggleOffline(currentTrack));
+  $("#now-playing-share").addEventListener("click", shareCurrentTrack);
   $("#now-playing-lyrics-toggle").addEventListener("click", toggleLyrics);
-  $("#volume").addEventListener("input", (event) => { audio.volume = Number(event.target.value); });
+  $("#retry-track").addEventListener("click", retryCurrentTrack);
+  $("#queue-clear").addEventListener("click", clearUpcoming);
+  $("#library-export").addEventListener("click", exportLibrary);
+  $("#library-import").addEventListener("click", () => $("#library-import-file").click());
+  $("#library-import-file").addEventListener("change", (event) => importLibrary(event.target.files?.[0]));
+  $("#volume").addEventListener("input", (event) => { audio.volume = Number(event.target.value); saveSession(); });
   for (const input of [$("#progress"), $("#now-playing-progress")]) input.addEventListener("input", (event) => seekTo(event.target.value));
   $("#search-input").addEventListener("input", (event) => renderSearch(event.target.value));
 
@@ -890,10 +1279,23 @@
     closeModals();
   });
 
-  audio.addEventListener("play", () => { updatePlayButtons(); renderHome(); if ("mediaSession" in navigator) { try { navigator.mediaSession.playbackState = "playing"; } catch { /* Partial support. */ } } });
-  audio.addEventListener("pause", () => { updatePlayButtons(); renderHome(); if ("mediaSession" in navigator) { try { navigator.mediaSession.playbackState = "paused"; } catch { /* Partial support. */ } } });
-  audio.addEventListener("timeupdate", () => updateProgressUI());
-  audio.addEventListener("loadedmetadata", () => updateProgressUI());
+  audio.addEventListener("play", () => { setPlaybackStatus(); updatePlayButtons(); renderHome(); saveSession(true); if ("mediaSession" in navigator) { try { navigator.mediaSession.playbackState = "playing"; } catch { /* Partial support. */ } } });
+  audio.addEventListener("playing", () => setPlaybackStatus());
+  audio.addEventListener("pause", () => { updatePlayButtons(); renderHome(); saveSession(true); if ("mediaSession" in navigator) { try { navigator.mediaSession.playbackState = "paused"; } catch { /* Partial support. */ } } });
+  audio.addEventListener("timeupdate", () => { updateProgressUI(); saveSession(); });
+  audio.addEventListener("loadstart", () => setPlaybackStatus("loading", navigator.onLine ? "Loading song…" : "Opening saved song…"));
+  audio.addEventListener("waiting", () => setPlaybackStatus("loading", "Buffering…"));
+  audio.addEventListener("stalled", () => setPlaybackStatus("loading", navigator.onLine ? "Connection slowed — still trying…" : "Trying to open the saved song…"));
+  audio.addEventListener("canplay", () => setPlaybackStatus());
+  audio.addEventListener("error", () => setPlaybackStatus("error", navigator.onLine ? "This song could not load. Check the connection and retry." : offlineIds.has(currentTrack?.id) ? "The saved song could not be opened. Retry once." : "This song is not saved offline. Reconnect to play it."));
+  audio.addEventListener("loadedmetadata", () => {
+    if (pendingRestorePosition > 0) {
+      const duration = playbackDuration();
+      audio.currentTime = Math.min(Math.max(0, pendingRestorePosition), Math.max(0, duration - 1));
+      pendingRestorePosition = 0;
+    }
+    updateProgressUI();
+  });
   audio.addEventListener("durationchange", () => updateProgressUI());
   audio.addEventListener("ended", () => {
     if (repeatMode === "one") { seekTo(0); audio.play().catch(() => undefined); return; }
@@ -918,12 +1320,27 @@
     showToast("Installed — open XotiicDuck Music from your Home screen or apps.");
   });
   window.addEventListener("pageshow", updateInstallButtons);
+  window.addEventListener("pagehide", () => saveSession(true));
+  window.addEventListener("beforeunload", () => saveSession(true));
+
+  const trapFocus = (event, layer) => {
+    if (event.key !== "Tab" || !layer) return;
+    const focusable = [...layer.querySelectorAll('button:not([disabled]), a[href], input:not([disabled]), select:not([disabled]), textarea:not([disabled]), [tabindex]:not([tabindex="-1"])')]
+      .filter((element) => element.getClientRects().length && !element.closest("[hidden]"));
+    if (!focusable.length) return;
+    const first = focusable[0];
+    const last = focusable[focusable.length - 1];
+    if (event.shiftKey && document.activeElement === first) { event.preventDefault(); last.focus(); }
+    else if (!event.shiftKey && document.activeElement === last) { event.preventDefault(); first.focus(); }
+  };
+
   window.addEventListener("keydown", (event) => {
     const typing = ["INPUT", "TEXTAREA"].includes(document.activeElement?.tagName);
-    if (event.key === "/" && !typing) { event.preventDefault(); renderSearch(); $("#search-layer").hidden = false; document.body.classList.add("modal-open"); setTimeout(() => $("#search-input").focus(), 0); }
+    const focusLayer = activeModal || (!$("#now-playing-layer").hidden ? $("#now-playing-layer") : null);
+    trapFocus(event, focusLayer);
+    if (event.key === "/" && !typing) { event.preventDefault(); openSearch(); }
     if (event.key === "Escape") {
-      const hasModal = [$("#search-layer"), $("#queue-layer"), $("#info-layer"), $("#playlist-layer"), $("#playlist-picker-layer"), $("#playlist-editor-layer")].some((layer) => !layer.hidden);
-      if (hasModal) closeModals();
+      if (activeModal) closeModals();
       else if (!$("#now-playing-layer").hidden) closeNowPlaying();
     }
     if (event.code === "Space" && !typing && !event.target.closest("button, a")) { event.preventDefault(); togglePlay(); }
@@ -951,14 +1368,50 @@
     }
   }
 
+  const showUpdateReady = (registration) => {
+    serviceWorkerRegistration = registration;
+    if (registration.waiting && navigator.serviceWorker.controller) $("#update-banner").hidden = false;
+  };
+
+  $("#apply-update").addEventListener("click", () => {
+    const waiting = serviceWorkerRegistration?.waiting;
+    if (!waiting) { location.reload(); return; }
+    $("#apply-update").disabled = true;
+    $("#apply-update").textContent = "Refreshing…";
+    waiting.postMessage({ type: "SKIP_WAITING" });
+  });
+  $("#dismiss-update").addEventListener("click", () => { $("#update-banner").hidden = true; });
+
   if ("serviceWorker" in navigator && location.protocol.startsWith("http")) {
+    navigator.serviceWorker.addEventListener("controllerchange", () => {
+      if (reloadingForUpdate) return;
+      reloadingForUpdate = true;
+      location.reload();
+    });
     navigator.serviceWorker.register("./sw.js", { updateViaCache: "none" })
-      .then((registration) => registration.update())
+      .then((registration) => {
+        serviceWorkerRegistration = registration;
+        showUpdateReady(registration);
+        registration.addEventListener("updatefound", () => {
+          const installing = registration.installing;
+          installing?.addEventListener("statechange", () => {
+            if (installing.state === "installed") showUpdateReady(registration);
+          });
+        });
+        return registration.update();
+      })
       .catch(() => undefined);
   }
 
+  const updateNetworkState = () => { $("#network-banner").hidden = navigator.onLine; };
+  window.addEventListener("online", () => { updateNetworkState(); showToast("Back online."); });
+  window.addEventListener("offline", updateNetworkState);
+
   $("#year").textContent = String(new Date().getFullYear());
-  audio.volume = Number($("#volume").value);
+  const restoredVolume = Number(restoredSession.volume);
+  const initialVolume = Number.isFinite(restoredVolume) ? Math.min(1, Math.max(0, restoredVolume)) : Number($("#volume").value);
+  $("#volume").value = String(initialVolume);
+  audio.volume = initialVolume;
   if (currentTrack) {
     audio.src = currentTrack.audio;
     audio.load();
@@ -967,4 +1420,7 @@
   renderAll();
   switchView(currentView);
   updateInstallButtons();
+  updateNetworkState();
+  refreshOfflineState();
+  if (params.get("search") === "1") openSearch();
 })();

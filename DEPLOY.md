@@ -8,7 +8,7 @@ Open this extracted folder in VS Code and confirm `index.html` is at the top lev
 git init -b main
 git add .
 git commit -m "Launch XotiicDuck Music and artist console"
-git remote add origin https://github.com/x-s-m-x/Xotiic-Songs.git
+git remote add origin https://github.com/X-S-M-X/Xotiic-Songs.git
 git push -u origin main
 ```
 
@@ -48,4 +48,10 @@ git commit -m "Update XotiicDuck Music"
 git push origin main
 ```
 
-Change the two example paths before running the copy. After GitHub Pages finishes, close and reopen the website or refresh it once. This package uses a new offline-cache version so previously opened phones and installed copies receive Now Playing, touch seeking, playlists, shuffle/repeat improvements, optional lyrics support, and the earlier installation fixes.
+Change the two example paths before running the copy. Do not copy the new package's empty `catalog.js` over the live one, and do not replace the live `music/` or `covers/` folders. After GitHub Pages finishes, reopen the website. Update 9 shows a **Player update ready** prompt so the running page and new service worker switch versions together safely.
+
+Update 9 adds `offline.js`, `range.js`, automated tests, and a GitHub Actions validation workflow. The `music/` and `covers/` folders remain user data and are intentionally not included in application replacement copies.
+
+## Offline listening behavior
+
+Listeners choose **Save offline** on each song they want stored. The complete MP3 and cover are saved only on that device. A song must be saved once while online; normal streaming does not silently download the catalog. Browser or operating-system storage cleanup can remove website data, so listeners should keep the original online catalog available and re-save a song if needed.

@@ -33,6 +33,12 @@
     idleTimer: null,
     hiddenAt: 0,
     busy: false,
+    editReleaseId: null,
+    editAudioFile: null,
+    editAudioDuration: 0,
+    editCoverFile: null,
+    serviceWorkerRegistration: null,
+    reloadingForUpdate: false,
   };
 
   const views = {
@@ -65,6 +71,16 @@
     const clean = text(path).trim().replaceAll("\\", "/").replace(/^\/+/, "");
     if (!/^(music|covers)\/[a-zA-Z0-9._/-]+$/.test(clean) || clean.includes("..")) return "";
     return `../${clean.split("/").map(encodeURIComponent).join("/")}`;
+  };
+  const safeYouTubeUrl = (value) => {
+    if (!text(value).trim()) return "";
+    try {
+      const url = new URL(text(value).trim());
+      const host = url.hostname.toLowerCase().replace(/^www\./, "");
+      return url.protocol === "https:" && (host === "youtube.com" || host.endsWith(".youtube.com") || host === "youtu.be") ? url.href : "";
+    } catch {
+      return "";
+    }
   };
   const localDate = () => {
     const now = new Date();
@@ -101,6 +117,8 @@
         DUPLICATE_RELEASE: "That release ID is already used. Choose a different release ID.",
         CATALOG_FORMAT: "The GitHub catalog format has changed. Restore catalog.js before publishing.",
         CATALOG_PARSE: "GitHub's catalog.js contains invalid data and needs to be repaired.",
+        RELEASE_MISSING: "That release changed or was removed. Refresh the catalog and try again.",
+        RELEASE_ID_CHANGED: "A published release ID cannot be changed.",
       };
       return messages[error.code] || `GitHub error: ${error.message}`;
     }
@@ -259,6 +277,8 @@
     clearTimeout(state.idleTimer);
     $("#progress-modal").hidden = true;
     $("#review-modal").hidden = true;
+    $("#edit-release-modal").hidden = true;
+    document.body.classList.remove("modal-open");
     setConnection(false);
     const vault = vaultApi.readVault();
     if (vault) {
@@ -277,6 +297,8 @@
     setView("dashboard");
     resetIdleTimer();
     await loadCatalog({ silent: false }).catch(() => undefined);
+    const requestedPanel = new URLSearchParams(location.search).get("panel");
+    if (["upload", "releases", "security"].includes(requestedPanel)) selectAdminPanel(requestedPanel);
   };
 
   const loadCatalog = async ({ silent = false } = {}) => {
@@ -352,12 +374,16 @@
       toggle.dataset.releaseToggle = text(release.id);
       toggle.dataset.nextStatus = published ? "draft" : "published";
       toggle.textContent = published ? "Hide" : "Publish";
+      const edit = document.createElement("button");
+      edit.type = "button";
+      edit.dataset.releaseEdit = text(release.id);
+      edit.textContent = "Edit";
       const remove = document.createElement("button");
       remove.type = "button";
       remove.className = "danger";
       remove.dataset.releaseDelete = text(release.id);
       remove.textContent = "Delete";
-      actions.append(status, toggle, remove);
+      actions.append(status, edit, toggle, remove);
       row.append(cover, copy, actions);
       list.append(row);
     });
@@ -402,6 +428,36 @@
     image.onerror = () => { URL.revokeObjectURL(url); reject(new Error("This cover image could not be read.")); };
     image.src = url;
   });
+
+  const prepareCoverFile = async (file) => {
+    const dimensions = await readImageSize(file);
+    const ratio = dimensions.width / dimensions.height;
+    if (ratio < 0.97 || ratio > 1.03) {
+      URL.revokeObjectURL(dimensions.url);
+      throw new Error(`The cover must be square. This image is ${dimensions.width} × ${dimensions.height}.`);
+    }
+    if (dimensions.width <= 1600 && dimensions.height <= 1600 && file.size <= 2 * 1024 * 1024) {
+      return { file, width: dimensions.width, height: dimensions.height, url: dimensions.url, optimized: false };
+    }
+
+    try {
+      const image = new Image();
+      image.src = dimensions.url;
+      await image.decode();
+      const size = Math.min(1400, dimensions.width, dimensions.height);
+      const canvas = document.createElement("canvas");
+      canvas.width = size;
+      canvas.height = size;
+      canvas.getContext("2d", { alpha: false }).drawImage(image, 0, 0, size, size);
+      const blob = await new Promise((resolve, reject) => canvas.toBlob((value) => value ? resolve(value) : reject(new Error("The optimized cover could not be created.")), "image/webp", 0.9));
+      URL.revokeObjectURL(dimensions.url);
+      const name = `${file.name.replace(/\.[^.]+$/, "") || "cover"}.webp`;
+      const optimized = new File([blob], name, { type: "image/webp", lastModified: Date.now() });
+      return { file: optimized, width: size, height: size, url: URL.createObjectURL(optimized), optimized: true };
+    } catch {
+      return { file, width: dimensions.width, height: dimensions.height, url: dimensions.url, optimized: false };
+    }
+  };
 
   const updateReleaseSummary = () => {
     const title = $("#release-title").value.trim();
@@ -459,6 +515,7 @@
     const id = $("#release-id").value.trim();
     const description = $("#release-description").value.trim();
     const lyrics = $("#release-lyrics").value.trim();
+    const youtubeUrl = safeYouTubeUrl($("#release-youtube").value);
     const release = {
       id,
       title: $("#release-title").value.trim(),
@@ -473,6 +530,7 @@
     };
     if (description) release.description = description;
     if (lyrics) release.lyrics = lyrics;
+    if (youtubeUrl) release.youtubeUrl = youtubeUrl;
     return release;
   };
 
@@ -494,6 +552,10 @@
     }
     if (state.releases.some((entry) => entry.id === id)) {
       showToast("That release ID is already in your catalog.", "error");
+      return false;
+    }
+    if ($("#release-youtube").value.trim() && !safeYouTubeUrl($("#release-youtube").value)) {
+      showToast("Use a valid HTTPS youtube.com or youtu.be link.", "error");
       return false;
     }
     return true;
@@ -548,6 +610,108 @@
       showToast("Release committed. GitHub Pages will update the player shortly.");
     } catch (error) {
       $("#progress-modal").hidden = true;
+      showToast(friendlyError(error), "error");
+    } finally {
+      state.busy = false;
+      resetIdleTimer();
+    }
+  };
+
+  const closeReleaseEditor = () => {
+    if (state.busy) return;
+    $("#edit-release-modal").hidden = true;
+    document.body.classList.remove("modal-open");
+    state.editReleaseId = null;
+    state.editAudioFile = null;
+    state.editAudioDuration = 0;
+    state.editCoverFile = null;
+    $("#edit-release-form").reset();
+    $("#edit-audio-copy").textContent = "Keep current MP3";
+    $("#edit-cover-copy").textContent = "Keep current cover";
+  };
+
+  const openReleaseEditor = (id) => {
+    const release = state.releases.find((entry) => entry.id === id);
+    if (!release) return;
+    state.editReleaseId = release.id;
+    state.editAudioFile = null;
+    state.editAudioDuration = 0;
+    state.editCoverFile = null;
+    $("#edit-release-id").textContent = `Release ID: ${release.id} · ID cannot be changed`;
+    $("#edit-title").value = text(release.title);
+    $("#edit-artist").value = text(release.artist || "XotiicDuck");
+    const album = $("#edit-album");
+    if (![...album.options].some((option) => option.value === text(release.album))) album.add(new Option(text(release.album || "Single"), text(release.album || "Single")));
+    album.value = text(release.album || "Single");
+    $("#edit-genre").value = text(release.genre || "Music");
+    $("#edit-date").value = /^\d{4}-\d{2}-\d{2}$/.test(text(release.releaseDate)) ? release.releaseDate : localDate();
+    $("#edit-youtube").value = text(release.youtubeUrl || release.youtube);
+    $("#edit-description").value = text(release.description);
+    $("#edit-lyrics").value = text(release.lyrics);
+    $("#edit-audio-file").value = "";
+    $("#edit-cover-file").value = "";
+    $("#edit-audio-copy").textContent = `Current: ${text(release.audio)} · ${formatDuration(Number(release.duration))}`;
+    $("#edit-cover-copy").textContent = `Current: ${text(release.cover)}`;
+    $("#edit-release-modal").hidden = false;
+    document.body.classList.add("modal-open");
+    requestAnimationFrame(() => $("#edit-title").focus());
+  };
+
+  const saveReleaseEdit = async (event) => {
+    event.preventDefault();
+    if (state.busy || !state.editReleaseId || !event.currentTarget.reportValidity()) return;
+    const previous = state.releases.find((entry) => entry.id === state.editReleaseId);
+    if (!previous) { showToast("That release is no longer in the catalog.", "error"); return; }
+    const youtubeInput = $("#edit-youtube").value.trim();
+    const youtubeUrl = safeYouTubeUrl(youtubeInput);
+    if (youtubeInput && !youtubeUrl) { showToast("Use a valid HTTPS youtube.com or youtu.be link.", "error"); return; }
+
+    const next = {
+      ...previous,
+      title: $("#edit-title").value.trim(),
+      artist: $("#edit-artist").value.trim(),
+      album: $("#edit-album").value,
+      genre: $("#edit-genre").value.trim(),
+      releaseDate: $("#edit-date").value,
+      duration: state.editAudioFile ? state.editAudioDuration : Number(previous.duration),
+      audio: state.editAudioFile ? `music/${previous.id}.mp3` : previous.audio,
+      cover: state.editCoverFile ? `covers/${previous.id}.${coverExtension(state.editCoverFile)}` : previous.cover,
+    };
+    const description = $("#edit-description").value.trim();
+    const lyrics = $("#edit-lyrics").value.trim();
+    if (description) next.description = description; else delete next.description;
+    if (lyrics) next.lyrics = lyrics; else delete next.lyrics;
+    delete next.youtube;
+    if (youtubeUrl) next.youtubeUrl = youtubeUrl; else delete next.youtubeUrl;
+
+    state.busy = true;
+    $("#edit-release-modal").hidden = true;
+    document.body.classList.remove("modal-open");
+    $("#progress-modal").hidden = false;
+    updateProgress("start", 0, "Starting secure release update");
+    try {
+      const result = await state.publisher.updateRelease({
+        id: previous.id,
+        release: next,
+        audioFile: state.editAudioFile,
+        coverFile: state.editCoverFile,
+        onStep: updateProgress,
+      });
+      state.releases = result.releases;
+      renderReleases();
+      $("#catalog-health").textContent = `${state.releases.length} release${state.releases.length === 1 ? "" : "s"} connected`;
+      await new Promise((resolve) => setTimeout(resolve, 450));
+      $("#progress-modal").hidden = true;
+      state.editReleaseId = null;
+      state.editAudioFile = null;
+      state.editAudioDuration = 0;
+      state.editCoverFile = null;
+      event.currentTarget.reset();
+      showToast("Release update committed. The player will refresh after GitHub Pages deploys.");
+    } catch (error) {
+      $("#progress-modal").hidden = true;
+      $("#edit-release-modal").hidden = false;
+      document.body.classList.add("modal-open");
       showToast(friendlyError(error), "error");
     } finally {
       state.busy = false;
@@ -658,14 +822,57 @@
     showToast("This device was reset. Published music was not changed.");
   };
 
+  const exportVault = () => {
+    const vault = vaultApi.readVault();
+    if (!vault) { showToast("There is no encrypted vault to back up.", "error"); return; }
+    const payload = { app: "Xotiic Upload", version: 1, exportedAt: new Date().toISOString(), vault };
+    const blob = new Blob([JSON.stringify(payload, null, 2)], { type: "application/json" });
+    const url = URL.createObjectURL(blob);
+    const link = document.createElement("a");
+    link.href = url;
+    link.download = `xotiic-upload-vault-${new Date().toISOString().slice(0, 10)}.json`;
+    link.click();
+    setTimeout(() => URL.revokeObjectURL(url), 1000);
+    showToast("Encrypted vault backup downloaded.");
+  };
+
+  const importVault = async (file) => {
+    if (!file) return;
+    if (file.size > 128 * 1024) { showToast("That vault backup is too large to be valid.", "error"); return; }
+    try {
+      const payload = JSON.parse(await file.text());
+      const vault = payload?.app === "Xotiic Upload" && payload.version === 1 ? payload.vault : null;
+      const valid = vault?.version === 1
+        && vault.owner === config.owner
+        && vault.repository === config.repository
+        && typeof vault.username === "string"
+        && typeof vault.salt === "string"
+        && typeof vault.iv === "string"
+        && typeof vault.ciphertext === "string";
+      if (!valid) throw new Error("Invalid vault backup");
+      if (!window.confirm(`Restore the encrypted owner vault for “${vault.username}” on this device? You will need its existing password to unlock it.`)) return;
+      vaultApi.saveVault(vault);
+      $("#login-username").value = vault.username;
+      lockConsole("Encrypted vault restored. Enter its username and password to verify it.");
+    } catch {
+      showToast("That file is not a valid Xotiic Upload vault backup.", "error");
+    } finally {
+      $("#import-vault-file").value = "";
+    }
+  };
+
   $("#setup-form").addEventListener("submit", setup);
   $("#login-form").addEventListener("submit", login);
   $("#replace-token-form").addEventListener("submit", replaceToken);
   $("#release-form").addEventListener("submit", (event) => { event.preventDefault(); openReview(); });
+  $("#edit-release-form").addEventListener("submit", saveReleaseEdit);
   $("#publish-release").addEventListener("click", publishPendingRelease);
   $("#logout-button").addEventListener("click", () => lockConsole("Console locked."));
   $("#reset-from-login").addEventListener("click", resetVault);
   $("#reset-vault-button").addEventListener("click", resetVault);
+  $("#export-vault").addEventListener("click", exportVault);
+  $("#import-vault").addEventListener("click", () => $("#import-vault-file").click());
+  $("#import-vault-file").addEventListener("change", (event) => importVault(event.target.files?.[0]));
   $("#refresh-catalog").addEventListener("click", () => loadCatalog().then(() => showToast("Catalog refreshed.")).catch(() => undefined));
   $("#token-help-link").href = config.tokenHelpUrl;
 
@@ -720,26 +927,61 @@
       return;
     }
     try {
-      const dimensions = await readImageSize(file);
-      const ratio = dimensions.width / dimensions.height;
-      if (ratio < 0.97 || ratio > 1.03) {
-        URL.revokeObjectURL(dimensions.url);
-        event.target.value = "";
-        throw new Error(`The cover must be square. This image is ${dimensions.width} × ${dimensions.height}.`);
-      }
+      const prepared = await prepareCoverFile(file);
       if (state.coverObjectUrl) URL.revokeObjectURL(state.coverObjectUrl);
-      state.coverFile = file;
-      state.coverWidth = dimensions.width;
-      state.coverHeight = dimensions.height;
-      state.coverObjectUrl = dimensions.url;
+      state.coverFile = prepared.file;
+      state.coverWidth = prepared.width;
+      state.coverHeight = prepared.height;
+      state.coverObjectUrl = prepared.url;
       const preview = $("#cover-preview");
-      preview.style.backgroundImage = `url(${JSON.stringify(dimensions.url).slice(1, -1)})`;
+      preview.style.backgroundImage = `url(${JSON.stringify(prepared.url).slice(1, -1)})`;
       preview.classList.add("has-image");
-      $("#cover-file-name").textContent = file.name;
-      $("#cover-file-meta").textContent = `${dimensions.width} × ${dimensions.height} · ${formatBytes(file.size)} · Square verified`;
+      $("#cover-file-name").textContent = prepared.file.name;
+      $("#cover-file-meta").textContent = `${prepared.width} × ${prepared.height} · ${formatBytes(prepared.file.size)} · ${prepared.optimized ? "Optimized WebP" : "Square verified"}`;
       $("#cover-drop").classList.add("has-file");
       updateReleaseSummary();
     } catch (error) {
+      event.target.value = "";
+      showToast(error.message, "error");
+    }
+  });
+
+  $("#edit-audio-file").addEventListener("change", async (event) => {
+    const file = event.target.files?.[0];
+    state.editAudioFile = null;
+    state.editAudioDuration = 0;
+    if (!file) { $("#edit-audio-copy").textContent = "Keep current MP3"; return; }
+    if (!(file.type === "audio/mpeg" || file.name.toLowerCase().endsWith(".mp3")) || file.size > config.maxAudioBytes) {
+      event.target.value = "";
+      showToast(`Choose an MP3 below ${formatBytes(config.maxAudioBytes)}.`, "error");
+      return;
+    }
+    try {
+      state.editAudioDuration = await readAudioDuration(file);
+      state.editAudioFile = file;
+      $("#edit-audio-copy").textContent = `${file.name} · ${formatBytes(file.size)} · ${formatDuration(state.editAudioDuration)}`;
+    } catch (error) {
+      event.target.value = "";
+      showToast(error.message, "error");
+    }
+  });
+
+  $("#edit-cover-file").addEventListener("change", async (event) => {
+    const file = event.target.files?.[0];
+    state.editCoverFile = null;
+    if (!file) { $("#edit-cover-copy").textContent = "Keep current cover"; return; }
+    if ((!/^image\/(jpeg|png|webp)$/.test(file.type) && !/\.(jpe?g|png|webp)$/i.test(file.name)) || file.size > config.maxCoverBytes) {
+      event.target.value = "";
+      showToast(`Choose a JPG, PNG, or WebP cover below ${formatBytes(config.maxCoverBytes)}.`, "error");
+      return;
+    }
+    try {
+      const prepared = await prepareCoverFile(file);
+      state.editCoverFile = prepared.file;
+      URL.revokeObjectURL(prepared.url);
+      $("#edit-cover-copy").textContent = `${prepared.file.name} · ${prepared.width} × ${prepared.height} · ${formatBytes(prepared.file.size)}${prepared.optimized ? " · Optimized" : ""}`;
+    } catch (error) {
+      event.target.value = "";
       showToast(error.message, "error");
     }
   });
@@ -767,11 +1009,13 @@
     }
     if (target.dataset.adminPanel) selectAdminPanel(target.dataset.adminPanel);
     if (target.hasAttribute("data-review-close")) closeReview();
+    if (target.hasAttribute("data-edit-close")) closeReleaseEditor();
     if (target.hasAttribute("data-install-close")) closeInstallHelp();
     if (target.hasAttribute("data-install")) {
       event.preventDefault();
       await requestInstall();
     }
+    if (target.dataset.releaseEdit) openReleaseEditor(target.dataset.releaseEdit);
     if (target.dataset.releaseToggle) {
       if (state.busy) return;
       const release = state.releases.find((entry) => entry.id === target.dataset.releaseToggle);
@@ -837,9 +1081,38 @@
     state.hiddenAt = 0;
   });
 
+  const showAdminUpdate = (registration) => {
+    state.serviceWorkerRegistration = registration;
+    if (registration.waiting && navigator.serviceWorker.controller) $("#admin-update-banner").hidden = false;
+  };
+
+  $("#admin-apply-update").addEventListener("click", () => {
+    const waiting = state.serviceWorkerRegistration?.waiting;
+    if (!waiting) { location.reload(); return; }
+    $("#admin-apply-update").disabled = true;
+    $("#admin-apply-update").textContent = "Refreshing…";
+    waiting.postMessage({ type: "SKIP_WAITING" });
+  });
+  $("#admin-dismiss-update").addEventListener("click", () => { $("#admin-update-banner").hidden = true; });
+
   if ("serviceWorker" in navigator && location.protocol.startsWith("http")) {
+    navigator.serviceWorker.addEventListener("controllerchange", () => {
+      if (state.reloadingForUpdate) return;
+      state.reloadingForUpdate = true;
+      location.reload();
+    });
     navigator.serviceWorker.register("./sw.js", { updateViaCache: "none" })
-      .then((registration) => registration.update())
+      .then((registration) => {
+        state.serviceWorkerRegistration = registration;
+        showAdminUpdate(registration);
+        registration.addEventListener("updatefound", () => {
+          const installing = registration.installing;
+          installing?.addEventListener("statechange", () => {
+            if (installing.state === "installed") showAdminUpdate(registration);
+          });
+        });
+        return registration.update();
+      })
       .catch(() => undefined);
   }
 
