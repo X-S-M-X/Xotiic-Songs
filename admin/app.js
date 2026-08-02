@@ -659,7 +659,8 @@
 
   const saveReleaseEdit = async (event) => {
     event.preventDefault();
-    if (state.busy || !state.editReleaseId || !event.currentTarget.reportValidity()) return;
+    const form = event.currentTarget;
+    if (state.busy || !state.editReleaseId || !form.reportValidity()) return;
     const previous = state.releases.find((entry) => entry.id === state.editReleaseId);
     if (!previous) { showToast("That release is no longer in the catalog.", "error"); return; }
     const youtubeInput = $("#edit-youtube").value.trim();
@@ -706,7 +707,7 @@
       state.editAudioFile = null;
       state.editAudioDuration = 0;
       state.editCoverFile = null;
-      event.currentTarget.reset();
+      form.reset();
       showToast("Release update committed. The player will refresh after GitHub Pages deploys.");
     } catch (error) {
       $("#progress-modal").hidden = true;
@@ -785,12 +786,13 @@
 
   const replaceToken = async (event) => {
     event.preventDefault();
+    const form = event.currentTarget;
     if (state.busy) return;
     const vault = vaultApi.readVault();
     const password = $("#replace-password").value;
     const newToken = $("#replace-token").value.trim();
     state.busy = true;
-    const button = event.currentTarget.querySelector("button[type='submit']");
+    const button = form.querySelector("button[type='submit']");
     button.disabled = true;
     button.textContent = "Verifying token...";
     try {
@@ -801,7 +803,7 @@
       vaultApi.saveVault(updatedVault);
       state.token = newToken;
       state.publisher = publisher;
-      event.currentTarget.reset();
+      form.reset();
       showToast("GitHub token replaced successfully.");
     } catch (error) {
       showToast(friendlyError(error), "error");

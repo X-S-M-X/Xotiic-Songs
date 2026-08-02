@@ -28,17 +28,26 @@ test("admin supports metadata edits, encrypted backup, and atomic updates", () =
   const html = read("admin/index.html");
   const app = read("admin/app.js");
   const github = read("admin/github.js");
+  const styles = read("admin/styles.css");
   assert.match(html, /id="edit-release-form"/);
   assert.match(html, /id="export-vault"/);
   assert.match(app, /prepareCoverFile/);
   assert.match(github, /async updateRelease/);
+  assert.match(styles, /input\[type="file"\]::file-selector-button/);
 });
 
-test("web app manifests are valid and use version 9 icons", () => {
-  for (const file of ["manifest.webmanifest", "admin/manifest.webmanifest"]) {
+test("async admin forms retain their form reference after awaited work", () => {
+  const app = read("admin/app.js");
+  assert.equal((app.match(/const form = event\.currentTarget;/g) || []).length, 2);
+  assert.doesNotMatch(app, /event\.currentTarget\.reset\(\)/);
+  assert.doesNotMatch(app, /event\.currentTarget\.querySelector\(/);
+});
+
+test("web app manifests are valid and use current versioned icons", () => {
+  for (const [file, version] of [["manifest.webmanifest", "v=9"], ["admin/manifest.webmanifest", "v=10"]]) {
     const manifest = JSON.parse(read(file));
     assert.ok(Array.isArray(manifest.icons) && manifest.icons.length >= 4);
-    assert.ok(manifest.icons.every((icon) => icon.src.includes("v=9")));
+    assert.ok(manifest.icons.every((icon) => icon.src.includes(version)));
     assert.ok(Array.isArray(manifest.shortcuts) && manifest.shortcuts.length >= 2);
   }
 });

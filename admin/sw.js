@@ -1,20 +1,20 @@
-const CACHE_NAME = "xotiic-upload-v9";
+const CACHE_NAME = "xotiic-upload-v10";
 const scoped = (file) => new URL(file, self.registration.scope).href;
 const SHELL = [
   "./",
   "./index.html",
-  "./styles.css?v=9",
-  "./config.js?v=9",
-  "./crypto.js?v=9",
-  "./github.js?v=9",
-  "./app.js?v=9",
-  "./manifest.webmanifest?v=9",
-  "../favicon.svg?v=9",
-  "../apple-touch-icon.png?v=9",
-  "../icon-192.png?v=9",
-  "../icon-512.png?v=9",
-  "../icon-maskable-192.png?v=9",
-  "../icon-maskable-512.png?v=9"
+  "./styles.css?v=10",
+  "./config.js?v=10",
+  "./crypto.js?v=10",
+  "./github.js?v=10",
+  "./app.js?v=10",
+  "./manifest.webmanifest?v=10",
+  "../favicon.svg?v=10",
+  "../apple-touch-icon.png?v=10",
+  "../icon-192.png?v=10",
+  "../icon-512.png?v=10",
+  "../icon-maskable-192.png?v=10",
+  "../icon-maskable-512.png?v=10"
 ].map(scoped);
 
 self.addEventListener("install", (event) => {
