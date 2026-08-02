@@ -218,6 +218,12 @@
 
   const playlistTracks = (playlist) => (playlist?.trackIds || []).map(byId).filter(Boolean);
 
+  const isCurrentTrack = (trackId) => currentTrack?.id === trackId;
+  const isTrackPlaying = (trackId) => isCurrentTrack(trackId) && !audio.paused && !audio.ended;
+  const trackStateClass = (trackId) => isCurrentTrack(trackId) ? ` is-current-track${isTrackPlaying(trackId) ? " is-playing" : ""}` : "";
+  const trackActionLabel = (track) => `${isTrackPlaying(track.id) ? "Pause" : "Play"} ${track.title}`;
+  const trackActionIcon = (track, className = "trailing-icon") => `<span class="${className}" data-track-play-icon>${iconMarkup(isTrackPlaying(track.id) ? "pause" : "play")}</span>`;
+
   const playlistArtwork = (playlist) => {
     const entries = playlistTracks(playlist).slice(0, 4);
     if (!entries.length) return `<span class="playlist-cover-empty" aria-hidden="true">${iconMarkup("music")}</span>`;
@@ -226,21 +232,24 @@
 
   const playlistCard = (playlist) => {
     const count = playlistTracks(playlist).length;
-    return `<article class="playlist-card">
+    const active = activeQueuePlaylistId === playlist.id && Boolean(currentTrack) && playlist.trackIds.includes(currentTrack.id);
+    const playing = active && isTrackPlaying(currentTrack.id);
+    const verb = playing ? "Pause" : active && !audio.ended ? "Resume" : "Play";
+    return `<article class="playlist-card${active ? " is-current-playlist" : ""}${playing ? " is-playing" : ""}">
       <button class="playlist-card-main" data-playlist-open="${escapeHtml(playlist.id)}" aria-label="Open ${escapeHtml(playlist.name)}">
         ${playlistArtwork(playlist)}
         <span class="playlist-card-copy"><strong>${escapeHtml(playlist.name)}</strong><small>${count} song${count === 1 ? "" : "s"} · saved on this device</small></span>
       </button>
-      <button class="playlist-card-play icon-only-button" data-playlist-play="${escapeHtml(playlist.id)}" aria-label="Play ${escapeHtml(playlist.name)}" ${count ? "" : "disabled"}>${iconMarkup("play")}</button>
+      <button class="playlist-card-play icon-only-button${active ? " is-current-playlist" : ""}${playing ? " is-playing" : ""}" data-playlist-play="${escapeHtml(playlist.id)}" data-playlist-action="${escapeHtml(playlist.id)}" aria-label="${verb} ${escapeHtml(playlist.name)}" ${count ? "" : "disabled"}><span data-playlist-play-icon>${iconMarkup(playing ? "pause" : "play")}</span></button>
     </article>`;
   };
 
   const releaseCard = (track) => `
-    <article class="release-card">
-      <button class="release-art-button" data-play="${escapeHtml(track.id)}" data-play-context="all" aria-label="Play ${escapeHtml(track.title)}">
+    <article class="release-card${trackStateClass(track.id)}">
+      <button class="release-art-button${trackStateClass(track.id)}" data-play="${escapeHtml(track.id)}" data-play-context="all" data-track-action="${escapeHtml(track.id)}" aria-label="${escapeHtml(trackActionLabel(track))}">
         ${artwork(track)}
         ${offlineIds.has(track.id) ? `<span class="offline-badge" title="Available offline">${iconMarkup("check")}<span>Offline</span></span>` : ""}
-        <span class="card-play">${iconMarkup(currentTrack?.id === track.id && !audio.paused ? "pause" : "play")}</span>
+        ${trackActionIcon(track, "card-play")}
       </button>
       <div class="release-meta">
         <div><h3>${escapeHtml(track.title)}</h3><p>${escapeHtml(track.album)}${track.year ? ` · ${escapeHtml(track.year)}` : ""}</p></div>
@@ -258,11 +267,17 @@
 
     const primary = $("#hero-primary");
     if (tracks.length) {
+      const latest = tracks[0];
+      const playing = isTrackPlaying(latest.id);
       primary.removeAttribute("href");
       primary.removeAttribute("target");
       primary.removeAttribute("rel");
-      primary.dataset.play = tracks[0].id;
-      primary.innerHTML = `${iconMarkup("play")}<span>Play latest</span>`;
+      primary.dataset.play = latest.id;
+      primary.dataset.trackAction = latest.id;
+      primary.classList.toggle("is-current-track", isCurrentTrack(latest.id));
+      primary.classList.toggle("is-playing", playing);
+      primary.setAttribute("aria-label", `${playing ? "Pause" : "Play"} ${latest.title}`);
+      primary.innerHTML = `<span data-track-play-icon>${iconMarkup(playing ? "pause" : "play")}</span><span data-track-play-label data-track-play-label-suffix=" latest">${playing ? "Pause" : "Play"} latest</span>`;
     }
   };
 
@@ -369,12 +384,12 @@
     $("#library-catalog").innerHTML = liked.length
       ? `<div class="track-table">
           <div class="track-table-head"><span>#</span><span>TITLE</span><span>ALBUM</span><span class="icon-frame">${iconMarkup("clock")}</span></div>
-          ${liked.map((track, index) => `<button class="track-row" data-play="${escapeHtml(track.id)}" data-play-context="favorites"><span class="track-number">${index + 1}</span><span class="track-name">${artwork(track, true)}<span><strong>${escapeHtml(track.title)}</strong><small>${escapeHtml(track.artist)}</small></span></span><span class="track-album">${escapeHtml(track.album)}</span><span class="track-duration">${formatTime(track.duration)}</span></button>`).join("")}
+          ${liked.map((track, index) => `<button class="track-row${trackStateClass(track.id)}" data-play="${escapeHtml(track.id)}" data-play-context="favorites" data-track-action="${escapeHtml(track.id)}" aria-label="${escapeHtml(trackActionLabel(track))}"><span class="track-number"><span class="track-index">${index + 1}</span>${trackActionIcon(track, "track-index-action")}</span><span class="track-name">${artwork(track, true)}<span><strong>${escapeHtml(track.title)}</strong><small>${escapeHtml(track.artist)}</small></span></span><span class="track-album">${escapeHtml(track.album)}</span><span class="track-duration">${formatTime(track.duration)}</span></button>`).join("")}
         </div>`
       : emptyFavorites();
     $("#offline-catalog").innerHTML = saved.length
-      ? `<div class="offline-track-list">${saved.map((track) => `<article class="offline-track-row">
-          <button class="offline-track-main" data-play="${escapeHtml(track.id)}" data-play-context="offline">${artwork(track, true)}<span><strong>${escapeHtml(track.title)}</strong><small>${escapeHtml(track.artist)} · ${formatTime(track.duration)}</small></span><span class="offline-ready">${iconMarkup("check")}<span>Ready</span></span></button>
+      ? `<div class="offline-track-list">${saved.map((track) => `<article class="offline-track-row${trackStateClass(track.id)}">
+          <button class="offline-track-main${trackStateClass(track.id)}" data-play="${escapeHtml(track.id)}" data-play-context="offline" data-track-action="${escapeHtml(track.id)}" aria-label="${escapeHtml(trackActionLabel(track))}">${artwork(track, true)}<span><strong>${escapeHtml(track.title)}</strong><small>${escapeHtml(track.artist)} · ${formatTime(track.duration)}</small></span><span class="offline-ready" data-track-play-icon>${iconMarkup(isTrackPlaying(track.id) ? "pause" : "play")}<span data-track-play-label>${isTrackPlaying(track.id) ? "Pause" : "Play"}</span></span></button>
           <button class="offline-remove icon-only-button" data-offline-toggle="${escapeHtml(track.id)}" aria-label="Remove ${escapeHtml(track.title)} from offline songs">${iconMarkup("close")}</button>
         </article>`).join("")}</div>`
       : `<div class="offline-empty"><span>${iconMarkup("download")}</span><div><strong>No offline songs yet</strong><p>Open a song, then choose “Save offline.” Download it once and it can play without internet on this device.</p></div></div>`;
@@ -403,7 +418,7 @@
       ? shuffleBag.slice().reverse().map(byId).filter(Boolean)
       : [...queue.slice(currentIndex + 1), ...queue.slice(0, currentIndex)]).slice(0, 3);
     $("#side-queue").innerHTML = upcoming
-      .map((track) => `<button data-queue-play="${escapeHtml(track.id)}">${artwork(track, true)}<span><strong>${escapeHtml(track.title)}</strong><small>${escapeHtml(track.artist)} · ${formatTime(track.duration)}</small></span><span class="trailing-icon">${iconMarkup("play")}</span></button>`)
+      .map((track) => `<button class="${trackStateClass(track.id).trim()}" data-queue-play="${escapeHtml(track.id)}" data-track-action="${escapeHtml(track.id)}" aria-label="${escapeHtml(trackActionLabel(track))}">${artwork(track, true)}<span><strong>${escapeHtml(track.title)}</strong><small>${escapeHtml(track.artist)} · ${formatTime(track.duration)}</small></span>${trackActionIcon(track)}</button>`)
       .join("");
   };
 
@@ -460,11 +475,12 @@
     $("#queue-context").textContent = playbackContextLabel;
     $("#queue-clear").disabled = naturalQueue.length <= 1;
     $("#queue-list").innerHTML = naturalQueue.map((track, index) => {
-      const current = track.id === currentTrack?.id;
+      const current = isCurrentTrack(track.id);
+      const playing = isTrackPlaying(track.id);
       return `<article class="queue-row${current ? " active" : ""}">
-        <button class="queue-row-main" data-queue-play="${escapeHtml(track.id)}">
+        <button class="queue-row-main${trackStateClass(track.id)}" data-queue-play="${escapeHtml(track.id)}" data-track-action="${escapeHtml(track.id)}" aria-label="${escapeHtml(trackActionLabel(track))}">
           <span class="queue-position">${index + 1}</span>${artwork(track, true)}
-          <span><strong>${escapeHtml(track.title)}</strong><small>${escapeHtml(track.artist)} · ${formatTime(track.duration)}${current ? " · Playing" : ""}</small></span><span class="trailing-icon">${iconMarkup(current ? "music" : "play")}</span>
+          <span><strong>${escapeHtml(track.title)}</strong><small>${escapeHtml(track.artist)} · ${formatTime(track.duration)}<span data-track-play-status>${current ? ` · ${playing ? "Playing" : "Paused"}` : ""}</span></small></span>${trackActionIcon(track)}
         </button>
         <div class="queue-row-actions" aria-label="Queue actions for ${escapeHtml(track.title)}">
           <button class="icon-only-button" data-queue-next="${escapeHtml(track.id)}" aria-label="Play ${escapeHtml(track.title)} next" ${current ? "disabled" : ""}>${iconMarkup("play-next")}</button>
@@ -481,7 +497,7 @@
     const matches = tracks.filter((track) => `${track.title} ${track.artist} ${track.album} ${track.genre}`.toLowerCase().includes(normalized));
     $("#search-label").textContent = normalized ? `${matches.length} RESULTS` : "OFFICIAL RELEASES";
     $("#search-results").innerHTML = matches.length
-      ? matches.map((track) => `<button data-play="${escapeHtml(track.id)}">${artwork(track, true)}<span><strong>${escapeHtml(track.title)}</strong><small>${escapeHtml(track.album)}${track.year ? ` · ${escapeHtml(track.year)}` : ""}</small></span><span class="trailing-icon">${iconMarkup("play")}</span></button>`).join("")
+      ? matches.map((track) => `<button class="${trackStateClass(track.id).trim()}" data-play="${escapeHtml(track.id)}" data-track-action="${escapeHtml(track.id)}" aria-label="${escapeHtml(trackActionLabel(track))}">${artwork(track, true)}<span><strong>${escapeHtml(track.title)}</strong><small>${escapeHtml(track.album)}${track.year ? ` · ${escapeHtml(track.year)}` : ""}</small></span>${trackActionIcon(track)}</button>`).join("")
       : `<p class="search-empty">${tracks.length ? "No tracks match that search." : "No official releases are live yet."}</p>`;
   };
 
@@ -493,16 +509,18 @@
     $("#playlist-detail-title").textContent = playlist.name;
     $("#playlist-detail-count").textContent = `${entries.length} song${entries.length === 1 ? "" : "s"} · saved on this device`;
     $("#playlist-detail-play").disabled = entries.length === 0;
+    $("#playlist-detail-play").dataset.playlistAction = playlist.id;
     $("#playlist-detail-shuffle").disabled = entries.length === 0;
     $("#playlist-detail-list").innerHTML = entries.length
-      ? entries.map((track, index) => `<div class="playlist-detail-row">
-          <button data-playlist-track="${escapeHtml(track.id)}" data-playlist-id="${escapeHtml(playlist.id)}">
+      ? entries.map((track, index) => `<div class="playlist-detail-row${trackStateClass(track.id)}">
+          <button class="${trackStateClass(track.id).trim()}" data-playlist-track="${escapeHtml(track.id)}" data-playlist-id="${escapeHtml(playlist.id)}" data-track-action="${escapeHtml(track.id)}" aria-label="${escapeHtml(trackActionLabel(track))}">
             <span class="queue-position">${index + 1}</span>${artwork(track, true)}
-            <span><strong>${escapeHtml(track.title)}</strong><small>${escapeHtml(track.artist)} · ${formatTime(track.duration)}</small></span><span class="trailing-icon">${iconMarkup("play")}</span>
+            <span><strong>${escapeHtml(track.title)}</strong><small>${escapeHtml(track.artist)} · ${formatTime(track.duration)}<span data-track-play-status>${isCurrentTrack(track.id) ? ` · ${isTrackPlaying(track.id) ? "Playing" : "Paused"}` : ""}</span></small></span>${trackActionIcon(track)}
           </button>
           <div class="playlist-row-actions"><button class="icon-only-button" data-playlist-move="${escapeHtml(track.id)}" data-playlist-id="${escapeHtml(playlist.id)}" data-direction="-1" aria-label="Move ${escapeHtml(track.title)} up" ${index === 0 ? "disabled" : ""}>${iconMarkup("arrow-up")}</button><button class="icon-only-button" data-playlist-move="${escapeHtml(track.id)}" data-playlist-id="${escapeHtml(playlist.id)}" data-direction="1" aria-label="Move ${escapeHtml(track.title)} down" ${index === entries.length - 1 ? "disabled" : ""}>${iconMarkup("arrow-down")}</button><button class="playlist-remove icon-only-button" data-playlist-remove="${escapeHtml(track.id)}" data-playlist-id="${escapeHtml(playlist.id)}" aria-label="Remove ${escapeHtml(track.title)} from ${escapeHtml(playlist.name)}">${iconMarkup("close")}</button></div>
         </div>`).join("")
       : `<div class="playlist-detail-empty"><span>${iconMarkup("music")}</span><strong>This playlist is empty</strong><p>Open a song and choose “Add to playlist.”</p></div>`;
+    syncPlaybackIndicators();
   };
 
   const modalLayers = () => [$("#search-layer"), $("#queue-layer"), $("#info-layer"), $("#playlist-layer"), $("#playlist-picker-layer"), $("#playlist-editor-layer")];
@@ -559,6 +577,12 @@
     const playlist = playlists.find((entry) => entry.id === id);
     const entries = playlistTracks(playlist);
     if (!playlist || !entries.length) return;
+    const active = activeQueuePlaylistId === playlist.id && Boolean(currentTrack) && playlist.trackIds.includes(currentTrack.id);
+    if (active && !shuffled && !audio.ended) {
+      togglePlay();
+      closeModals();
+      return;
+    }
     setPlaybackQueue(entries.map((track) => track.id), playlist.name, playlist.id);
     shuffleEnabled = shuffled;
     savePlaybackPreferences();
@@ -723,6 +747,7 @@
     renderDiscover();
     renderLibrary();
     renderCurrent();
+    syncPlaybackIndicators();
   };
 
   const showToast = (message) => {
@@ -811,12 +836,58 @@
     $("#now-playing-repeat-state").textContent = repeatMode === "one" ? "One" : repeatMode === "all" ? "All" : "Off";
   };
 
+  const syncPlaybackIndicators = () => {
+    for (const button of $$('[data-track-action]')) {
+      const track = byId(button.dataset.trackAction);
+      if (!track) continue;
+      const current = isCurrentTrack(track.id);
+      const playing = isTrackPlaying(track.id);
+      button.classList.toggle("is-current-track", current);
+      button.classList.toggle("is-playing", playing);
+      button.setAttribute("aria-label", `${playing ? "Pause" : "Play"} ${track.title}`);
+      button.title = `${playing ? "Pause" : "Play"} ${track.title}`;
+      setIcon(button.querySelector("[data-track-play-icon]"), playing ? "pause" : "play");
+      for (const label of button.querySelectorAll("[data-track-play-label]")) {
+        label.textContent = `${playing ? "Pause" : "Play"}${label.dataset.trackPlayLabelSuffix || ""}`;
+      }
+      for (const status of button.querySelectorAll("[data-track-play-status]")) {
+        status.textContent = current ? ` · ${playing ? "Playing" : "Paused"}` : "";
+      }
+      for (const container of [button.closest(".release-card"), button.closest(".offline-track-row"), button.closest(".playlist-detail-row")]) {
+        container?.classList.toggle("is-current-track", current);
+        container?.classList.toggle("is-playing", playing);
+      }
+      const queueRow = button.closest(".queue-row");
+      queueRow?.classList.toggle("active", current);
+      queueRow?.classList.toggle("is-playing", playing);
+    }
+
+    for (const button of $$('[data-playlist-action]')) {
+      const playlist = playlists.find((entry) => entry.id === button.dataset.playlistAction);
+      const active = Boolean(playlist && currentTrack && activeQueuePlaylistId === playlist.id && playlist.trackIds.includes(currentTrack.id));
+      const playing = active && isTrackPlaying(currentTrack.id);
+      const verb = playing ? "Pause" : active && !audio.ended ? "Resume" : "Play";
+      button.classList.toggle("is-current-playlist", active);
+      button.classList.toggle("is-playing", playing);
+      if (playlist) {
+        button.setAttribute("aria-label", `${verb} ${playlist.name}`);
+        button.title = `${verb} ${playlist.name}`;
+      }
+      setIcon(button.querySelector("[data-playlist-play-icon]"), playing ? "pause" : "play");
+      for (const label of button.querySelectorAll("[data-playlist-play-label]")) label.textContent = verb;
+      const card = button.closest(".playlist-card");
+      card?.classList.toggle("is-current-playlist", active);
+      card?.classList.toggle("is-playing", playing);
+    }
+  };
+
   const updatePlayButtons = () => {
     const playing = !audio.paused && !audio.ended;
     for (const button of [$("#play"), $("#now-playing-play")]) {
       setIcon(button, playing ? "pause" : "play");
       button.setAttribute("aria-label", playing ? "Pause" : "Play");
     }
+    syncPlaybackIndicators();
   };
 
   const updateMediaSession = () => {
@@ -1145,6 +1216,16 @@
     else audio.pause();
   };
 
+  const activateTrack = (track, prepareQueue = null) => {
+    if (!track) return;
+    if (isCurrentTrack(track.id)) {
+      togglePlay();
+      return;
+    }
+    prepareQueue?.();
+    setTrack(track);
+  };
+
   const toggleShuffle = () => {
     shuffleEnabled = !shuffleEnabled;
     shuffleBag = [];
@@ -1179,23 +1260,23 @@
     if (target.dataset.view) { event.preventDefault(); switchView(target.dataset.view); }
     if (target.dataset.play) {
       event.preventDefault();
-      const favoriteIds = tracks.filter((track) => favorites.has(track.id)).map((track) => track.id);
-      const offlineTrackIds = tracks.filter((track) => offlineIds.has(track.id)).map((track) => track.id);
-      if (target.dataset.playContext === "favorites" && favoriteIds.length) setPlaybackQueue(favoriteIds, "Liked songs");
-      else if (target.dataset.playContext === "offline" && offlineTrackIds.length) setPlaybackQueue(offlineTrackIds, "Offline songs");
-      else setPlaybackQueue(tracks.map((track) => track.id), "All tracks");
-      setTrack(byId(target.dataset.play));
+      activateTrack(byId(target.dataset.play), () => {
+        const favoriteIds = tracks.filter((track) => favorites.has(track.id)).map((track) => track.id);
+        const offlineTrackIds = tracks.filter((track) => offlineIds.has(track.id)).map((track) => track.id);
+        if (target.dataset.playContext === "favorites" && favoriteIds.length) setPlaybackQueue(favoriteIds, "Liked songs");
+        else if (target.dataset.playContext === "offline" && offlineTrackIds.length) setPlaybackQueue(offlineTrackIds, "Offline songs");
+        else setPlaybackQueue(tracks.map((track) => track.id), "All tracks");
+      });
       closeModals();
     }
-    if (target.dataset.queuePlay) { event.preventDefault(); setTrack(byId(target.dataset.queuePlay)); closeModals(); }
+    if (target.dataset.queuePlay) { event.preventDefault(); activateTrack(byId(target.dataset.queuePlay)); closeModals(); }
     if (target.dataset.playlistOpen) { event.preventDefault(); openPlaylist(target.dataset.playlistOpen); }
     if (target.dataset.playlistPlay) { event.preventDefault(); playPlaylist(target.dataset.playlistPlay); }
     if (target.dataset.playlistTrack) {
       event.preventDefault();
       const playlist = playlists.find((entry) => entry.id === target.dataset.playlistId);
       if (playlist) {
-        setPlaybackQueue(playlist.trackIds, playlist.name, playlist.id);
-        setTrack(byId(target.dataset.playlistTrack));
+        activateTrack(byId(target.dataset.playlistTrack), () => setPlaybackQueue(playlist.trackIds, playlist.name, playlist.id));
         closeModals();
       }
     }
@@ -1279,9 +1360,9 @@
     closeModals();
   });
 
-  audio.addEventListener("play", () => { setPlaybackStatus(); updatePlayButtons(); renderHome(); saveSession(true); if ("mediaSession" in navigator) { try { navigator.mediaSession.playbackState = "playing"; } catch { /* Partial support. */ } } });
+  audio.addEventListener("play", () => { setPlaybackStatus(); updatePlayButtons(); saveSession(true); if ("mediaSession" in navigator) { try { navigator.mediaSession.playbackState = "playing"; } catch { /* Partial support. */ } } });
   audio.addEventListener("playing", () => setPlaybackStatus());
-  audio.addEventListener("pause", () => { updatePlayButtons(); renderHome(); saveSession(true); if ("mediaSession" in navigator) { try { navigator.mediaSession.playbackState = "paused"; } catch { /* Partial support. */ } } });
+  audio.addEventListener("pause", () => { updatePlayButtons(); saveSession(true); if ("mediaSession" in navigator) { try { navigator.mediaSession.playbackState = "paused"; } catch { /* Partial support. */ } } });
   audio.addEventListener("timeupdate", () => { updateProgressUI(); saveSession(); });
   audio.addEventListener("loadstart", () => setPlaybackStatus("loading", navigator.onLine ? "Loading song…" : "Opening saved song…"));
   audio.addEventListener("waiting", () => setPlaybackStatus("loading", "Buffering…"));

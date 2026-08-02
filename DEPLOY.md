@@ -48,7 +48,7 @@ git commit -m "Update XotiicDuck Music"
 git push origin main
 ```
 
-Change the two example paths before running the copy. Do not copy the new package's empty `catalog.js` over the live one, and do not replace the live `music/` or `covers/` folders. After GitHub Pages finishes, reopen the website. Update 9 shows a **Player update ready** prompt so the running page and new service worker switch versions together safely. Update 9.1 also refreshes the artist-console cache so the corrected release editor loads instead of an older installed copy.
+Change the two example paths before running the copy. Do not copy the new package's empty `catalog.js` over the live one, and do not replace the live `music/` or `covers/` folders. After GitHub Pages finishes, reopen the website. Update 9 shows a **Player update ready** prompt so the running page and new service worker switch versions together safely. Update 9.1 refreshes the artist-console cache for the corrected release editor, and Update 9.2 refreshes the player cache for synchronized song and playlist controls.
 
 Update 9 adds `offline.js`, `range.js`, automated tests, and a GitHub Actions validation workflow. The `music/` and `covers/` folders remain user data and are intentionally not included in application replacement copies.
 

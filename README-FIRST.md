@@ -49,6 +49,10 @@ Installation support belongs to the browser. On browsers without installable-web
 
 Background controls use the browser Media Session API where supported, so installed copies can continue audio when the app is in the background and provide lock-screen controls. Force-closing the browser/PWA or an operating-system battery rule can still stop playback.
 
+## Update 9.2 playback-state polish
+
+Update 9.2 keeps every visible song and playlist control synchronized with the real audio state. The active item shows Pause while playing, returns to Play when paused or finished, receives a clear active highlight, and can pause or resume without restarting its queue.
+
 ## Update 9.1 editor fix
 
 Update 9.1 fixes the artist console error that could appear after saving edited lyrics or other release details. It also aligns the replacement MP3 and cover file controls consistently on phones, tablets, and desktop browsers.

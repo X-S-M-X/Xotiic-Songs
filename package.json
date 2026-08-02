@@ -1,6 +1,6 @@
 {
   "name": "xotiicduck-music-portable",
-  "version": "9.1.0",
+  "version": "9.2.0",
   "private": true,
   "description": "Static PWA validation for XotiicDuck Music and Xotiic Upload.",
   "scripts": {

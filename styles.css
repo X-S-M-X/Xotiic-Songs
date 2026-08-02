@@ -5128,6 +5128,75 @@ body.now-playing-open {
   }
 }
 
+/* Update 9.2: one synchronized play/pause state across every song and playlist view. */
+#hero-primary [data-track-play-icon],
+[data-playlist-play-icon],
+.track-index-action {
+  display: grid;
+  place-items: center;
+  line-height: 0;
+}
+
+.track-index-action {
+  display: none;
+  width: 20px;
+  height: 20px;
+  color: var(--acid);
+}
+
+.track-index-action .ui-icon {
+  width: 14px;
+  height: 14px;
+}
+
+.track-row:hover .track-index,
+.track-row:focus-visible .track-index,
+.track-row.is-current-track .track-index {
+  display: none;
+}
+
+.track-row:hover .track-index-action,
+.track-row:focus-visible .track-index-action,
+.track-row.is-current-track .track-index-action {
+  display: grid;
+}
+
+.release-card.is-current-track .card-play,
+.release-art-button.is-current-track .card-play {
+  opacity: 1;
+  transform: translateY(0);
+}
+
+.release-card.is-current-track .release-meta h3,
+.track-row.is-current-track .track-name strong,
+.search-results button.is-current-track strong,
+.playlist-detail-row.is-current-track strong,
+.queue-row.active strong {
+  color: var(--acid-soft);
+}
+
+.track-row.is-current-track,
+.search-results button.is-current-track,
+.offline-track-row.is-current-track,
+.playlist-detail-row.is-current-track {
+  background: rgba(184, 255, 61, 0.055);
+}
+
+.offline-track-row.is-current-track,
+.playlist-detail-row.is-current-track {
+  box-shadow: inset 3px 0 var(--acid);
+}
+
+.playlist-card.is-current-playlist {
+  border-color: var(--line-strong);
+  background: linear-gradient(145deg, rgba(184, 255, 61, 0.07), rgba(255, 255, 255, 0.018));
+}
+
+.playlist-card-play.is-current-playlist,
+#playlist-detail-play.is-current-playlist {
+  box-shadow: 0 0 0 3px rgba(184, 255, 61, 0.11), 0 10px 26px rgba(0, 0, 0, 0.32);
+}
+
 @media (prefers-contrast: more) {
   :root { --line: rgba(255, 255, 255, 0.28); --muted: #b5bdb7; }
   .section-kicker, .nav-label, small, .site-footer { color: #b7c0b9; }

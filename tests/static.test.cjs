@@ -24,6 +24,18 @@ test("service worker serves explicitly saved media with range support", () => {
   assert.doesNotMatch(worker, /addEventListener\("install"[\s\S]{0,220}skipWaiting/);
 });
 
+test("song and playlist surfaces share synchronized play and pause state", () => {
+  const app = read("app.js");
+  const styles = read("styles.css");
+  assert.match(app, /const syncPlaybackIndicators = \(\) =>/);
+  assert.match(app, /\$\$\('\[data-track-action\]'\)/);
+  assert.match(app, /\$\$\('\[data-playlist-action\]'\)/);
+  assert.match(app, /const activateTrack = \(track, prepareQueue = null\) =>/);
+  assert.match(app, /if \(isCurrentTrack\(track\.id\)\) \{\s*togglePlay\(\)/);
+  assert.match(styles, /\.release-card\.is-current-track \.card-play/);
+  assert.match(styles, /\.playlist-card\.is-current-playlist/);
+});
+
 test("admin supports metadata edits, encrypted backup, and atomic updates", () => {
   const html = read("admin/index.html");
   const app = read("admin/app.js");
@@ -44,7 +56,7 @@ test("async admin forms retain their form reference after awaited work", () => {
 });
 
 test("web app manifests are valid and use current versioned icons", () => {
-  for (const [file, version] of [["manifest.webmanifest", "v=9"], ["admin/manifest.webmanifest", "v=10"]]) {
+  for (const [file, version] of [["manifest.webmanifest", "v=10"], ["admin/manifest.webmanifest", "v=10"]]) {
     const manifest = JSON.parse(read(file));
     assert.ok(Array.isArray(manifest.icons) && manifest.icons.length >= 4);
     assert.ok(manifest.icons.every((icon) => icon.src.includes(version)));
