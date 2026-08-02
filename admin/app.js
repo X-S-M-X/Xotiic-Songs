@@ -11,6 +11,10 @@
 
   const $ = (selector) => document.querySelector(selector);
   const $$ = (selector) => [...document.querySelectorAll(selector)];
+  const setIcon = (target, name) => {
+    const use = target?.matches?.("use") ? target : target?.querySelector?.("use");
+    if (use) use.setAttribute("href", `#admin-icon-${name}`);
+  };
   const state = {
     token: "",
     publisher: null,
@@ -106,7 +110,7 @@
   const showToast = (message, type = "success") => {
     clearTimeout(state.toastTimer);
     const toast = $("#toast");
-    $("#toast-icon").textContent = type === "error" ? "!" : "✓";
+    setIcon($("#toast-icon"), type === "error" ? "alert" : "check");
     $("#toast-copy").textContent = message;
     toast.classList.toggle("error", type === "error");
     toast.hidden = false;
@@ -136,7 +140,7 @@
     const label = button?.querySelector("[data-install-label]");
     const icon = button?.querySelector("[data-install-icon]");
     if (label) label.textContent = installed ? "Installed" : "Install";
-    if (icon) icon.textContent = installed ? "✓" : "⇩";
+    if (icon) setIcon(icon, installed ? "check" : "download");
     if (button) {
       button.classList.toggle("is-installed", installed);
       button.setAttribute("aria-label", installed ? "Xotiic Upload is installed" : "Install Xotiic Upload");
@@ -758,6 +762,7 @@
     if (target.dataset.passwordToggle) {
       const input = document.getElementById(target.dataset.passwordToggle);
       input.type = input.type === "password" ? "text" : "password";
+      setIcon(target, input.type === "password" ? "eye" : "eye-off");
       target.setAttribute("aria-label", input.type === "password" ? "Show password" : "Hide password");
     }
     if (target.dataset.adminPanel) selectAdminPanel(target.dataset.adminPanel);

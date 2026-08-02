@@ -11,14 +11,40 @@
     <meta name="apple-mobile-web-app-title" content="XotiicDuck" />
     <meta name="format-detection" content="telephone=no" />
     <title>XotiicDuck Music — Anime Worlds. Original Sound.</title>
-    <link rel="manifest" href="./manifest.webmanifest?v=7" />
-    <link rel="icon" href="./favicon.svg?v=7" />
-    <link rel="apple-touch-icon" href="./apple-touch-icon.png?v=7" />
-    <link rel="stylesheet" href="./styles.css?v=7" />
-    <script src="./catalog.js?v=7" defer></script>
-    <script src="./app.js?v=7" defer></script>
+    <link rel="manifest" href="./manifest.webmanifest?v=8" />
+    <link rel="icon" href="./favicon.svg?v=8" />
+    <link rel="apple-touch-icon" href="./apple-touch-icon.png?v=8" />
+    <link rel="stylesheet" href="./styles.css?v=8" />
+    <script src="./catalog.js?v=8" defer></script>
+    <script src="./app.js?v=8" defer></script>
   </head>
   <body>
+    <svg class="icon-sprite" aria-hidden="true" focusable="false">
+      <symbol id="icon-home" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="m3 11 9-8 9 8"></path><path d="M5.5 10v10h13V10"></path><path d="M9.5 20v-6h5v6"></path></symbol>
+      <symbol id="icon-discover" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="9"></circle><circle cx="12" cy="12" r="2.25"></circle><path d="m15.8 8.2-2.2 5.4-5.4 2.2 2.2-5.4 5.4-2.2Z"></path></symbol>
+      <symbol id="icon-library" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="4" y="4" width="5" height="16" rx="1"></rect><rect x="11" y="4" width="5" height="16" rx="1"></rect><path d="m18 5 2 14"></path></symbol>
+      <symbol id="icon-search" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><circle cx="10.5" cy="10.5" r="6.5"></circle><path d="m15.5 15.5 5 5"></path></symbol>
+      <symbol id="icon-download" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 3v12"></path><path d="m7 10 5 5 5-5"></path><path d="M4 20h16"></path></symbol>
+      <symbol id="icon-music" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M9 18V5l10-2v13"></path><circle cx="6" cy="18" r="3"></circle><circle cx="16" cy="16" r="3"></circle></symbol>
+      <symbol id="icon-heart" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M20.8 4.8a5.5 5.5 0 0 0-7.8 0L12 5.9l-1.1-1.1a5.5 5.5 0 0 0-7.8 7.8L12 21l8.8-8.4a5.5 5.5 0 0 0 0-7.8Z"></path></symbol>
+      <symbol id="icon-heart-filled" viewBox="0 0 24 24"><path fill="currentColor" d="M20.8 4.8a5.5 5.5 0 0 0-7.8 0L12 5.9l-1.1-1.1a5.5 5.5 0 0 0-7.8 7.8L12 21l8.8-8.4a5.5 5.5 0 0 0 0-7.8Z"></path></symbol>
+      <symbol id="icon-shuffle" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M4 7h2.5c2.6 0 3.8 1.6 5.2 4.1l1 1.8c1.4 2.5 2.6 4.1 5.8 4.1H20"></path><path d="m17 14 3 3-3 3"></path><path d="M4 17h2.5c1.8 0 2.9-.8 3.9-2.2"></path><path d="M14.3 9.1C15.4 7.7 16.6 7 18.5 7H20"></path><path d="m17 4 3 3-3 3"></path></symbol>
+      <symbol id="icon-previous" viewBox="0 0 24 24"><path fill="currentColor" d="M17.5 5.5 8 12l9.5 6.5v-13Z"></path></symbol>
+      <symbol id="icon-next" viewBox="0 0 24 24"><path fill="currentColor" d="M6.5 5.5 16 12l-9.5 6.5v-13Z"></path></symbol>
+      <symbol id="icon-play" viewBox="0 0 24 24"><path fill="currentColor" d="M8 5.25v13.5L19 12 8 5.25Z"></path></symbol>
+      <symbol id="icon-pause" viewBox="0 0 24 24"><path fill="currentColor" d="M7 5h3.5v14H7zM13.5 5H17v14h-3.5z"></path></symbol>
+      <symbol id="icon-repeat" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="m17 3 3 3-3 3"></path><path d="M4 11V9a3 3 0 0 1 3-3h13"></path><path d="m7 21-3-3 3-3"></path><path d="M20 13v2a3 3 0 0 1-3 3H4"></path></symbol>
+      <symbol id="icon-repeat-one" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="m17 3 3 3-3 3"></path><path d="M4 11V9a3 3 0 0 1 3-3h13"></path><path d="m7 21-3-3 3-3"></path><path d="M20 13v2a3 3 0 0 1-3 3H4"></path><path d="M11.1 11.1 12.5 10v5"></path></symbol>
+      <symbol id="icon-queue" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M9 6h11M9 12h11M9 18h11"></path><circle cx="4.5" cy="6" r="1"></circle><circle cx="4.5" cy="12" r="1"></circle><circle cx="4.5" cy="18" r="1"></circle></symbol>
+      <symbol id="icon-volume" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M5 10v4h4l5 4V6l-5 4H5Z"></path><path d="M17 9a4 4 0 0 1 0 6"></path><path d="M19.5 6.5a8 8 0 0 1 0 11"></path></symbol>
+      <symbol id="icon-chevron-down" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><path d="m6.5 9.5 5.5 5 5.5-5"></path></symbol>
+      <symbol id="icon-plus" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M12 5v14M5 12h14"></path></symbol>
+      <symbol id="icon-lyrics" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M5 6h14M5 11h14M5 16h9M5 21h6"></path></symbol>
+      <symbol id="icon-close" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="m6 6 12 12M18 6 6 18"></path></symbol>
+      <symbol id="icon-check" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><path d="m5 12 4 4L19 6"></path></symbol>
+      <symbol id="icon-clock" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="9"></circle><path d="M12 7v5l3 2"></path></symbol>
+      <symbol id="icon-chevron-right" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="m9 5 7 7-7 7"></path></symbol>
+    </svg>
     <div id="app" class="app-shell catalog-empty">
       <audio id="audio" preload="metadata"></audio>
 
@@ -29,29 +55,29 @@
         </button>
         <nav class="primary-nav" aria-label="Primary navigation">
           <p class="nav-label">BROWSE</p>
-          <button class="active" data-view="home"><span class="nav-symbol">⌂</span><span>Home</span></button>
-          <button data-view="discover"><span class="nav-symbol">◉</span><span>Discover</span></button>
-          <button data-view="library"><span class="nav-symbol">▥</span><span>Your library</span></button>
+          <button class="active" data-view="home"><span class="nav-symbol"><svg class="ui-icon" aria-hidden="true"><use href="#icon-home"></use></svg></span><span>Home</span></button>
+          <button data-view="discover"><span class="nav-symbol"><svg class="ui-icon" aria-hidden="true"><use href="#icon-discover"></use></svg></span><span>Discover</span></button>
+          <button data-view="library"><span class="nav-symbol"><svg class="ui-icon" aria-hidden="true"><use href="#icon-library"></use></svg></span><span>Your library</span></button>
         </nav>
         <div class="sidebar-section">
           <p class="nav-label">MY COLLECTION</p>
-          <button data-view="library"><span class="mini-tile liked">♥</span><span>Liked songs</span></button>
+          <button data-view="library"><span class="mini-tile liked"><svg class="ui-icon" aria-hidden="true"><use href="#icon-heart-filled"></use></svg></span><span>Liked songs</span></button>
         </div>
         <div class="sidebar-spacer"></div>
         <div class="install-card">
-          <span class="install-icon">▯</span>
+          <span class="install-icon"><svg class="ui-icon" aria-hidden="true"><use href="#icon-download"></use></svg></span>
           <div><strong>Take it with you</strong><p>Install the player on this device.</p></div>
-          <button data-install aria-label="Install XotiicDuck Music"><span data-install-icon aria-hidden="true">⇩</span></button>
+          <button data-install aria-label="Install XotiicDuck Music"><span data-install-icon class="icon-frame" aria-hidden="true"><svg class="ui-icon"><use href="#icon-download"></use></svg></span></button>
         </div>
-        <a class="channel-link" href="https://www.youtube.com/@XotiicDuck" target="_blank" rel="noreferrer"><span aria-hidden="true">▶</span><span>@XotiicDuck on YouTube</span></a>
+        <a class="channel-link" href="https://www.youtube.com/@XotiicDuck" target="_blank" rel="noreferrer"><span class="icon-frame" aria-hidden="true"><svg class="ui-icon"><use href="#icon-play"></use></svg></span><span>@XotiicDuck on YouTube</span></a>
       </aside>
 
       <main class="main-content">
         <header class="topbar">
           <div class="mobile-brand"><span class="brand-mark"><span>XD</span></span><strong>XOTIICDUCK</strong></div>
-          <button class="search-trigger" data-search-open><span>⌕</span><span>Search the official catalog...</span><kbd>/</kbd></button>
+          <button class="search-trigger" data-search-open><span class="icon-frame"><svg class="ui-icon" aria-hidden="true"><use href="#icon-search"></use></svg></span><span>Search the official catalog...</span><kbd>/</kbd></button>
           <div class="top-actions">
-            <button class="profile-button" data-install aria-label="Install XotiicDuck Music"><span data-install-icon aria-hidden="true">⇩</span><span data-install-label>Install app</span></button>
+            <button class="profile-button" data-install aria-label="Install XotiicDuck Music"><span data-install-icon class="icon-frame" aria-hidden="true"><svg class="ui-icon"><use href="#icon-download"></use></svg></span><span data-install-label>Install app</span></button>
           </div>
         </header>
 
@@ -63,8 +89,8 @@
                 <h1>ANIME WORLDS.<br /><em>ORIGINAL SOUND.</em></h1>
                 <p class="hero-description">High-impact tracks inspired by the stories, rivalries, and final battles that refuse to leave your head.</p>
                 <div class="hero-actions">
-                  <a id="hero-primary" class="primary-button" href="https://www.youtube.com/@XotiicDuck" target="_blank" rel="noreferrer">▶ Open YouTube</a>
-                  <button class="secondary-button" data-install><span data-install-icon aria-hidden="true">⇩</span><span data-install-label>Install player</span></button>
+                  <a id="hero-primary" class="primary-button" href="https://www.youtube.com/@XotiicDuck" target="_blank" rel="noreferrer"><svg class="ui-icon" aria-hidden="true"><use href="#icon-play"></use></svg><span>Open YouTube</span></a>
+                  <button class="secondary-button" data-install><span data-install-icon class="icon-frame" aria-hidden="true"><svg class="ui-icon"><use href="#icon-download"></use></svg></span><span data-install-label>Install player</span></button>
                 </div>
                 <div class="hero-stats">
                   <div><strong id="live-count">00</strong><span>LIVE TRACKS</span></div>
@@ -83,14 +109,14 @@
             </section>
 
             <section class="section-block">
-              <div class="section-heading"><div><p class="section-kicker">OFFICIAL CATALOG</p><h2 id="catalog-heading">The catalog opens with the first release</h2></div><button id="view-all" data-view="discover" hidden>View all ›</button></div>
+              <div class="section-heading"><div><p class="section-kicker">OFFICIAL CATALOG</p><h2 id="catalog-heading">The catalog opens with the first release</h2></div><button id="view-all" data-view="discover" hidden><span>View all</span><svg class="ui-icon" aria-hidden="true"><use href="#icon-chevron-right"></use></svg></button></div>
               <div id="home-catalog"></div>
             </section>
 
             <section class="signal-banner">
-              <div class="signal-icon">♫</div>
+              <div class="signal-icon"><svg class="ui-icon" aria-hidden="true"><use href="#icon-music"></use></svg></div>
               <div><p class="section-kicker">BUILT FOR LISTENERS</p><h2>No ads. No algorithms. Just the music.</h2><p>Install the web app, keep your library close, and hear every XotiicDuck release from one focused home.</p></div>
-              <button data-install><span data-install-label>Install app</span><span data-install-icon aria-hidden="true">⇩</span></button>
+              <button data-install><span data-install-label>Install app</span><span data-install-icon class="icon-frame" aria-hidden="true"><svg class="ui-icon"><use href="#icon-download"></use></svg></span></button>
             </section>
           </section>
 
@@ -101,7 +127,7 @@
           </section>
 
           <section class="view-panel page-section" data-panel="library" hidden>
-            <div class="page-title library-title"><div><p class="section-kicker">SAVED ON THIS DEVICE</p><h1>Your library</h1><p>Favorites and playlists stay on this device. Your music files remain in the official catalog.</p></div><button class="library-create" data-playlist-create><span>＋</span>Create playlist</button></div>
+            <div class="page-title library-title"><div><p class="section-kicker">SAVED ON THIS DEVICE</p><h1>Your library</h1><p>Favorites and playlists stay on this device. Your music files remain in the official catalog.</p></div><button class="library-create" data-playlist-create><span class="icon-frame"><svg class="ui-icon" aria-hidden="true"><use href="#icon-plus"></use></svg></span>Create playlist</button></div>
             <section class="library-section"><div class="library-section-heading"><p class="section-kicker">YOUR PLAYLISTS</p><h2>Playlists</h2></div><div id="playlist-library"></div></section>
             <section class="library-section liked-library-section"><div class="library-section-heading"><p class="section-kicker">QUICK COLLECTION</p><h2>Liked songs</h2></div><div id="library-catalog"></div></section>
           </section>
@@ -117,52 +143,52 @@
       <aside id="now-panel" class="now-panel" hidden>
         <div class="panel-heading"><div><span class="live-dot"></span> NOW PLAYING</div></div>
         <div id="now-art"></div>
-        <div class="now-copy"><div><h2 id="now-title"></h2><p id="now-artist"></p></div><button id="now-favorite" aria-label="Save current track">♡</button></div>
-        <div class="now-context"><p>◉ RELEASE</p><strong id="now-album"></strong><span id="now-year"></span></div>
-        <div class="queue-heading"><span>UP NEXT</span><span>☷</span></div>
+        <div class="now-copy"><div><h2 id="now-title"></h2><p id="now-artist"></p></div><button id="now-favorite" class="icon-only-button" aria-label="Save current track"><svg class="ui-icon" aria-hidden="true"><use href="#icon-heart"></use></svg></button></div>
+        <div class="now-context"><p><span class="release-dot" aria-hidden="true"></span> RELEASE</p><strong id="now-album"></strong><span id="now-year"></span></div>
+        <div class="queue-heading"><span>UP NEXT</span><span class="icon-frame"><svg class="ui-icon" aria-hidden="true"><use href="#icon-queue"></use></svg></span></div>
         <div id="side-queue" class="queue-list"></div>
       </aside>
 
       <footer id="player" class="player-bar" hidden>
         <span class="mini-player-progress-track" aria-hidden="true"><span id="mini-progress"></span></span>
-        <div class="player-track"><button id="player-open" class="player-open" aria-label="Open Now Playing"><span id="player-art"></span><span class="player-copy"><strong id="player-title"></strong><span id="player-artist"></span></span></button><button id="player-favorite" aria-label="Save current track">♡</button></div>
+        <div class="player-track"><button id="player-open" class="player-open" aria-label="Open Now Playing"><span id="player-art"></span><span class="player-copy"><strong id="player-title"></strong><span id="player-artist"></span></span></button><button id="player-favorite" class="icon-only-button" aria-label="Save current track"><svg class="ui-icon" aria-hidden="true"><use href="#icon-heart"></use></svg></button></div>
         <div class="player-controls">
-          <div class="control-buttons"><button id="shuffle" aria-label="Turn shuffle on" aria-pressed="false">⇄</button><button id="previous" aria-label="Previous track or restart">◀</button><button id="play" class="main-play" aria-label="Play">▶</button><button id="next" aria-label="Next track">▶</button><button id="repeat" class="repeat-control" aria-label="Repeat mode: off" aria-pressed="false">↻</button></div>
+          <div class="control-buttons"><button id="shuffle" class="icon-only-button" aria-label="Turn shuffle on" aria-pressed="false"><svg class="ui-icon" aria-hidden="true"><use href="#icon-shuffle"></use></svg></button><button id="previous" class="icon-only-button" aria-label="Previous track or restart"><svg class="ui-icon" aria-hidden="true"><use href="#icon-previous"></use></svg></button><button id="play" class="main-play icon-only-button" aria-label="Play"><svg class="ui-icon" aria-hidden="true"><use href="#icon-play"></use></svg></button><button id="next" class="icon-only-button" aria-label="Next track"><svg class="ui-icon" aria-hidden="true"><use href="#icon-next"></use></svg></button><button id="repeat" class="repeat-control icon-only-button" aria-label="Repeat mode: off" aria-pressed="false"><svg class="ui-icon" aria-hidden="true"><use href="#icon-repeat"></use></svg></button></div>
           <div class="progress-row"><span id="elapsed">0:00</span><input id="progress" type="range" min="0" max="1" step="0.1" value="0" aria-label="Track progress" /><span id="duration">0:00</span></div>
         </div>
-        <div class="player-extras"><button id="queue-open" aria-label="Open queue">☷</button><span>◕</span><input id="volume" type="range" min="0" max="1" step="0.01" value="0.72" aria-label="Volume" /></div>
+        <div class="player-extras"><button id="queue-open" class="icon-only-button" aria-label="Open queue"><svg class="ui-icon" aria-hidden="true"><use href="#icon-queue"></use></svg></button><span class="icon-frame" aria-hidden="true"><svg class="ui-icon"><use href="#icon-volume"></use></svg></span><input id="volume" type="range" min="0" max="1" step="0.01" value="0.72" aria-label="Volume" /></div>
       </footer>
 
       <nav class="mobile-nav" aria-label="Mobile navigation">
-        <button class="active" data-view="home"><span>⌂</span><span>Home</span></button>
-        <button data-view="discover"><span>◉</span><span>Discover</span></button>
-        <button data-view="library"><span>▥</span><span>Library</span></button>
-        <button data-search-open><span>⌕</span><span>Search</span></button>
+        <button class="active" data-view="home"><span class="icon-frame"><svg class="ui-icon" aria-hidden="true"><use href="#icon-home"></use></svg></span><span>Home</span></button>
+        <button data-view="discover"><span class="icon-frame"><svg class="ui-icon" aria-hidden="true"><use href="#icon-discover"></use></svg></span><span>Discover</span></button>
+        <button data-view="library"><span class="icon-frame"><svg class="ui-icon" aria-hidden="true"><use href="#icon-library"></use></svg></span><span>Library</span></button>
+        <button data-search-open><span class="icon-frame"><svg class="ui-icon" aria-hidden="true"><use href="#icon-search"></use></svg></span><span>Search</span></button>
       </nav>
 
       <div id="now-playing-layer" class="now-playing-layer" role="dialog" aria-modal="true" aria-label="Now Playing" hidden>
         <section class="now-playing-surface">
           <header id="now-playing-header" class="now-playing-header">
-            <button id="now-playing-close" type="button" aria-label="Close Now Playing">⌄</button>
+            <button id="now-playing-close" class="icon-only-button" type="button" aria-label="Close Now Playing"><svg class="ui-icon" aria-hidden="true"><use href="#icon-chevron-down"></use></svg></button>
             <div><span>NOW PLAYING</span><strong id="now-playing-context">All tracks</strong></div>
             <span class="now-playing-header-space" aria-hidden="true"></span>
           </header>
           <div class="now-playing-body">
             <div id="now-playing-art" class="now-playing-art"></div>
             <div class="now-playing-details">
-              <div class="now-playing-title-row"><div><h2 id="now-playing-title"></h2><p id="now-playing-artist"></p><small id="now-playing-album"></small></div><button id="now-playing-favorite" type="button" aria-label="Save current track">♡</button></div>
+              <div class="now-playing-title-row"><div><h2 id="now-playing-title"></h2><p id="now-playing-artist"></p><small id="now-playing-album"></small></div><button id="now-playing-favorite" class="icon-only-button" type="button" aria-label="Save current track"><svg class="ui-icon" aria-hidden="true"><use href="#icon-heart"></use></svg></button></div>
               <div class="now-playing-progress"><input id="now-playing-progress" type="range" min="0" max="1" step="0.1" value="0" aria-label="Track progress" /><div><span id="now-playing-elapsed">0:00</span><span id="now-playing-duration">0:00</span></div></div>
               <div class="now-playing-controls">
-                <button id="now-playing-shuffle" class="mode-control" type="button" aria-label="Turn shuffle on" aria-pressed="false"><span>⇄</span><small id="now-playing-shuffle-state">Off</small></button>
-                <button id="now-playing-previous" type="button" aria-label="Previous track or restart">◀</button>
-                <button id="now-playing-play" class="now-playing-main-play" type="button" aria-label="Play">▶</button>
-                <button id="now-playing-next" type="button" aria-label="Next track">▶</button>
-                <button id="now-playing-repeat" class="mode-control" type="button" aria-label="Repeat mode: off" aria-pressed="false"><span id="now-playing-repeat-icon">↻</span><small id="now-playing-repeat-state">Off</small></button>
+                <button id="now-playing-shuffle" class="mode-control" type="button" aria-label="Turn shuffle on" aria-pressed="false"><span class="mode-icon"><svg class="ui-icon" aria-hidden="true"><use href="#icon-shuffle"></use></svg></span><small id="now-playing-shuffle-state">Off</small></button>
+                <button id="now-playing-previous" class="icon-only-button" type="button" aria-label="Previous track or restart"><svg class="ui-icon" aria-hidden="true"><use href="#icon-previous"></use></svg></button>
+                <button id="now-playing-play" class="now-playing-main-play icon-only-button" type="button" aria-label="Play"><svg class="ui-icon" aria-hidden="true"><use href="#icon-play"></use></svg></button>
+                <button id="now-playing-next" class="icon-only-button" type="button" aria-label="Next track"><svg class="ui-icon" aria-hidden="true"><use href="#icon-next"></use></svg></button>
+                <button id="now-playing-repeat" class="mode-control" type="button" aria-label="Repeat mode: off" aria-pressed="false"><span class="mode-icon"><svg id="now-playing-repeat-icon" class="ui-icon" aria-hidden="true"><use href="#icon-repeat"></use></svg></span><small id="now-playing-repeat-state">Off</small></button>
               </div>
               <div class="now-playing-actions">
-                <button id="now-playing-add-playlist" type="button"><span>＋</span><small>Add to playlist</small></button>
-                <button id="now-playing-queue" type="button"><span>☷</span><small>Queue</small></button>
-                <button id="now-playing-lyrics-toggle" type="button" aria-expanded="false" hidden><span>≡</span><small>Lyrics</small></button>
+                <button id="now-playing-add-playlist" type="button"><span class="icon-frame"><svg class="ui-icon" aria-hidden="true"><use href="#icon-plus"></use></svg></span><small>Add to playlist</small></button>
+                <button id="now-playing-queue" type="button"><span class="icon-frame"><svg class="ui-icon" aria-hidden="true"><use href="#icon-queue"></use></svg></span><small>Queue</small></button>
+                <button id="now-playing-lyrics-toggle" type="button" aria-expanded="false" hidden><span class="icon-frame"><svg class="ui-icon" aria-hidden="true"><use href="#icon-lyrics"></use></svg></span><small>Lyrics</small></button>
               </div>
               <section id="lyrics-panel" class="lyrics-panel" hidden><div><p class="section-kicker">LYRICS</p><span>Available for this release</span></div><div id="lyrics-copy" class="lyrics-copy"></div></section>
             </div>
@@ -172,19 +198,19 @@
 
       <div id="search-layer" class="modal-layer search-layer" role="dialog" aria-modal="true" aria-label="Search music" hidden>
         <button class="modal-backdrop" data-modal-close aria-label="Close search"></button>
-        <div class="search-modal"><div class="search-input-wrap"><span>⌕</span><input id="search-input" placeholder="Search the XotiicDuck catalog" /><button data-modal-close aria-label="Close">×</button></div><p id="search-label" class="result-label">OFFICIAL RELEASES</p><div id="search-results" class="search-results"></div></div>
+        <div class="search-modal"><div class="search-input-wrap"><span class="icon-frame"><svg class="ui-icon" aria-hidden="true"><use href="#icon-search"></use></svg></span><input id="search-input" placeholder="Search the XotiicDuck catalog" /><button class="icon-only-button" data-modal-close aria-label="Close"><svg class="ui-icon" aria-hidden="true"><use href="#icon-close"></use></svg></button></div><p id="search-label" class="result-label">OFFICIAL RELEASES</p><div id="search-results" class="search-results"></div></div>
       </div>
 
       <div id="queue-layer" class="modal-layer" role="dialog" aria-modal="true" aria-label="Playback queue" hidden>
         <button class="modal-backdrop" data-modal-close aria-label="Close queue"></button>
-        <div class="queue-modal"><div class="queue-modal-heading"><div><p class="section-kicker">PLAYBACK ORDER · <span id="queue-context">All tracks</span></p><h2>Queue</h2></div><button data-modal-close aria-label="Close">×</button></div><div id="queue-list" class="queue-modal-list"></div></div>
+        <div class="queue-modal"><div class="queue-modal-heading"><div><p class="section-kicker">PLAYBACK ORDER · <span id="queue-context">All tracks</span></p><h2>Queue</h2></div><button class="icon-only-button" data-modal-close aria-label="Close"><svg class="ui-icon" aria-hidden="true"><use href="#icon-close"></use></svg></button></div><div id="queue-list" class="queue-modal-list"></div></div>
       </div>
 
       <div id="playlist-layer" class="modal-layer" role="dialog" aria-modal="true" aria-label="Playlist" hidden>
         <button class="modal-backdrop" data-modal-close aria-label="Close playlist"></button>
         <article class="playlist-modal">
-          <header class="playlist-modal-header"><div id="playlist-detail-cover" class="playlist-detail-cover"></div><div><p class="section-kicker">PLAYLIST</p><h2 id="playlist-detail-title"></h2><span id="playlist-detail-count"></span></div><button data-modal-close aria-label="Close playlist">×</button></header>
-          <div class="playlist-modal-actions"><button id="playlist-detail-play" class="playlist-primary">▶ Play</button><button id="playlist-detail-shuffle">⇄ Shuffle</button><button id="playlist-detail-rename">Rename</button><button id="playlist-detail-delete" class="playlist-danger">Delete</button></div>
+          <header class="playlist-modal-header"><div id="playlist-detail-cover" class="playlist-detail-cover"></div><div><p class="section-kicker">PLAYLIST</p><h2 id="playlist-detail-title"></h2><span id="playlist-detail-count"></span></div><button class="icon-only-button" data-modal-close aria-label="Close playlist"><svg class="ui-icon" aria-hidden="true"><use href="#icon-close"></use></svg></button></header>
+          <div class="playlist-modal-actions"><button id="playlist-detail-play" class="playlist-primary"><svg class="ui-icon" aria-hidden="true"><use href="#icon-play"></use></svg><span>Play</span></button><button id="playlist-detail-shuffle"><svg class="ui-icon" aria-hidden="true"><use href="#icon-shuffle"></use></svg><span>Shuffle</span></button><button id="playlist-detail-rename">Rename</button><button id="playlist-detail-delete" class="playlist-danger">Delete</button></div>
           <div id="playlist-detail-list" class="playlist-detail-list"></div>
         </article>
       </div>
@@ -192,8 +218,8 @@
       <div id="playlist-picker-layer" class="modal-layer" role="dialog" aria-modal="true" aria-label="Add song to playlist" hidden>
         <button class="modal-backdrop" data-modal-close aria-label="Close playlist chooser"></button>
         <article class="playlist-picker-modal">
-          <header><div><p class="section-kicker">ADD TO PLAYLIST</p><h2 id="playlist-picker-track"></h2></div><button data-modal-close aria-label="Close playlist chooser">×</button></header>
-          <button class="playlist-new-row" data-playlist-create-current><span>＋</span><div><strong>New playlist</strong><small>Create one with this song</small></div><b>›</b></button>
+          <header><div><p class="section-kicker">ADD TO PLAYLIST</p><h2 id="playlist-picker-track"></h2></div><button class="icon-only-button" data-modal-close aria-label="Close playlist chooser"><svg class="ui-icon" aria-hidden="true"><use href="#icon-close"></use></svg></button></header>
+          <button class="playlist-new-row" data-playlist-create-current><span class="icon-frame"><svg class="ui-icon" aria-hidden="true"><use href="#icon-plus"></use></svg></span><div><strong>New playlist</strong><small>Create one with this song</small></div><b class="icon-frame"><svg class="ui-icon" aria-hidden="true"><use href="#icon-chevron-right"></use></svg></b></button>
           <div id="playlist-picker-list" class="playlist-picker-list"></div>
         </article>
       </div>
@@ -201,7 +227,7 @@
       <div id="playlist-editor-layer" class="modal-layer" role="dialog" aria-modal="true" aria-label="Playlist editor" hidden>
         <button class="modal-backdrop" data-modal-close aria-label="Close playlist editor"></button>
         <form id="playlist-editor-form" class="playlist-editor-modal">
-          <button class="modal-close" type="button" data-modal-close aria-label="Close playlist editor">×</button><p id="playlist-editor-label" class="section-kicker">NEW PLAYLIST</p><h2 id="playlist-editor-title">Create a playlist</h2>
+          <button class="modal-close icon-only-button" type="button" data-modal-close aria-label="Close playlist editor"><svg class="ui-icon" aria-hidden="true"><use href="#icon-close"></use></svg></button><p id="playlist-editor-label" class="section-kicker">NEW PLAYLIST</p><h2 id="playlist-editor-title">Create a playlist</h2>
           <label for="playlist-name">Playlist name</label><input id="playlist-name" maxlength="60" autocomplete="off" required placeholder="e.g. Final Battle Anthems" />
           <button id="playlist-editor-submit" class="playlist-editor-submit" type="submit">Create playlist</button>
         </form>
@@ -209,10 +235,10 @@
 
       <div id="info-layer" class="modal-layer" role="dialog" aria-modal="true" aria-label="Information" hidden>
         <button class="modal-backdrop" data-modal-close aria-label="Close information"></button>
-        <article class="portable-info-modal"><button class="modal-close" data-modal-close aria-label="Close">×</button><p id="info-eyebrow" class="section-kicker"></p><h2 id="info-title"></h2><div id="info-copy"></div></article>
+        <article class="portable-info-modal"><button class="modal-close icon-only-button" data-modal-close aria-label="Close"><svg class="ui-icon" aria-hidden="true"><use href="#icon-close"></use></svg></button><p id="info-eyebrow" class="section-kicker"></p><h2 id="info-title"></h2><div id="info-copy"></div></article>
       </div>
 
-      <div id="toast" class="toast" role="status" aria-live="polite" aria-atomic="true" hidden><span class="toast-icon" aria-hidden="true">✓</span><span id="toast-copy" class="toast-copy"></span></div>
+      <div id="toast" class="toast" role="status" aria-live="polite" aria-atomic="true" hidden><span class="toast-icon" aria-hidden="true"><svg class="ui-icon"><use href="#icon-check"></use></svg></span><span id="toast-copy" class="toast-copy"></span></div>
     </div>
   </body>
 </html>

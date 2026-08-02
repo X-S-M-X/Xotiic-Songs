@@ -20,6 +20,13 @@
     .replaceAll('"', "&quot;")
     .replaceAll("'", "&#039;");
 
+  const iconMarkup = (name, className = "ui-icon") => `<svg class="${className}" aria-hidden="true" focusable="false"><use href="#icon-${name}"></use></svg>`;
+
+  const setIcon = (target, name) => {
+    const use = target?.matches?.("use") ? target : target?.querySelector?.("use");
+    if (use) use.setAttribute("href", `#icon-${name}`);
+  };
+
   const seenIds = new Set();
   const tracks = rawCatalog
     .filter((entry) => {
@@ -129,15 +136,15 @@
 
   const emptyCatalog = () => `
     <div class="empty-state catalog-empty-state">
-      <span>♫</span>
+      <span>${iconMarkup("music")}</span>
       <h2>Official releases are being prepared.</h2>
       <p>Tracks appear here only after the final MP3 and square cover have been published.</p>
-      <a class="primary-button" href="https://www.youtube.com/@XotiicDuck" target="_blank" rel="noreferrer">▶ Visit XotiicDuck on YouTube</a>
+      <a class="primary-button" href="https://www.youtube.com/@XotiicDuck" target="_blank" rel="noreferrer">${iconMarkup("play")}<span>Visit XotiicDuck on YouTube</span></a>
     </div>`;
 
   const emptyFavorites = () => `
     <div class="empty-state">
-      <span>♥</span>
+      <span>${iconMarkup("heart-filled")}</span>
       <h2>Your favorites will live here.</h2>
       <p>Save a released track and it will appear in this library on the same device.</p>
     </div>`;
@@ -146,7 +153,7 @@
 
   const playlistArtwork = (playlist) => {
     const entries = playlistTracks(playlist).slice(0, 4);
-    if (!entries.length) return `<span class="playlist-cover-empty" aria-hidden="true">♫</span>`;
+    if (!entries.length) return `<span class="playlist-cover-empty" aria-hidden="true">${iconMarkup("music")}</span>`;
     return `<span class="playlist-cover-grid count-${entries.length}">${entries.map((track) => `<img src="${escapeHtml(track.cover)}" alt="" />`).join("")}</span>`;
   };
 
@@ -157,7 +164,7 @@
         ${playlistArtwork(playlist)}
         <span class="playlist-card-copy"><strong>${escapeHtml(playlist.name)}</strong><small>${count} song${count === 1 ? "" : "s"} · saved on this device</small></span>
       </button>
-      <button class="playlist-card-play" data-playlist-play="${escapeHtml(playlist.id)}" aria-label="Play ${escapeHtml(playlist.name)}" ${count ? "" : "disabled"}>▶</button>
+      <button class="playlist-card-play icon-only-button" data-playlist-play="${escapeHtml(playlist.id)}" aria-label="Play ${escapeHtml(playlist.name)}" ${count ? "" : "disabled"}>${iconMarkup("play")}</button>
     </article>`;
   };
 
@@ -165,11 +172,11 @@
     <article class="release-card">
       <button class="release-art-button" data-play="${escapeHtml(track.id)}" data-play-context="all" aria-label="Play ${escapeHtml(track.title)}">
         ${artwork(track)}
-        <span class="card-play">${currentTrack?.id === track.id && !audio.paused ? "Ⅱ" : "▶"}</span>
+        <span class="card-play">${iconMarkup(currentTrack?.id === track.id && !audio.paused ? "pause" : "play")}</span>
       </button>
       <div class="release-meta">
         <div><h3>${escapeHtml(track.title)}</h3><p>${escapeHtml(track.album)}${track.year ? ` · ${escapeHtml(track.year)}` : ""}</p></div>
-        <button class="icon-button${favorites.has(track.id) ? " is-favorite" : ""}" data-favorite="${escapeHtml(track.id)}" aria-label="${favorites.has(track.id) ? "Remove from" : "Save to"} favorites">${favorites.has(track.id) ? "♥" : "♡"}</button>
+        <button class="icon-button icon-only-button${favorites.has(track.id) ? " is-favorite" : ""}" data-favorite="${escapeHtml(track.id)}" aria-label="${favorites.has(track.id) ? "Remove from" : "Save to"} favorites">${iconMarkup(favorites.has(track.id) ? "heart-filled" : "heart")}</button>
       </div>
     </article>`;
 
@@ -187,7 +194,7 @@
       primary.removeAttribute("target");
       primary.removeAttribute("rel");
       primary.dataset.play = tracks[0].id;
-      primary.textContent = "▶ Play latest";
+      primary.innerHTML = `${iconMarkup("play")}<span>Play latest</span>`;
     }
   };
 
@@ -205,10 +212,10 @@
     const liked = tracks.filter((track) => favorites.has(track.id));
     $("#playlist-library").innerHTML = playlists.length
       ? `<div class="playlist-grid">${playlists.map(playlistCard).join("")}</div>`
-      : `<div class="playlist-empty"><span aria-hidden="true">＋</span><div><strong>Create your first playlist</strong><p>Build your own listening order from the XotiicDuck catalog.</p></div><button data-playlist-create>Create playlist</button></div>`;
+      : `<div class="playlist-empty"><span aria-hidden="true">${iconMarkup("plus")}</span><div><strong>Create your first playlist</strong><p>Build your own listening order from the XotiicDuck catalog.</p></div><button data-playlist-create>Create playlist</button></div>`;
     $("#library-catalog").innerHTML = liked.length
       ? `<div class="track-table">
-          <div class="track-table-head"><span>#</span><span>TITLE</span><span>ALBUM</span><span>◷</span></div>
+          <div class="track-table-head"><span>#</span><span>TITLE</span><span>ALBUM</span><span class="icon-frame">${iconMarkup("clock")}</span></div>
           ${liked.map((track, index) => `<button class="track-row" data-play="${escapeHtml(track.id)}" data-play-context="favorites"><span class="track-number">${index + 1}</span><span class="track-name">${artwork(track, true)}<span><strong>${escapeHtml(track.title)}</strong><small>${escapeHtml(track.artist)}</small></span></span><span class="track-album">${escapeHtml(track.album)}</span><span class="track-duration">${formatTime(track.duration)}</span></button>`).join("")}
         </div>`
       : emptyFavorites();
@@ -235,7 +242,7 @@
       ? shuffleBag.slice().reverse().map(byId).filter(Boolean)
       : [...queue.slice(currentIndex + 1), ...queue.slice(0, currentIndex)]).slice(0, 3);
     $("#side-queue").innerHTML = upcoming
-      .map((track) => `<button data-queue-play="${escapeHtml(track.id)}">${artwork(track, true)}<span><strong>${escapeHtml(track.title)}</strong><small>${escapeHtml(track.artist)} · ${formatTime(track.duration)}</small></span><span>▶</span></button>`)
+      .map((track) => `<button data-queue-play="${escapeHtml(track.id)}">${artwork(track, true)}<span><strong>${escapeHtml(track.title)}</strong><small>${escapeHtml(track.artist)} · ${formatTime(track.duration)}</small></span><span class="trailing-icon">${iconMarkup("play")}</span></button>`)
       .join("");
   };
 
@@ -263,7 +270,7 @@
     $("#now-playing-context").textContent = playbackContextLabel;
     $("#duration").textContent = formatTime(currentTrack.duration);
     for (const button of [$("#now-favorite"), $("#player-favorite"), $("#now-playing-favorite")]) {
-      button.textContent = favorites.has(currentTrack.id) ? "♥" : "♡";
+      setIcon(button, favorites.has(currentTrack.id) ? "heart-filled" : "heart");
       button.classList.toggle("is-favorite", favorites.has(currentTrack.id));
       button.setAttribute("aria-label", favorites.has(currentTrack.id) ? `Remove ${currentTrack.title} from favorites` : `Save ${currentTrack.title} to favorites`);
     }
@@ -288,7 +295,7 @@
     $("#queue-list").innerHTML = queue.map((track, index) => `
       <button data-queue-play="${escapeHtml(track.id)}" class="${track.id === currentTrack?.id ? "active" : ""}">
         <span class="queue-position">${index + 1}</span>${artwork(track, true)}
-        <span><strong>${escapeHtml(track.title)}</strong><small>${escapeHtml(track.artist)} · ${formatTime(track.duration)}</small></span><span>▶</span>
+        <span><strong>${escapeHtml(track.title)}</strong><small>${escapeHtml(track.artist)} · ${formatTime(track.duration)}</small></span><span class="trailing-icon">${iconMarkup("play")}</span>
       </button>`).join("") || `<div class="queue-empty"><strong>The queue is empty</strong><span>Add music to a playlist or play from the catalog.</span></div>`;
   };
 
@@ -297,7 +304,7 @@
     const matches = tracks.filter((track) => `${track.title} ${track.artist} ${track.album} ${track.genre}`.toLowerCase().includes(normalized));
     $("#search-label").textContent = normalized ? `${matches.length} RESULTS` : "OFFICIAL RELEASES";
     $("#search-results").innerHTML = matches.length
-      ? matches.map((track) => `<button data-play="${escapeHtml(track.id)}">${artwork(track, true)}<span><strong>${escapeHtml(track.title)}</strong><small>${escapeHtml(track.album)}${track.year ? ` · ${escapeHtml(track.year)}` : ""}</small></span><span>▶</span></button>`).join("")
+      ? matches.map((track) => `<button data-play="${escapeHtml(track.id)}">${artwork(track, true)}<span><strong>${escapeHtml(track.title)}</strong><small>${escapeHtml(track.album)}${track.year ? ` · ${escapeHtml(track.year)}` : ""}</small></span><span class="trailing-icon">${iconMarkup("play")}</span></button>`).join("")
       : `<p class="search-empty">${tracks.length ? "No tracks match that search." : "No official releases are live yet."}</p>`;
   };
 
@@ -314,11 +321,11 @@
       ? entries.map((track, index) => `<div class="playlist-detail-row">
           <button data-playlist-track="${escapeHtml(track.id)}" data-playlist-id="${escapeHtml(playlist.id)}">
             <span class="queue-position">${index + 1}</span>${artwork(track, true)}
-            <span><strong>${escapeHtml(track.title)}</strong><small>${escapeHtml(track.artist)} · ${formatTime(track.duration)}</small></span><span>▶</span>
+            <span><strong>${escapeHtml(track.title)}</strong><small>${escapeHtml(track.artist)} · ${formatTime(track.duration)}</small></span><span class="trailing-icon">${iconMarkup("play")}</span>
           </button>
-          <button class="playlist-remove" data-playlist-remove="${escapeHtml(track.id)}" data-playlist-id="${escapeHtml(playlist.id)}" aria-label="Remove ${escapeHtml(track.title)} from ${escapeHtml(playlist.name)}">×</button>
+          <button class="playlist-remove icon-only-button" data-playlist-remove="${escapeHtml(track.id)}" data-playlist-id="${escapeHtml(playlist.id)}" aria-label="Remove ${escapeHtml(track.title)} from ${escapeHtml(playlist.name)}">${iconMarkup("close")}</button>
         </div>`).join("")
-      : `<div class="playlist-detail-empty"><span>♫</span><strong>This playlist is empty</strong><p>Open a song and choose “Add to playlist.”</p></div>`;
+      : `<div class="playlist-detail-empty"><span>${iconMarkup("music")}</span><strong>This playlist is empty</strong><p>Open a song and choose “Add to playlist.”</p></div>`;
   };
 
   const openPlaylist = (id) => {
@@ -337,10 +344,10 @@
           const added = playlist.trackIds.includes(currentTrack.id);
           const count = playlistTracks(playlist).length;
           return `<button data-playlist-toggle="${escapeHtml(playlist.id)}" class="${added ? "added" : ""}">
-            ${playlistArtwork(playlist)}<span><strong>${escapeHtml(playlist.name)}</strong><small>${count} song${count === 1 ? "" : "s"}</small></span><b>${added ? "✓" : "＋"}</b>
+            ${playlistArtwork(playlist)}<span><strong>${escapeHtml(playlist.name)}</strong><small>${count} song${count === 1 ? "" : "s"}</small></span><b class="icon-frame">${iconMarkup(added ? "check" : "plus")}</b>
           </button>`;
         }).join("")
-      : `<div class="playlist-picker-empty"><span>＋</span><strong>No playlists yet</strong><p>Create one and this song will be added automatically.</p></div>`;
+      : `<div class="playlist-picker-empty"><span>${iconMarkup("plus")}</span><strong>No playlists yet</strong><p>Create one and this song will be added automatically.</p></div>`;
   };
 
   const openPlaylistPicker = () => {
@@ -478,8 +485,8 @@
       button.setAttribute("aria-pressed", String(repeatMode !== "off"));
       button.setAttribute("aria-label", `Repeat mode: ${repeatMode}`);
     }
-    $("#repeat").textContent = repeatMode === "one" ? "↻¹" : "↻";
-    $("#now-playing-repeat-icon").textContent = repeatMode === "one" ? "↻¹" : "↻";
+    setIcon($("#repeat"), repeatMode === "one" ? "repeat-one" : "repeat");
+    setIcon($("#now-playing-repeat-icon"), repeatMode === "one" ? "repeat-one" : "repeat");
     $("#now-playing-shuffle-state").textContent = shuffleEnabled ? "On" : "Off";
     $("#now-playing-repeat-state").textContent = repeatMode === "one" ? "One" : repeatMode === "all" ? "All" : "Off";
   };
@@ -487,7 +494,7 @@
   const updatePlayButtons = () => {
     const playing = !audio.paused && !audio.ended;
     for (const button of [$("#play"), $("#now-playing-play")]) {
-      button.textContent = playing ? "Ⅱ" : "▶";
+      setIcon(button, playing ? "pause" : "play");
       button.setAttribute("aria-label", playing ? "Pause" : "Play");
     }
   };
@@ -630,7 +637,7 @@
       return {
         eyebrow: "PLAYER READY",
         title: status === "accepted" ? "Installation accepted." : "XotiicDuck Music is installed.",
-        copy: `<div class="install-result success"><span aria-hidden="true">✓</span><div><h3>${status === "accepted" ? "Check your Home screen or app list" : "Open it like any other app"}</h3><p>${status === "accepted" ? "Your browser accepted the install. Leave the browser and look for XotiicDuck Music on your Home screen or in your apps. Some devices take a few seconds to place the icon." : "You are currently using the installed player, or this browser completed the installation during this visit."}</p></div></div><section><h3>If you cannot find the icon</h3><p>Use your device search for “XotiicDuck.” If it is still missing, return to the website in your browser and follow the install guide again.</p></section>`,
+        copy: `<div class="install-result success"><span aria-hidden="true">${iconMarkup("check")}</span><div><h3>${status === "accepted" ? "Check your Home screen or app list" : "Open it like any other app"}</h3><p>${status === "accepted" ? "Your browser accepted the install. Leave the browser and look for XotiicDuck Music on your Home screen or in your apps. Some devices take a few seconds to place the icon." : "You are currently using the installed player, or this browser completed the installation during this visit."}</p></div></div><section><h3>If you cannot find the icon</h3><p>Use your device search for “XotiicDuck.” If it is still missing, return to the website in your browser and follow the install guide again.</p></section>`,
       };
     }
 
@@ -697,7 +704,7 @@
       const icon = button.querySelector("[data-install-icon]");
       if (label && !button.dataset.installLabel) button.dataset.installLabel = label.textContent.trim();
       if (label) label.textContent = installed ? "Installed" : button.dataset.installLabel;
-      if (icon) icon.textContent = installed ? "✓" : "⇩";
+      if (icon) setIcon(icon, installed ? "check" : "download");
       button.classList.toggle("is-installed", installed);
       button.setAttribute("aria-label", installed ? "XotiicDuck Music is installed" : "Install XotiicDuck Music");
       button.title = installed ? "Already installed — tap for details" : "Install XotiicDuck Music";

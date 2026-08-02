@@ -51,6 +51,40 @@ a {
 
 button {
   color: inherit;
+  appearance: none;
+}
+
+.icon-sprite {
+  position: absolute;
+  width: 0;
+  height: 0;
+  overflow: hidden;
+  pointer-events: none;
+}
+
+.ui-icon {
+  width: 20px;
+  height: 20px;
+  display: block;
+  flex: none;
+  overflow: visible;
+  pointer-events: none;
+}
+
+.icon-frame {
+  width: 24px;
+  height: 24px;
+  display: inline-grid;
+  place-items: center;
+  flex: none;
+  line-height: 0;
+}
+
+.icon-only-button {
+  display: grid;
+  place-items: center;
+  padding: 0;
+  line-height: 0;
 }
 
 button:focus-visible,
@@ -242,6 +276,11 @@ input:focus-visible {
   place-items: center;
 }
 
+.install-icon .ui-icon {
+  width: 18px;
+  height: 18px;
+}
+
 .install-card strong {
   font-size: 10px;
   display: block;
@@ -255,10 +294,15 @@ input:focus-visible {
 }
 
 .install-card button {
+  width: 32px;
+  height: 32px;
   border: 0;
   background: transparent;
   color: var(--acid);
-  padding: 4px;
+  display: grid;
+  place-items: center;
+  padding: 0;
+  line-height: 0;
   cursor: pointer;
 }
 
@@ -322,9 +366,19 @@ input:focus-visible {
   background: rgba(255, 255, 255, 0.045);
 }
 
-.search-trigger span {
+.search-trigger > span:nth-child(2) {
   font-size: 11px;
   flex: 1;
+}
+
+.search-trigger > .icon-frame {
+  width: 20px;
+  height: 20px;
+}
+
+.search-trigger > .icon-frame .ui-icon {
+  width: 17px;
+  height: 17px;
 }
 
 .search-trigger kbd {
@@ -474,6 +528,14 @@ input:focus-visible {
   font-size: 10px;
   font-weight: 850;
   cursor: pointer;
+}
+
+.primary-button > .ui-icon,
+.secondary-button .ui-icon,
+.signal-banner > button .ui-icon,
+.profile-button .ui-icon {
+  width: 16px;
+  height: 16px;
 }
 
 .primary-button {
@@ -821,6 +883,11 @@ input:focus-visible {
   cursor: pointer;
 }
 
+.section-heading > button .ui-icon {
+  width: 14px;
+  height: 14px;
+}
+
 .release-grid {
   display: grid;
   grid-template-columns: repeat(4, minmax(0, 1fr));
@@ -872,12 +939,18 @@ input:focus-visible {
   border-radius: 50%;
   display: grid;
   place-items: center;
+  line-height: 0;
   background: var(--acid);
   color: #0b1007;
   box-shadow: 0 11px 26px rgba(0, 0, 0, 0.38);
   opacity: 0;
   transform: translateY(5px);
   transition: 180ms ease;
+}
+
+.card-play .ui-icon {
+  width: 18px;
+  height: 18px;
 }
 
 .release-art-button:hover .card-play,
@@ -917,11 +990,21 @@ input:focus-visible {
 
 .icon-button,
 .release-meta button {
+  width: 32px;
+  height: 32px;
   border: 0;
   background: transparent;
   color: #626a64;
   padding: 0;
+  display: grid;
+  place-items: center;
+  line-height: 0;
   cursor: pointer;
+}
+
+.icon-button .ui-icon {
+  width: 18px;
+  height: 18px;
 }
 
 .is-favorite {
@@ -948,6 +1031,11 @@ input:focus-visible {
   place-items: center;
   color: var(--acid);
   background: rgba(184, 255, 61, 0.11);
+}
+
+.signal-icon .ui-icon {
+  width: 24px;
+  height: 24px;
 }
 
 .signal-banner .section-kicker {
@@ -1101,6 +1189,11 @@ input:focus-visible {
   background: rgba(184, 255, 61, 0.09);
 }
 
+.empty-state > span .ui-icon {
+  width: 27px;
+  height: 27px;
+}
+
 .empty-state h2 {
   margin: 17px 0 0;
   font-size: 19px;
@@ -1160,7 +1253,21 @@ input:focus-visible {
   border: 0;
   background: transparent;
   color: #687069;
+  padding: 0;
   cursor: pointer;
+}
+
+.now-copy button {
+  width: 36px;
+  height: 36px;
+  display: grid;
+  place-items: center;
+  line-height: 0;
+}
+
+.now-copy button .ui-icon {
+  width: 20px;
+  height: 20px;
 }
 
 .now-panel > .artwork {
@@ -1206,6 +1313,14 @@ input:focus-visible {
   font-weight: 850;
   letter-spacing: 0.14em;
   margin: 0 0 9px;
+}
+
+.release-dot {
+  width: 7px;
+  height: 7px;
+  border-radius: 50%;
+  background: currentColor;
+  flex: none;
 }
 
 .now-context strong {
@@ -1255,6 +1370,21 @@ input:focus-visible {
   min-width: 0;
   display: flex;
   flex-direction: column;
+}
+
+.trailing-icon {
+  width: 24px;
+  height: 24px;
+  min-width: 24px !important;
+  display: grid !important;
+  place-items: center;
+  align-self: center;
+  line-height: 0;
+}
+
+.trailing-icon .ui-icon {
+  width: 14px;
+  height: 14px;
 }
 
 .queue-list strong {
@@ -1372,6 +1502,30 @@ input:focus-visible {
   padding: 5px;
 }
 
+.player-track > #player-favorite,
+.control-buttons > .icon-only-button,
+.player-extras > .icon-only-button {
+  width: 34px;
+  height: 34px;
+  display: grid;
+  place-items: center;
+  padding: 0;
+  line-height: 0;
+}
+
+.control-buttons > .icon-only-button .ui-icon,
+.player-track > #player-favorite .ui-icon,
+.player-extras > .icon-only-button .ui-icon {
+  width: 18px;
+  height: 18px;
+}
+
+.control-buttons > #previous .ui-icon,
+.control-buttons > #next .ui-icon {
+  width: 15px;
+  height: 15px;
+}
+
 .player-controls {
   width: min(540px, 100%);
   justify-self: center;
@@ -1417,6 +1571,11 @@ input:focus-visible {
   color: #0c1008;
   background: var(--acid);
   box-shadow: 0 0 24px rgba(184, 255, 61, 0.14);
+}
+
+.control-buttons .main-play .ui-icon {
+  width: 18px;
+  height: 18px;
 }
 
 .progress-row {
@@ -1466,6 +1625,16 @@ input[type="range"]::-moz-range-thumb {
   align-items: center;
   gap: 6px;
   color: #6e7770;
+}
+
+.player-extras > .icon-frame {
+  width: 24px;
+  height: 24px;
+}
+
+.player-extras > .icon-frame .ui-icon {
+  width: 18px;
+  height: 18px;
 }
 
 .player-extras input {
@@ -1520,8 +1689,19 @@ input[type="range"]::-moz-range-thumb {
   background: rgba(255, 255, 255, 0.05);
   display: grid;
   place-items: center;
+  padding: 0;
+  line-height: 0;
   color: #8a938b;
   cursor: pointer;
+}
+
+.modal-close .ui-icon,
+.queue-modal-heading > button .ui-icon,
+.search-input-wrap button .ui-icon,
+.playlist-modal-header > button .ui-icon,
+.playlist-picker-modal header > button .ui-icon {
+  width: 17px;
+  height: 17px;
 }
 
 .upload-hero-icon {
@@ -1790,6 +1970,8 @@ input[type="range"]::-moz-range-thumb {
   color: #89928b;
   display: grid;
   place-items: center;
+  padding: 0;
+  line-height: 0;
   cursor: pointer;
 }
 
@@ -1895,9 +2077,15 @@ input[type="range"]::-moz-range-thumb {
 }
 
 .search-input-wrap button {
+  width: 34px;
+  height: 34px;
   border: 0;
   background: transparent;
   color: #768078;
+  display: grid;
+  place-items: center;
+  padding: 0;
+  line-height: 0;
   cursor: pointer;
 }
 
@@ -2002,6 +2190,11 @@ input[type="range"]::-moz-range-thumb {
   font-weight: 900;
   line-height: 1;
   box-shadow: 0 0 20px rgba(184, 255, 61, 0.18);
+}
+
+.toast-icon .ui-icon {
+  width: 17px;
+  height: 17px;
 }
 
 .toast-copy {
@@ -2432,7 +2625,14 @@ body.now-playing-open {
   font-size: 25px;
   display: grid;
   place-items: center;
+  padding: 0;
+  line-height: 0;
   cursor: pointer;
+}
+
+.now-playing-header > button .ui-icon {
+  width: 22px;
+  height: 22px;
 }
 
 .now-playing-header div {
@@ -2516,7 +2716,16 @@ body.now-playing-open {
   background: rgba(255, 255, 255, 0.035);
   color: #a9b2ab;
   font-size: 25px;
+  display: grid;
+  place-items: center;
+  padding: 0;
+  line-height: 0;
   cursor: pointer;
+}
+
+.now-playing-title-row > button .ui-icon {
+  width: 23px;
+  height: 23px;
 }
 
 .now-playing-title-row > button.is-favorite {
@@ -2574,6 +2783,8 @@ body.now-playing-open {
   color: #aab3ac;
   display: grid;
   place-items: center;
+  padding: 0;
+  line-height: 0;
   cursor: pointer;
   font-size: 16px;
 }
@@ -2587,21 +2798,45 @@ body.now-playing-open {
   box-shadow: 0 16px 38px rgba(184, 255, 61, 0.18);
 }
 
+.now-playing-controls .now-playing-main-play .ui-icon {
+  width: 26px;
+  height: 26px;
+}
+
+.now-playing-controls > #now-playing-previous .ui-icon,
+.now-playing-controls > #now-playing-next .ui-icon {
+  width: 18px;
+  height: 18px;
+}
+
 .now-playing-controls .mode-control {
   height: 58px;
   border-radius: 13px;
-  grid-template-rows: 22px 12px;
-  gap: 2px;
+  grid-template-rows: 24px 12px;
+  align-content: center;
+  justify-items: center;
+  gap: 3px;
+  line-height: 1;
 }
 
-.now-playing-controls .mode-control span {
-  font-size: 20px;
+.now-playing-controls .mode-icon {
+  width: 24px;
+  height: 24px;
+  display: grid;
+  place-items: center;
+  line-height: 0;
+}
+
+.now-playing-controls .mode-icon .ui-icon {
+  width: 21px;
+  height: 21px;
 }
 
 .now-playing-controls .mode-control small {
   color: #657068;
   font-size: 7px;
   font-weight: 850;
+  line-height: 12px;
 }
 
 .now-playing-controls .mode-control.control-active {
@@ -2638,6 +2873,16 @@ body.now-playing-open {
 .now-playing-actions button span {
   color: var(--acid);
   font-size: 17px;
+}
+
+.now-playing-actions button .icon-frame {
+  width: 22px;
+  height: 22px;
+}
+
+.now-playing-actions button .ui-icon {
+  width: 17px;
+  height: 17px;
 }
 
 .now-playing-actions button small {
@@ -2746,6 +2991,10 @@ body.now-playing-open {
   border-radius: 50%;
   background: rgba(255, 255, 255, 0.05);
   color: #89938b;
+  display: grid;
+  place-items: center;
+  padding: 0;
+  line-height: 0;
   cursor: pointer;
 }
 
@@ -2765,9 +3014,18 @@ body.now-playing-open {
   background: rgba(255, 255, 255, 0.025);
   color: #a1aba3;
   padding: 0 12px;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 6px;
   font-size: 9px;
   font-weight: 800;
   cursor: pointer;
+}
+
+.playlist-modal-actions button .ui-icon {
+  width: 14px;
+  height: 14px;
 }
 
 .playlist-modal-actions button:disabled {
@@ -2846,8 +3104,17 @@ body.now-playing-open {
   border-radius: 50%;
   background: transparent;
   color: #677169;
+  display: grid;
+  place-items: center;
+  padding: 0;
+  line-height: 0;
   cursor: pointer;
   font-size: 17px;
+}
+
+.playlist-remove .ui-icon {
+  width: 16px;
+  height: 16px;
 }
 
 .playlist-remove:hover {
@@ -3285,8 +3552,14 @@ body.now-playing-open {
   }
 
   .mobile-nav button > span:first-child {
-    font-size: 19px;
-    line-height: 1;
+    width: 30px;
+    height: 28px;
+    line-height: 0;
+  }
+
+  .mobile-nav button > span:first-child .ui-icon {
+    width: 20px;
+    height: 20px;
   }
 
   .mobile-nav button.active {
@@ -3918,9 +4191,16 @@ body.now-playing-open {
 }
 
 .nav-symbol {
-  width: 19px;
-  text-align: center;
-  font-size: 17px;
+  width: 24px;
+  height: 24px;
+  display: grid;
+  place-items: center;
+  line-height: 0;
+}
+
+.nav-symbol .ui-icon {
+  width: 18px;
+  height: 18px;
 }
 
 .site-footer button {
@@ -4060,6 +4340,11 @@ body.now-playing-open {
   color: #0b1007;
   font-size: 20px;
   font-weight: 900;
+}
+
+.install-result > span .ui-icon {
+  width: 19px;
+  height: 19px;
 }
 
 .install-result.notice {
