@@ -388,5 +388,18 @@ window.XOTIICDUCK_RELEASES = [
     "audio": "music/thunderclap-grin.mp3",
     "cover": "covers/thunderclap-grin.webp",
     "status": "draft"
+  },
+  {
+    "id": "black-moon-blade",
+    "title": "Black Moon Blade",
+    "artist": "XotiicDuck",
+    "album": "Single",
+    "genre": "Anime J-Rock",
+    "releaseDate": "2026-08-06",
+    "duration": 396,
+    "audio": "music/black-moon-blade.mp3",
+    "cover": "covers/black-moon-blade.webp",
+    "status": "draft",
+    "lyrics": "[Intro]\n\nRain falls over Karakura\nLike the sky remembers her name\nI learned too young that love can vanish\nSo I swore I would stand in the way\n\n[Verse 1]\n\nI saw the souls nobody noticed\nHeard their silence calling me home\nThen a girl dressed in black met a Hollow\nAnd placed tomorrow into my bones\n\nOne borrowed blade became my burden\nOne desperate night rewrote my name\nFrom a kid with fists and anger\nTo the shield standing in the flame\n\n[Pre-Chorus]\n\nIn a drowned-out city inside me\nA voice said, “Rise and know your blade”\nEvery drop became a warning\nEvery wound became my strength\n\n[Chorus]\n\nI carry every world on a black moon blade\nHuman heart with a Soul Reaper name\nHollow in the shadows, Quincy in my veins\nEvery side of me still answers the same\n\nI don’t fight for crowns or glory\nI don’t need the heavens to know\nWhen the ones I love are behind me\nGetsuga Tensho\n\n[Verse 2]\n\nThrough the gates of the Soul Society\nI broke every law in my path\nFaced the petals of Senbonzakura\nWith Tensa Zangetsu drawn in black\n\nI reached the tower where they bound her\nMade the captains hear my resolve\nThen the desert called me onward\nWhere white masks swallowed the stars\n\nFor the girl who said she wasn’t afraid\nI crossed Hueco Mundo alone\nBut against the emptiness of Ulquiorra\nSomething darker took control\n\n[Pre-Chorus]\n\nI feared the teeth behind my heartbeat\nFeared the king beneath my skin\nTill I learned the war inside me\nWas a war I had to win\n\n[Chorus]\n\nI carry every world on a black moon blade\nHuman heart with a Soul Reaper name\nHollow in the shadows, Quincy in my veins\nEvery side of me still answers the same\n\nI don’t fight for crowns or glory\nI don’t need the heavens to know\nWhen the ones I love are behind me\nGetsuga Tensho\n\n[Verse 3]\n\nIn the Dangai I faced the silence\nLet the final moon consume the night\nMugetsu fell across the heavens\nAnd I traded all my strength to win that fight\n\nThen the spirits faded from my vision\nEmpty hands where Zangetsu had been\nFullbring wrapped around my heartbeat\nTill betrayal tore it out again\n\nBut a silver blade came through me\nAnd familiar voices filled the dark\nSoul Society returned my power\nAnd relit the fire in my heart\n\n[Bridge]\n\nEverything but the rain was hidden\nFather’s soul and mother’s blood\nA Quincy light behind the old man\nA white blade born from Hollow love\n\nAll the voices I called strangers\nAll the power I tried to divide\nWere never chains around my spirit\nThey were always part of mine\n\nTwo blades burning in my hands now\nBlack and white beneath one sky\nI stopped asking what I should be\nZangetsu and I are one tonight\n\n[Final Chorus]\n\nI carry every world on a black moon blade\nEvery loss and every name\nSoul Reaper, Hollow, Human, Quincy\nDifferent blood, but one resolve remains\n\nLet the Wandenreich shake the heavens\nLet the future fracture and fold\nI will tear through fate to reach you\nGetsuga Tensho\n\nI don’t fight because I’m fearless\nI fight because I know\nWhat it means to lose the light you love\nAnd still refuse to let it go\n\n[Outro]\n\nRain falls over Karakura\nBut it doesn’t drown me anymore\nWith every world within my blade\nI’ll protect them all"
   }
 ];
