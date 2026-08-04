@@ -426,5 +426,17 @@ window.XOTIICDUCK_RELEASES = [
     "audio": "music/crimson-dragon.mp3",
     "cover": "covers/crimson-dragon.webp",
     "status": "draft"
+  },
+  {
+    "id": "silent-equation",
+    "title": "Silent Equation",
+    "artist": "XotiicDuck",
+    "album": "Single",
+    "genre": "Anime J-Rock",
+    "releaseDate": "2026-08-17",
+    "duration": 290,
+    "audio": "music/silent-equation.mp3",
+    "cover": "covers/silent-equation.webp",
+    "status": "draft"
   }
 ];
