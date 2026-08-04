@@ -477,5 +477,17 @@ window.XOTIICDUCK_RELEASES = [
     "cover": "covers/sleeping-eclipse.webp",
     "status": "draft",
     "lyrics": "[Intro]\nMoonlight cracks on a ruined throne\nOne eye burns where the heavens froze\nA lazy king with a blade in hand\nA cursed survivor in a shadowed land\n\n[Verse 1]\nI woke up late, but the sky still knows my name\nFallen from grace, but I never lost the flame\nWings tucked low, yeah, I move like I’m bored\nTill the whole world splits from the edge of my sword\n\nYou chase revenge through a blood-red night\nI’ve slept through wars that could bury your light\nCall it sloth, but the truth cuts deep\nI’m most dangerous when I wake from sleep\n\n[Pre-Chorus]\nBlack fire climbing, heaven falling\nTwo lost legends hear the calling\nOne swings silence, one strikes thunder\nWho breaks first when the stars go under?\n\n[Chorus]\nSleeping eclipse, blade to the storm\nAshes and angels, battle reborn\nRed eye shining through the black flame rain\nKings don’t kneel when they’re born from pain\nSleeping eclipse, fate in the scars\nShadow and lightning tearing the stars\nIf the sky comes down, let it fall tonight\nWe’ll carve our names in the afterlight\n\n[Verse 2]\nI walked alone with my clan in my chest\nEvery step forward was a war with the past\nLightning in my palm, hatred in my bones\nA hawk in the dark, but I fly on my own\n\nYour throne looks soft, your smile looks tired\nBut I can see the monster behind those eyes\nRinnegan shift, now the distance bends\nOne blink and your lazy dream ends\n\n[Pre-Chorus]\nBlack fire climbing, heaven falling\nTwo lost legends hear the calling\nOne swings silence, one strikes thunder\nWho breaks first when the stars go under?\n\n[Chorus]\nSleeping eclipse, blade to the storm\nAshes and angels, battle reborn\nRed eye shining through the black flame rain\nKings don’t kneel when they’re born from pain\nSleeping eclipse, fate in the scars\nShadow and lightning tearing the stars\nIf the sky comes down, let it fall tonight\nWe’ll carve our names in the afterlight\n\n[Bridge]\nSusanoo rising like a ghost in blue\nA fallen halo cuts the moon in two\nAmaterasu paints the clouds in coal\nSloth wakes up and devours the soul\n\nIndra’s echo, heaven’s blade\nTwo old curses in the war they made\nNot for glory, not for peace\nJust two shadows refusing release\n\n[Breakdown]\nStep through space\nCut through fate\nLightning screams\nHeaven breaks\n\nOne more clash\nOne more scar\nWho are we\nWithout our wars?\n\n[Final Chorus]\nSleeping eclipse, blade to the storm\nAshes and angels, battle reborn\nRed eye shining through the black flame rain\nKings don’t kneel when they’re born from pain\nSleeping eclipse, fate in the scars\nShadow and lightning tearing the stars\nIf the sky comes down, let it fall tonight\nWe’ll carve our names in the afterlight\n\n[Outro]\nMoonlight fades on a shattered throne\nOne walks away, but never alone\nA lazy king and a cursed black flame\nTwo legends vanish, but the scars remain"
+  },
+  {
+    "id": "heat-haze-mirror",
+    "title": "Heat Haze Mirror",
+    "artist": "XotiicDuck",
+    "album": "Single",
+    "genre": "Anime J-Rock",
+    "releaseDate": "2026-08-24",
+    "duration": 378,
+    "audio": "music/heat-haze-mirror.mp3",
+    "cover": "covers/heat-haze-mirror.webp",
+    "status": "draft"
   }
 ];
