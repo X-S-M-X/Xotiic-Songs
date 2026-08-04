@@ -337,5 +337,18 @@ window.XOTIICDUCK_RELEASES = [
     "audio": "music/tiny-fang-thunder.mp3",
     "cover": "covers/tiny-fang-thunder.webp",
     "status": "draft"
+  },
+  {
+    "id": "monarchs-collide",
+    "title": "Monarchs Collide",
+    "artist": "XotiicDuck",
+    "album": "Single",
+    "genre": "Anime J-Rock",
+    "releaseDate": "2026-08-08",
+    "duration": 308,
+    "audio": "music/monarchs-collide.mp3",
+    "cover": "covers/monarchs-collide.webp",
+    "status": "draft",
+    "lyrics": "[Intro]\nTwo kings step out where the worlds divide\nBlue aura burns against the midnight tide\nOne built a nation from a monster’s name\nOne rose from graves into a crown of shade\n\n[Verse 1: Rimuru]\nI woke up small in a world too wide\nNow every law bends when I decide\nPredator smile with a calm disguise\nGot a kingdom standing behind my eyes\n\nGreat Sage whispered, Raphael planned\nCiel runs futures in the palm of my hand\nCall me slime, then watch fate split\nOne wrong move and the void gets lit\n\nI don’t need thunder to shake your throne\nI turned loneliness into a nation of my own\nTempest flag when the storm winds bloom\nYou brought an army, I brought the end of the room\n\n[Pre-Chorus: Rimuru]\nDevour the blade, analyze the sound\nRewrite the spell before it touches ground\nYou command shadows from a death-black sea\nBut even the dark gets swallowed by me\n\n[Chorus: Both]\nVoid meets shadow under broken skies\nCrowns collide where the dead still rise\nKing of monsters, monarch of night\nBlue against black in the final light\n\nNo fear, no fall, no turning away\nTwo legends wake when the heavens fray\nIf the world wants war, let the stars all know\nTempest roars where the shadows grow\n\n[Verse 2: Jinwoo]\nI was E-rank blood on a dungeon floor\nNow every locked gate becomes my door\nThe System carved numbers into my pain\nI died once, then I leveled through the rain\n\nIgris kneels, Beru screams my name\nEvery fallen beast comes back in my flame\nAshborn’s will in the depth of my breath\nI don’t chase power, I command death\n\nYou built a city, I conquered despair\nI move unseen and I’m already there\nYou can read futures, I erase the board\nWhen the shadows rise, they salute their lord\n\n[Pre-Chorus: Jinwoo]\nDaggers flash where the moonlight bends\nA thousand soldiers from a thousand ends\nYou swallow magic, but hear my call\nEven silence answers when shadows fall\n\n[Chorus: Both]\nVoid meets shadow under broken skies\nCrowns collide where the dead still rise\nKing of monsters, monarch of night\nBlue against black in the final light\n\nNo fear, no fall, no turning away\nTwo legends wake when the heavens fray\nIf the world wants war, let the stars all know\nTempest roars where the shadows grow\n\n[Bridge: Rimuru]\nBeelzebuth hunger, Azathoth deep\nI cut through space while the gods still sleep\nEvery skill you show becomes mine to see\nYou fight the dead, but I rewrite reality\n\n[Bridge: Jinwoo]\nArise from the grave, march through the storm\nA king is not chosen, a king is reborn\nYou hold the void, I hold the night\nLet eternity judge who owns this fight\n\n[Breakdown: Both]\nBlue blade, black crown\nHeaven cracks, gates fall down\nOne devours, one commands\nWorlds collapse in our hands\n\n[Final Chorus: Both]\nVoid meets shadow under broken skies\nCrowns collide where the dead still rise\nKing of monsters, monarch of night\nBlue against black in the final light\n\nNo fear, no fall, no turning away\nTwo legends wake when the heavens fray\nIf the world wants war, let the stars all know\nTempest roars where the shadows grow\n\n[Outro: Both]\nWhen the last gate fades and the storm is gone\nOne crown remains, but both live on\nVoid and shadow, name them in flame\nRimuru, Jinwoo, legends claim the same"
   }
 ];
