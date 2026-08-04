@@ -438,5 +438,18 @@ window.XOTIICDUCK_RELEASES = [
     "audio": "music/silent-equation.mp3",
     "cover": "covers/silent-equation.webp",
     "status": "draft"
+  },
+  {
+    "id": "stolen-black-crown",
+    "title": "Stolen Black Crown",
+    "artist": "XotiicDuck",
+    "album": "Single",
+    "genre": "Anime J-Rock",
+    "releaseDate": "2026-08-18",
+    "duration": 318,
+    "audio": "music/stolen-black-crown.mp3",
+    "cover": "covers/stolen-black-crown.webp",
+    "status": "draft",
+    "lyrics": "[Intro]\nUnder the city lights, a shadow starts to grin\nHands like a graveyard, pulling power in\nBlack flame at the doorway, dressed like a vow\nTwo devils in the dark, only one stands now\n\n[Verse 1]\nI was born where the age of heroes cracked\nTook the gifts from the weak, never gave them back\nEvery hand that reached for hope, I bent it into chains\nBuilt an empire out of fear, made the future speak my name\n\nI don’t need a throne, I make kings kneel\nEvery stolen spark becomes another blade of steel\nCall me the wound that the world can’t close\nA hundred borrowed powers in the blood-red glow\n\n[Pre-Chorus]\nOne touch, one breath\nI rewrite what’s left\nOne smile, one lie\nWatch your halo die\n\n[Chorus]\nAll for one, black against the dawn\nBut the deeper night is already moving on\nCrown of stolen souls, crown of crimson sin\nFace the demon who was loyal from within\nYou can take the light, you can bend the sky\nBut you can’t steal faith from a devil’s eye\nWhen the void comes down and the bells resound\nWho will wear the stolen black crown?\n\n[Verse 2]\nHow amusing, little tyrant of the mortal stage\nCollecting broken miracles and calling them rage\nYou speak of ownership, I speak of devotion\nMy shadow split the silence like a blackened ocean\n\nI don’t need your throne, I serve something higher\nA name carved in my soul burns brighter than fire\nI bowed once by choice, now worlds understand\nLoyalty sharper than a god-killing hand\n\n[Pre-Chorus]\nOne glance, one thread\nYour borrowed army’s dead\nOne vow, one name\nTurns your kingdom into flame\n\n[Chorus]\nAll for one, black against the dawn\nBut the deeper night is already moving on\nCrown of stolen souls, crown of crimson sin\nFace the demon who was loyal from within\nYou can take the light, you can bend the sky\nBut you can’t steal faith from a devil’s eye\nWhen the void comes down and the bells resound\nWho will wear the stolen black crown?\n\n[Bridge]\nA hundred Quirks awaken\nA thousand shadows rise\nRed hands reach for heaven\nBlack wings cut the skies\n\n“You are only what you’ve taken”\n“You are only what you fear”\n“Power without purpose”\n“Disappears when I appear”\n\n[Verse 3]\nI break successors, twist the child into war\nEvery symbol turns to ash when I open the door\nI am legacy rewritten, the nightmare in control\nThe final hand closing around every soul\n\nThen come and try to claim me, collector of despair\nYour fingers grasp at nothing, only darkness waiting there\nMy master gave me meaning, your hunger gave you rust\nNow kneel before the butler who turns monsters into dust\n\n[Final Chorus]\nAll for one, black against the dawn\nBut the deeper night has already carried on\nCrown of stolen souls, crown of crimson sin\nFalls before the demon with devotion burning in\nYou can steal a gift, you can break a name\nBut you can’t own loyalty, you can’t cage flame\nWhen the void comes down and the bells resound\nOnly one walks out with the stolen black crown\n\n[Outro]\nHands fade empty in the smoke and rain\nBlack coat turning from a conquered stage\nOne devil wanted all the world to bow\nThe other smiled… and ended it now"
   }
 ];
