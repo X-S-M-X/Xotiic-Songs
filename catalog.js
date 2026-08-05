@@ -319,7 +319,7 @@ window.XOTIICDUCK_RELEASES = [
     "artist": "XotiicDuck",
     "album": "Single",
     "genre": "Anime J-Rock",
-    "releaseDate": "2026-08-04",
+    "releaseDate": "2026-08-05",
     "duration": 317,
     "audio": "music/shadow-flash.mp3",
     "cover": "covers/shadow-flash.webp",
