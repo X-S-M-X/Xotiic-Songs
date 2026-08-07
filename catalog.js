@@ -489,5 +489,17 @@ window.XOTIICDUCK_RELEASES = [
     "audio": "music/heat-haze-mirror.mp3",
     "cover": "covers/heat-haze-mirror.webp",
     "status": "draft"
+  },
+  {
+    "id": "blessing-of-the-void",
+    "title": "Blessing of the void",
+    "artist": "XotiicDuck",
+    "album": "Single",
+    "genre": "Anime J-Rock",
+    "releaseDate": "2026-08-07",
+    "duration": 345,
+    "audio": "music/blessing-of-the-void.mp3",
+    "cover": "covers/blessing-of-the-void.webp",
+    "status": "draft"
   }
 ];
