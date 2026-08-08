@@ -344,7 +344,7 @@ window.XOTIICDUCK_RELEASES = [
     "artist": "XotiicDuck",
     "album": "Single",
     "genre": "Anime J-Rock",
-    "releaseDate": "2026-08-08",
+    "releaseDate": "2026-08-09",
     "duration": 308,
     "audio": "music/monarchs-collide.mp3",
     "cover": "covers/monarchs-collide.webp",
