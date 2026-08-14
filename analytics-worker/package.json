@@ -1,0 +1,15 @@
+{
+  "name": "xotiic-songs-analytics-worker",
+  "version": "1.0.0",
+  "private": true,
+  "type": "module",
+  "scripts": {
+    "dev": "wrangler dev",
+    "deploy": "wrangler deploy",
+    "migrate:local": "wrangler d1 migrations apply xotiic-song-stats --local",
+    "migrate:remote": "wrangler d1 migrations apply xotiic-song-stats --remote"
+  },
+  "devDependencies": {
+    "wrangler": "^4.30.0"
+  }
+}

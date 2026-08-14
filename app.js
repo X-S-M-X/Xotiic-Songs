@@ -4,6 +4,16 @@
   const rawCatalog = Array.isArray(window.XOTIICDUCK_RELEASES)
     ? window.XOTIICDUCK_RELEASES
     : [];
+  const analyticsConfig = window.XOTIIC_ANALYTICS || {};
+  const analyticsEndpoint = (() => {
+    if (analyticsConfig.enabled !== true || typeof analyticsConfig.endpoint !== "string") return "";
+    try {
+      const url = new URL(analyticsConfig.endpoint);
+      const local = ["localhost", "127.0.0.1"].includes(url.hostname);
+      if ((!local && url.protocol !== "https:") || (!local && !url.hostname.endsWith(".workers.dev"))) return "";
+      return url.href.replace(/\/+$/, "");
+    } catch { return ""; }
+  })();
 
   const safePath = (value) => {
     if (typeof value !== "string") return "";
@@ -38,11 +48,25 @@
     if (use) use.setAttribute("href", `#icon-${name}`);
   };
 
-  const seenIds = new Set();
-  const tracks = rawCatalog
+  const validDate = (value) => /^\d{4}-\d{2}-\d{2}$/.test(text(value)) ? text(value) : "";
+  const validIsoTime = (value) => {
+    const timestamp = Date.parse(text(value));
+    return Number.isFinite(timestamp) ? timestamp : 0;
+  };
+  const releaseIsPublic = (entry, now = Date.now()) => {
+    if (entry?.status === "published") return true;
+    return entry?.status === "scheduled" && validIsoTime(entry.releaseAt) > 0 && validIsoTime(entry.releaseAt) <= now;
+  };
+  const catalogTimestamp = (entry, index = 0) => validIsoTime(entry.publishedAt)
+    || validIsoTime(entry.releaseAt)
+    || (validDate(entry.releaseDate) ? Date.parse(`${entry.releaseDate}T00:00:00`) : 0)
+    || index;
+  const buildPublicTracks = (now = Date.now()) => {
+    const seenIds = new Set();
+    return rawCatalog
     .filter((entry) => {
       const validId = typeof entry?.id === "string" && /^[a-z0-9]+(?:-[a-z0-9]+)*$/.test(entry.id);
-      const complete = entry?.status === "published" && safePath(entry.audio) && safePath(entry.cover);
+      const complete = releaseIsPublic(entry, now) && safePath(entry.audio) && safePath(entry.cover);
       const validDuration = Number.isFinite(entry?.duration) && entry.duration > 0;
       const unique = validId && !seenIds.has(entry.id);
       if (unique) seenIds.add(entry.id);
@@ -54,7 +78,7 @@
       artist: text(entry.artist),
       album: text(entry.album || entry.release || "Single"),
       genre: text(entry.genre || "Music"),
-      releaseDate: /^\d{4}-\d{2}-\d{2}$/.test(text(entry.releaseDate)) ? text(entry.releaseDate) : "",
+      releaseDate: validDate(entry.releaseDate),
       year: /^\d{4}/.test(text(entry.releaseDate)) ? text(entry.releaseDate).slice(0, 4) : "",
       duration: Number(entry.duration),
       audio: safePath(entry.audio),
@@ -62,7 +86,11 @@
       description: text(entry.description).trim(),
       lyrics: typeof entry.lyrics === "string" ? entry.lyrics.trim().slice(0, 30000) : "",
       youtubeUrl: safeYouTubeUrl(entry.youtubeUrl || entry.youtube),
+      catalogTimestamp: catalogTimestamp(entry, rawCatalog.indexOf(entry)),
     }));
+  };
+
+  let tracks = buildPublicTracks();
 
   const byId = (id) => tracks.find((track) => track.id === id);
   const $ = (selector) => document.querySelector(selector);
@@ -73,6 +101,8 @@
   const PLAYLISTS_KEY = "xotiicduck-playlists-v1";
   const PLAYBACK_KEY = "xotiicduck-playback-v1";
   const SESSION_KEY = "xotiicduck-session-v1";
+  const LISTENING_KEY = "xotiicduck-listening-v1";
+  const ANALYTICS_SESSION_KEY = "xotiicduck-analytics-session-v1";
   const BACKUP_VERSION = 1;
   const offlineApi = globalThis.XotiicOffline;
   const params = new URLSearchParams(location.search);
@@ -109,6 +139,10 @@
   let modalReturnFocus = null;
   let serviceWorkerRegistration = null;
   let reloadingForUpdate = false;
+  let scheduleTimer = null;
+  let listening = { recent: [], months: {} };
+  let listenProgress = { trackId: null, seconds: 0, counted: false, lastPosition: 0 };
+  let globalChart = [];
   const downloadingIds = new Set();
 
   try {
@@ -141,6 +175,16 @@
     repeatMode = "off";
   }
 
+  try {
+    const stored = JSON.parse(localStorage.getItem(LISTENING_KEY) || "{}");
+    listening = {
+      recent: Array.isArray(stored.recent) ? stored.recent.filter((entry) => byId(entry?.id) && Number.isFinite(entry?.playedAt)).slice(0, 20) : [],
+      months: stored.months && typeof stored.months === "object" ? stored.months : {},
+    };
+  } catch {
+    listening = { recent: [], months: {} };
+  }
+
   const saveFavorites = () => {
     try { localStorage.setItem(FAVORITES_KEY, JSON.stringify([...favorites])); } catch { /* Listening still works when storage is unavailable. */ }
   };
@@ -151,6 +195,10 @@
 
   const savePlaybackPreferences = () => {
     try { localStorage.setItem(PLAYBACK_KEY, JSON.stringify({ shuffle: shuffleEnabled, repeat: repeatMode })); } catch { /* Listening still works when storage is unavailable. */ }
+  };
+
+  const saveListening = () => {
+    try { localStorage.setItem(LISTENING_KEY, JSON.stringify(listening)); } catch { /* Private mode may block local listening history. */ }
   };
 
   const saveSession = (force = false) => {
@@ -257,26 +305,156 @@
       </div>
     </article>`;
 
+  const latestTracks = () => [...tracks].sort((left, right) => right.catalogTimestamp - left.catalogTimestamp || right.id.localeCompare(left.id));
+  const monthKey = (date = new Date()) => `${date.getFullYear()}-${String(date.getMonth() + 1).padStart(2, "0")}`;
+
+  const analyticsListenerId = () => {
+    const currentMonth = monthKey();
+    try {
+      const stored = JSON.parse(localStorage.getItem(ANALYTICS_SESSION_KEY) || "{}");
+      if (stored.month === currentMonth && /^[a-zA-Z0-9_-]{20,100}$/.test(stored.id || "")) return stored.id;
+      const bytes = crypto.getRandomValues(new Uint8Array(24));
+      const id = btoa(String.fromCharCode(...bytes)).replaceAll("+", "-").replaceAll("/", "_").replaceAll("=", "");
+      localStorage.setItem(ANALYTICS_SESSION_KEY, JSON.stringify({ month: currentMonth, id }));
+      return id;
+    } catch { return ""; }
+  };
+
+  const renderGlobalChart = () => {
+    const section = $("#global-chart-section");
+    section.hidden = globalChart.length === 0;
+    $("#global-monthly-chart").innerHTML = globalChart.length
+      ? `<div class="monthly-track-list global-track-list">${globalChart.map(({ track, plays }, index) => `<button class="monthly-track-row${trackStateClass(track.id)}" data-play="${escapeHtml(track.id)}" data-play-context="all" data-track-action="${escapeHtml(track.id)}" aria-label="${escapeHtml(trackActionLabel(track))}"><span class="monthly-rank">${String(index + 1).padStart(2, "0")}</span>${artwork(track, true)}<span class="monthly-track-copy"><strong>${escapeHtml(track.title)}</strong><small>${escapeHtml(track.artist)} · ${plays} global qualified play${plays === 1 ? "" : "s"}</small></span><span class="monthly-play" data-track-play-icon>${iconMarkup(isTrackPlaying(track.id) ? "pause" : "play")}</span></button>`).join("")}</div>`
+      : "";
+  };
+
+  const loadGlobalChart = async () => {
+    if (!analyticsEndpoint) return;
+    try {
+      const response = await fetch(`${analyticsEndpoint}/v1/charts/monthly?limit=5`, { credentials: "omit", headers: { Accept: "application/json" } });
+      if (!response.ok) throw new Error("Chart unavailable");
+      const payload = await response.json();
+      globalChart = Array.isArray(payload?.tracks)
+        ? payload.tracks.map((entry) => ({ track: byId(entry.trackId), plays: Math.max(0, Number(entry.plays) || 0) })).filter((entry) => entry.track && entry.plays > 0)
+        : [];
+      renderGlobalChart();
+    } catch {
+      globalChart = [];
+      renderGlobalChart();
+    }
+  };
+
+  const submitGlobalListen = async (track) => {
+    if (!analyticsEndpoint || !track) return;
+    const listenerId = analyticsListenerId();
+    if (!listenerId) return;
+    try {
+      const response = await fetch(`${analyticsEndpoint}/v1/listens`, {
+        method: "POST",
+        credentials: "omit",
+        keepalive: true,
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ trackId: track.id, listenerId }),
+      });
+      if (response.ok) setTimeout(() => loadGlobalChart(), 800);
+    } catch { /* Global analytics never interrupts music playback. */ }
+  };
+
+  const recentlyPlayedTracks = () => listening.recent
+    .map((entry) => byId(entry.id))
+    .filter(Boolean)
+    .slice(0, 4);
+
+  const currentMonthlyLeaders = () => {
+    const month = listening.months[monthKey()];
+    if (!month || typeof month !== "object") return [];
+    return Object.entries(month)
+      .map(([id, stats]) => ({ track: byId(id), plays: Math.max(0, Number(stats?.plays) || 0), lastPlayedAt: Number(stats?.lastPlayedAt) || 0 }))
+      .filter((entry) => entry.track && entry.plays > 0)
+      .sort((left, right) => right.plays - left.plays || right.lastPlayedAt - left.lastPlayedAt)
+      .slice(0, 5);
+  };
+
+  const renderListeningSections = () => {
+    const recent = recentlyPlayedTracks();
+    const recentSection = $("#recently-played-section");
+    recentSection.hidden = recent.length === 0;
+    $("#recently-played").innerHTML = recent.length
+      ? `<div class="release-grid listening-grid">${recent.map(releaseCard).join("")}</div>`
+      : "";
+
+    const leaders = currentMonthlyLeaders();
+    const chartSection = $("#monthly-chart-section");
+    chartSection.hidden = leaders.length === 0;
+    $("#monthly-chart").innerHTML = leaders.length
+      ? `<div class="monthly-track-list">${leaders.map(({ track, plays }, index) => `<button class="monthly-track-row${trackStateClass(track.id)}" data-play="${escapeHtml(track.id)}" data-play-context="all" data-track-action="${escapeHtml(track.id)}" aria-label="${escapeHtml(trackActionLabel(track))}"><span class="monthly-rank">${String(index + 1).padStart(2, "0")}</span>${artwork(track, true)}<span class="monthly-track-copy"><strong>${escapeHtml(track.title)}</strong><small>${escapeHtml(track.artist)} · ${plays} qualified play${plays === 1 ? "" : "s"}</small></span><span class="monthly-play" data-track-play-icon>${iconMarkup(isTrackPlaying(track.id) ? "pause" : "play")}</span></button>`).join("")}</div>`
+      : "";
+  };
+
+  const markRecentlyPlayed = (track) => {
+    if (!track) return;
+    listening.recent = [{ id: track.id, playedAt: Date.now() }, ...listening.recent.filter((entry) => entry.id !== track.id)].slice(0, 20);
+    saveListening();
+    renderListeningSections();
+  };
+
+  const recordQualifiedListen = (track) => {
+    if (!track) return;
+    const key = monthKey();
+    if (!listening.months[key] || typeof listening.months[key] !== "object") listening.months[key] = {};
+    const previous = listening.months[key][track.id] || {};
+    listening.months[key][track.id] = {
+      plays: Math.max(0, Number(previous.plays) || 0) + 1,
+      lastPlayedAt: Date.now(),
+    };
+    const retainedMonths = Object.keys(listening.months).sort().slice(-13);
+    listening.months = Object.fromEntries(retainedMonths.map((month) => [month, listening.months[month]]));
+    saveListening();
+    renderListeningSections();
+    renderGlobalChart();
+    submitGlobalListen(track);
+  };
+
+  const resetListenProgress = () => {
+    listenProgress = { trackId: currentTrack?.id || null, seconds: 0, counted: false, lastPosition: Number(audio.currentTime) || 0 };
+  };
+
+  const updateListeningProgress = () => {
+    if (!currentTrack) return;
+    if (listenProgress.trackId !== currentTrack.id) resetListenProgress();
+    const position = Number(audio.currentTime) || 0;
+    const delta = position - listenProgress.lastPosition;
+    listenProgress.lastPosition = position;
+    if (!audio.paused && delta > 0 && delta <= 3) listenProgress.seconds += delta;
+    const threshold = Math.max(1, Math.min(30, playbackDuration() * 0.5));
+    if (!listenProgress.counted && listenProgress.seconds >= threshold) {
+      listenProgress.counted = true;
+      recordQualifiedListen(currentTrack);
+    }
+  };
+
   const renderHome = () => {
+    const latest = latestTracks();
     $("#live-count").textContent = String(tracks.length).padStart(2, "0");
     $("#catalog-heading").textContent = tracks.length ? "Latest releases" : "The catalog opens with the first release";
     $("#view-all").hidden = tracks.length === 0;
     $("#home-catalog").innerHTML = tracks.length
-      ? `<div class="release-grid">${tracks.slice(0, 4).map(releaseCard).join("")}</div>`
+      ? `<div class="release-grid">${latest.slice(0, 4).map(releaseCard).join("")}</div>`
       : emptyCatalog();
+    renderListeningSections();
 
     const primary = $("#hero-primary");
     if (tracks.length) {
-      const latest = tracks[0];
-      const playing = isTrackPlaying(latest.id);
+      const latestTrack = latest[0];
+      const playing = isTrackPlaying(latestTrack.id);
       primary.removeAttribute("href");
       primary.removeAttribute("target");
       primary.removeAttribute("rel");
-      primary.dataset.play = latest.id;
-      primary.dataset.trackAction = latest.id;
-      primary.classList.toggle("is-current-track", isCurrentTrack(latest.id));
+      primary.dataset.play = latestTrack.id;
+      primary.dataset.trackAction = latestTrack.id;
+      primary.classList.toggle("is-current-track", isCurrentTrack(latestTrack.id));
       primary.classList.toggle("is-playing", playing);
-      primary.setAttribute("aria-label", `${playing ? "Pause" : "Play"} ${latest.title}`);
+      primary.setAttribute("aria-label", `${playing ? "Pause" : "Play"} ${latestTrack.title}`);
       primary.innerHTML = `<span data-track-play-icon>${iconMarkup(playing ? "pause" : "play")}</span><span data-track-play-label data-track-play-label-suffix=" latest">${playing ? "Pause" : "Play"} latest</span>`;
     }
   };
@@ -285,7 +463,7 @@
     const genres = ["All tracks", ...new Set(tracks.map((track) => track.genre))];
     $("#genre-row").hidden = tracks.length === 0;
     $("#genre-row").innerHTML = genres.map((genre) => `<button data-genre="${escapeHtml(genre)}" class="${genre === selectedGenre ? "active" : ""}">${escapeHtml(genre)}</button>`).join("");
-    const visible = selectedGenre === "All tracks" ? tracks : tracks.filter((track) => track.genre === selectedGenre);
+    const visible = (selectedGenre === "All tracks" ? latestTracks() : latestTracks().filter((track) => track.genre === selectedGenre));
     $("#discover-catalog").innerHTML = tracks.length
       ? `<div class="release-grid expanded">${visible.map(releaseCard).join("")}</div>`
       : emptyCatalog();
@@ -750,6 +928,38 @@
     syncPlaybackIndicators();
   };
 
+  const scheduleCatalogRefresh = () => {
+    clearTimeout(scheduleTimer);
+    const now = Date.now();
+    const nextReleaseAt = rawCatalog
+      .filter((entry) => entry?.status === "scheduled")
+      .map((entry) => validIsoTime(entry.releaseAt))
+      .filter((timestamp) => timestamp > now)
+      .sort((left, right) => left - right)[0];
+    if (!nextReleaseAt) return;
+    scheduleTimer = setTimeout(refreshScheduledCatalog, Math.min(2147483647, Math.max(1000, nextReleaseAt - now + 1000)));
+  };
+
+  const refreshScheduledCatalog = () => {
+    const previousSignature = tracks.map((track) => track.id).join("|");
+    const currentId = currentTrack?.id || null;
+    tracks = buildPublicTracks();
+    const nextSignature = tracks.map((track) => track.id).join("|");
+    if (currentId) currentTrack = byId(currentId) || tracks[0] || null;
+    else currentTrack = tracks[0] || null;
+    if (playbackContextLabel === "All tracks") activeQueueIds = tracks.map((track) => track.id);
+    else activeQueueIds = activeQueueIds.filter((id) => byId(id));
+    if (previousSignature !== nextSignature) {
+      if (currentTrack && !audio.src) {
+        audio.src = currentTrack.audio;
+        audio.load();
+      }
+      renderAll();
+      showToast("A scheduled XotiicDuck release is now live.");
+    }
+    scheduleCatalogRefresh();
+  };
+
   const showToast = (message) => {
     clearTimeout(toastTimer);
     $("#toast-copy").textContent = message;
@@ -816,6 +1026,7 @@
     const duration = playbackDuration();
     const position = Math.min(duration || 0, Math.max(0, Number(seconds) || 0));
     audio.currentTime = position;
+    listenProgress.lastPosition = position;
     updateProgressUI(position);
   };
 
@@ -915,6 +1126,7 @@
       setPlaybackStatus("loading", "Loading song…");
       audio.src = track.audio;
       audio.load();
+      resetListenProgress();
     }
     renderAll();
     updateMediaSession();
@@ -1164,7 +1376,7 @@
     privacy: {
       eyebrow: "PRIVACY",
       title: "A small player should collect very little.",
-      copy: `<section><h3>Local favorites</h3><p>Listener favorites are stored in this browser on this device. The public player includes no listener account, advertising tracker, or product analytics.</p></section><section><h3>Separate artist access</h3><p>The owner publishing console stores its GitHub connection in an encrypted device vault. Public listeners cannot publish releases without the verified repository owner’s GitHub access.</p></section><section><h3>External links</h3><p>YouTube links open an external service governed by its own privacy terms. This player does not embed a YouTube video.</p></section>`,
+      copy: `<section><h3>Saved on this device</h3><p>Favorites, playlists, playback position, Recently Played, and Your Top Tracks stay in this browser. They are not connected to a listener account.</p></section><section><h3>Qualified global plays</h3><p>${analyticsEndpoint ? "After meaningful playback, the player sends the song ID and a rotating anonymous token to the XotiicDuck chart service. The service stores keyed hashes for deduplication, not names, emails, raw IP addresses, or precise locations." : "The optional worldwide chart service is currently disabled, so this player sends no global listening events."} There are no advertising trackers.</p></section><section><h3>Separate artist access</h3><p>The owner publishing console stores its GitHub connection in an encrypted device vault. Public listeners cannot publish releases without the verified repository owner’s GitHub access.</p></section><section><h3>External links</h3><p>YouTube links open an external service governed by its own privacy terms. This player does not embed a YouTube video.</p></section>`,
     },
     terms: {
       eyebrow: "TERMS",
@@ -1317,6 +1529,13 @@
   $("#library-export").addEventListener("click", exportLibrary);
   $("#library-import").addEventListener("click", () => $("#library-import-file").click());
   $("#library-import-file").addEventListener("change", (event) => importLibrary(event.target.files?.[0]));
+  $("#clear-listening-data").addEventListener("click", () => {
+    if (!window.confirm("Clear recently played songs and your monthly listening counts on this device?")) return;
+    listening = { recent: [], months: {} };
+    saveListening();
+    renderListeningSections();
+    showToast("Listening history cleared on this device.");
+  });
   $("#volume").addEventListener("input", (event) => { audio.volume = Number(event.target.value); saveSession(); });
   for (const input of [$("#progress"), $("#now-playing-progress")]) input.addEventListener("input", (event) => seekTo(event.target.value));
   $("#search-input").addEventListener("input", (event) => renderSearch(event.target.value));
@@ -1360,10 +1579,10 @@
     closeModals();
   });
 
-  audio.addEventListener("play", () => { setPlaybackStatus(); updatePlayButtons(); saveSession(true); if ("mediaSession" in navigator) { try { navigator.mediaSession.playbackState = "playing"; } catch { /* Partial support. */ } } });
+  audio.addEventListener("play", () => { setPlaybackStatus(); updatePlayButtons(); markRecentlyPlayed(currentTrack); saveSession(true); if ("mediaSession" in navigator) { try { navigator.mediaSession.playbackState = "playing"; } catch { /* Partial support. */ } } });
   audio.addEventListener("playing", () => setPlaybackStatus());
   audio.addEventListener("pause", () => { updatePlayButtons(); saveSession(true); if ("mediaSession" in navigator) { try { navigator.mediaSession.playbackState = "paused"; } catch { /* Partial support. */ } } });
-  audio.addEventListener("timeupdate", () => { updateProgressUI(); saveSession(); });
+  audio.addEventListener("timeupdate", () => { updateProgressUI(); updateListeningProgress(); saveSession(); });
   audio.addEventListener("loadstart", () => setPlaybackStatus("loading", navigator.onLine ? "Loading song…" : "Opening saved song…"));
   audio.addEventListener("waiting", () => setPlaybackStatus("loading", "Buffering…"));
   audio.addEventListener("stalled", () => setPlaybackStatus("loading", navigator.onLine ? "Connection slowed — still trying…" : "Trying to open the saved song…"));
@@ -1379,6 +1598,7 @@
   });
   audio.addEventListener("durationchange", () => updateProgressUI());
   audio.addEventListener("ended", () => {
+    resetListenProgress();
     if (repeatMode === "one") { seekTo(0); audio.play().catch(() => undefined); return; }
     const queue = currentQueue();
     if (queue.length <= 1) { seekTo(0); updatePlayButtons(); return; }
@@ -1403,6 +1623,7 @@
   window.addEventListener("pageshow", updateInstallButtons);
   window.addEventListener("pagehide", () => saveSession(true));
   window.addEventListener("beforeunload", () => saveSession(true));
+  document.addEventListener("visibilitychange", () => { if (!document.hidden) refreshScheduledCatalog(); });
 
   const trapFocus = (event, layer) => {
     if (event.key !== "Tab" || !layer) return;
@@ -1503,5 +1724,7 @@
   updateInstallButtons();
   updateNetworkState();
   refreshOfflineState();
+  loadGlobalChart();
+  scheduleCatalogRefresh();
   if (params.get("search") === "1") openSearch();
 })();

@@ -14,14 +14,14 @@
     <meta name="format-detection" content="telephone=no" />
     <meta name="robots" content="noindex, nofollow, noarchive" />
     <title>Xotiic Upload — Artist Console</title>
-    <link rel="manifest" href="./manifest.webmanifest?v=10" />
-    <link rel="icon" href="../favicon.svg?v=10" />
-    <link rel="apple-touch-icon" href="../apple-touch-icon.png?v=10" />
-    <link rel="stylesheet" href="./styles.css?v=10" />
-    <script src="./config.js?v=10" defer></script>
-    <script src="./crypto.js?v=10" defer></script>
-    <script src="./github.js?v=10" defer></script>
-    <script src="./app.js?v=10" defer></script>
+    <link rel="manifest" href="./manifest.webmanifest?v=11" />
+    <link rel="icon" href="../favicon.svg?v=11" />
+    <link rel="apple-touch-icon" href="../apple-touch-icon.png?v=11" />
+    <link rel="stylesheet" href="./styles.css?v=11" />
+    <script src="./config.js?v=11" defer></script>
+    <script src="./crypto.js?v=11" defer></script>
+    <script src="./github.js?v=11" defer></script>
+    <script src="./app.js?v=11" defer></script>
   </head>
   <body>
     <svg class="icon-sprite" aria-hidden="true" focusable="false">
@@ -39,6 +39,8 @@
       <symbol id="admin-icon-lock" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="5" y="10" width="14" height="11" rx="2"></rect><path d="M8 10V7a4 4 0 0 1 8 0v3"></path></symbol>
       <symbol id="admin-icon-plus" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M12 5v14M5 12h14"></path></symbol>
       <symbol id="admin-icon-edit" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M4 20h4l11-11-4-4L4 16v4Z"></path><path d="m13.5 6.5 4 4"></path></symbol>
+      <symbol id="admin-icon-home" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="m3 11 9-8 9 8"></path><path d="M5.5 10v10h13V10"></path><path d="M9.5 20v-6h5v6"></path></symbol>
+      <symbol id="admin-icon-clock" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="9"></circle><path d="M12 7v5l3 2"></path></symbol>
     </svg>
     <div class="ambient ambient-one"></div>
     <div class="ambient ambient-two"></div>
@@ -120,7 +122,8 @@
             </div>
             <nav aria-label="Artist console navigation">
               <p class="section-label">RELEASE TOOLS</p>
-              <button class="active" type="button" data-admin-panel="upload"><span class="icon-frame"><svg class="ui-icon" aria-hidden="true"><use href="#admin-icon-upload"></use></svg></span><span>New release</span></button>
+              <button class="active" type="button" data-admin-panel="overview"><span class="icon-frame"><svg class="ui-icon" aria-hidden="true"><use href="#admin-icon-home"></use></svg></span><span>Overview</span></button>
+              <button type="button" data-admin-panel="upload"><span class="icon-frame"><svg class="ui-icon" aria-hidden="true"><use href="#admin-icon-upload"></use></svg></span><span>New release</span></button>
               <button type="button" data-admin-panel="releases"><span class="icon-frame"><svg class="ui-icon" aria-hidden="true"><use href="#admin-icon-music"></use></svg></span><span>Manage music</span><b id="release-count-badge">0</b></button>
               <p class="section-label account-label">ACCOUNT</p>
               <button type="button" data-admin-panel="security"><span class="icon-frame"><svg class="ui-icon" aria-hidden="true"><use href="#admin-icon-shield"></use></svg></span><span>Security</span></button>
@@ -131,11 +134,35 @@
 
           <div class="dashboard-main">
             <section class="dashboard-header">
-              <div><p class="eyebrow"><span></span> ARTIST CONTROL</p><h1 id="dashboard-title">Publish a new release</h1><p id="dashboard-subtitle">Upload the final MP3 and square artwork from this device.</p></div>
+              <div><p class="eyebrow"><span></span> ARTIST CONTROL</p><h1 id="dashboard-title">Release overview</h1><p id="dashboard-subtitle">See what is live, scheduled, drafted, and ready for your next move.</p></div>
               <div class="publish-health"><span><i></i> OWNER VERIFIED</span><strong id="catalog-health">Catalog ready</strong></div>
             </section>
 
-            <section class="admin-panel" data-panel="upload">
+            <section class="admin-panel" data-panel="overview">
+              <div class="overview-metrics" aria-label="Catalog status summary">
+                <article><span>LIVE NOW</span><strong id="overview-live">0</strong><small>public releases</small></article>
+                <article><span>SCHEDULED</span><strong id="overview-scheduled">0</strong><small>upcoming releases</small></article>
+                <article><span>DRAFTS</span><strong id="overview-drafts">0</strong><small>hidden works</small></article>
+                <article><span>ARCHIVED</span><strong id="overview-archived">0</strong><small>recoverable releases</small></article>
+              </div>
+              <div class="overview-grid">
+                <article class="panel-card overview-next-card">
+                  <div class="panel-heading"><div><p class="section-label">NEXT RELEASE</p><h2>Schedule</h2></div><button type="button" class="panel-link" data-admin-panel="releases">Manage all</button></div>
+                  <div id="overview-next-release" class="overview-next-release"><span class="overview-empty-icon"><svg class="ui-icon" aria-hidden="true"><use href="#admin-icon-clock"></use></svg></span><div><strong>No release is scheduled</strong><p>Choose Schedule when preparing the next song.</p></div></div>
+                </article>
+                <article class="panel-card overview-actions-card">
+                  <p class="section-label">QUICK ACTIONS</p><h2>What do you want to do?</h2>
+                  <div class="overview-actions"><button type="button" data-admin-panel="upload"><span><svg class="ui-icon" aria-hidden="true"><use href="#admin-icon-upload"></use></svg></span><strong>Prepare a release</strong><small>Publish now, schedule, or save a draft.</small></button><button type="button" data-admin-panel="releases"><span><svg class="ui-icon" aria-hidden="true"><use href="#admin-icon-music"></use></svg></span><strong>Manage catalog</strong><small>Edit metadata or restore an archived song.</small></button></div>
+                </article>
+                <article class="panel-card diagnostics-card">
+                  <div class="panel-heading"><div><p class="section-label">SYSTEM CHECK</p><h2>Publishing diagnostics</h2></div><span id="diagnostics-state" class="diagnostics-state">READY</span></div>
+                  <dl><div><dt>Catalog writer</dt><dd id="diagnostics-catalog">Version 2 ready</dd></div><div><dt>Network</dt><dd id="diagnostics-network">Checking</dd></div><div><dt>Device vault</dt><dd>Encrypted</dd></div><div><dt>Storage</dt><dd id="diagnostics-storage">Checking</dd></div></dl>
+                  <button id="copy-diagnostics" type="button" class="secondary-action">Copy diagnostics</button>
+                </article>
+              </div>
+            </section>
+
+            <section class="admin-panel" data-panel="upload" hidden>
               <form id="release-form" class="release-form">
                 <div class="form-column asset-column">
                   <div class="panel-card">
@@ -156,7 +183,14 @@
 
                   <div class="panel-card publish-card">
                     <div class="publish-summary"><span class="summary-art" id="summary-art">XD</span><div><p class="section-label">READY CHECK</p><strong id="summary-title">Waiting for release details</strong><small id="summary-meta">MP3 and cover required</small></div></div>
-                    <label class="publish-toggle"><input id="publish-now" type="checkbox" checked /><span><i></i></span><span><strong>Publish immediately</strong><small>Turn off to save the release as a hidden draft.</small></span></label>
+                    <fieldset class="release-mode-selector">
+                      <legend>Release visibility</legend>
+                      <label><input type="radio" name="release-mode" value="published" checked /><span><strong>Publish now</strong><small>Use today automatically.</small></span></label>
+                      <label><input type="radio" name="release-mode" value="scheduled" /><span><strong>Schedule</strong><small>Go live at an exact time.</small></span></label>
+                      <label><input type="radio" name="release-mode" value="draft" /><span><strong>Draft</strong><small>Keep completely hidden.</small></span></label>
+                    </fieldset>
+                    <div id="schedule-fields" class="schedule-fields" hidden><label class="field"><span>Release date and time</span><input id="release-schedule" type="datetime-local" /><small>Uses this device’s current timezone.</small></label></div>
+                    <input id="release-date" type="hidden" />
                     <button id="review-release" class="primary-action" type="submit"><span>Review release</span><span class="icon-frame"><svg class="ui-icon" aria-hidden="true"><use href="#admin-icon-arrow-right"></use></svg></span></button>
                     <p class="publish-note">The MP3, cover and catalog are committed together. Listeners never see a half-finished release.</p>
                   </div>
@@ -170,7 +204,6 @@
                       <label class="field"><span>Artist</span><input id="release-artist" required maxlength="80" value="XotiicDuck" /></label>
                       <label class="field"><span>Release type</span><select id="release-album"><option>Single</option><option>EP</option><option>Album</option><option>Soundtrack</option></select></label>
                       <label class="field"><span>Genre</span><input id="release-genre" required maxlength="60" value="Anime J-Rock" /></label>
-                      <label class="field"><span>Release date</span><input id="release-date" type="date" required /></label>
                       <label class="field"><span>Duration</span><input id="release-duration" inputmode="numeric" readonly placeholder="Detected from MP3" /></label>
                       <label class="field"><span>Release ID</span><input id="release-id" required pattern="[a-z0-9]+(?:-[a-z0-9]+)*" maxlength="80" placeholder="generated-from-title" /><small>Lowercase letters, numbers and hyphens.</small></label>
                       <label class="field field-wide"><span>YouTube link <small>optional</small></span><input id="release-youtube" type="url" maxlength="500" inputmode="url" placeholder="https://www.youtube.com/watch?v=..." /><small>Only youtube.com and youtu.be links are accepted.</small></label>
@@ -185,6 +218,7 @@
 
             <section class="admin-panel" data-panel="releases" hidden>
               <div class="manage-toolbar"><div><p class="section-label">CATALOG CONTROL</p><h2>Your releases</h2></div><button id="refresh-catalog" type="button"><span class="icon-frame"><svg class="ui-icon" aria-hidden="true"><use href="#admin-icon-refresh"></use></svg></span><span>Refresh</span></button></div>
+              <div class="release-filters" role="group" aria-label="Filter releases"><button class="active" type="button" data-release-filter="all">All</button><button type="button" data-release-filter="published">Live</button><button type="button" data-release-filter="scheduled">Scheduled</button><button type="button" data-release-filter="draft">Drafts</button><button type="button" data-release-filter="archived">Archived</button></div>
               <div id="catalog-loading" class="loading-card"><span></span><div><strong>Reading the GitHub catalog</strong><p>Checking the latest main branch.</p></div></div>
               <div id="release-list" class="release-list" hidden></div>
               <div id="manage-empty" class="manage-empty" hidden><span><svg class="ui-icon" aria-hidden="true"><use href="#admin-icon-music"></use></svg></span><h3>No releases yet</h3><p>Your first published song will appear here.</p><button type="button" data-admin-panel="upload">Upload the first release</button></div>
@@ -250,7 +284,9 @@
           <label class="field"><span>Artist</span><input id="edit-artist" required maxlength="80" /></label>
           <label class="field"><span>Release type</span><select id="edit-album"><option>Single</option><option>EP</option><option>Album</option><option>Soundtrack</option></select></label>
           <label class="field"><span>Genre</span><input id="edit-genre" required maxlength="60" /></label>
-          <label class="field"><span>Release date</span><input id="edit-date" type="date" required /></label>
+          <label class="field"><span>Visibility</span><select id="edit-status"><option value="published">Published now</option><option value="scheduled">Scheduled</option><option value="draft">Hidden draft</option><option value="archived">Archived</option></select></label>
+          <label id="edit-schedule-field" class="field" hidden><span>Release date and time</span><input id="edit-schedule" type="datetime-local" /><small>Uses this device’s current timezone.</small></label>
+          <input id="edit-date" type="hidden" />
           <label class="field field-wide"><span>YouTube link <small>optional</small></span><input id="edit-youtube" type="url" maxlength="500" inputmode="url" /></label>
           <label class="field field-wide"><span>Short description <small>optional</small></span><textarea id="edit-description" maxlength="280" rows="3"></textarea></label>
           <label class="field field-wide"><span>Lyrics <small>optional</small></span><textarea id="edit-lyrics" maxlength="30000" rows="7"></textarea></label>

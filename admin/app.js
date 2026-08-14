@@ -39,6 +39,7 @@
     editCoverFile: null,
     serviceWorkerRegistration: null,
     reloadingForUpdate: false,
+    releaseFilter: "all",
   };
 
   const views = {
@@ -87,6 +88,31 @@
     const offset = now.getTimezoneOffset() * 60000;
     return new Date(now.getTime() - offset).toISOString().slice(0, 10);
   };
+  const localDateTime = (date = new Date()) => {
+    const offset = date.getTimezoneOffset() * 60000;
+    return new Date(date.getTime() - offset).toISOString().slice(0, 16);
+  };
+  const isoToLocalDateTime = (value) => {
+    const date = new Date(text(value));
+    return Number.isNaN(date.getTime()) ? "" : localDateTime(date);
+  };
+  const selectedReleaseMode = () => $("input[name='release-mode']:checked")?.value || "published";
+  const releaseTimestamp = (release, index = 0) => Date.parse(text(release.publishedAt))
+    || Date.parse(text(release.releaseAt))
+    || (/^\d{4}-\d{2}-\d{2}$/.test(text(release.releaseDate)) ? Date.parse(`${release.releaseDate}T00:00:00`) : 0)
+    || index;
+  const effectiveStatus = (release, now = Date.now()) => release?.status === "scheduled" && Date.parse(text(release.releaseAt)) <= now
+    ? "published"
+    : ["published", "scheduled", "draft", "archived"].includes(release?.status) ? release.status : "draft";
+  const formatReleaseMoment = (release) => {
+    if (release?.status === "scheduled" && Number.isFinite(Date.parse(text(release.releaseAt)))) {
+      return new Intl.DateTimeFormat(undefined, { dateStyle: "medium", timeStyle: "short" }).format(new Date(release.releaseAt));
+    }
+    if (/^\d{4}-\d{2}-\d{2}$/.test(text(release?.releaseDate))) {
+      return new Intl.DateTimeFormat(undefined, { dateStyle: "medium" }).format(new Date(`${release.releaseDate}T00:00:00`));
+    }
+    return "No release date";
+  };
 
   const setView = (name) => {
     Object.entries(views).forEach(([key, element]) => { element.hidden = key !== name; });
@@ -119,6 +145,7 @@
         CATALOG_PARSE: "GitHub's catalog.js contains invalid data and needs to be repaired.",
         RELEASE_MISSING: "That release changed or was removed. Refresh the catalog and try again.",
         RELEASE_ID_CHANGED: "A published release ID cannot be changed.",
+        RELEASE_STATUS: "Choose Published, Scheduled, Draft, or Archived.",
       };
       return messages[error.code] || `GitHub error: ${error.message}`;
     }
@@ -298,7 +325,7 @@
     resetIdleTimer();
     await loadCatalog({ silent: false }).catch(() => undefined);
     const requestedPanel = new URLSearchParams(location.search).get("panel");
-    if (["upload", "releases", "security"].includes(requestedPanel)) selectAdminPanel(requestedPanel);
+    selectAdminPanel(["overview", "upload", "releases", "security"].includes(requestedPanel) ? requestedPanel : "overview");
   };
 
   const loadCatalog = async ({ silent = false } = {}) => {
@@ -325,22 +352,84 @@
     }
   };
 
+  const refreshDiagnostics = async () => {
+    $("#diagnostics-catalog").textContent = `Version ${window.XotiicGitHub?.CATALOG_VERSION || 1} ready`;
+    $("#diagnostics-network").textContent = navigator.onLine ? "Online" : "Offline";
+    let storage = "Available";
+    try {
+      if (navigator.storage?.persisted) storage = await navigator.storage.persisted() ? "Persistent" : "Browser managed";
+    } catch { /* Storage status is informational only. */ }
+    $("#diagnostics-storage").textContent = storage;
+    $("#diagnostics-state").textContent = navigator.onLine ? "READY" : "OFFLINE";
+    $("#diagnostics-state").classList.toggle("warning", !navigator.onLine);
+  };
+
+  const renderOverview = () => {
+    const statuses = state.releases.map((release) => effectiveStatus(release));
+    $("#overview-live").textContent = String(statuses.filter((status) => status === "published").length);
+    $("#overview-scheduled").textContent = String(statuses.filter((status) => status === "scheduled").length);
+    $("#overview-drafts").textContent = String(statuses.filter((status) => status === "draft").length);
+    $("#overview-archived").textContent = String(statuses.filter((status) => status === "archived").length);
+
+    const next = state.releases
+      .filter((release) => effectiveStatus(release) === "scheduled")
+      .sort((left, right) => Date.parse(left.releaseAt) - Date.parse(right.releaseAt))[0];
+    const target = $("#overview-next-release");
+    target.replaceChildren();
+    if (next) {
+      const coverUrl = safeAssetUrl(next.cover);
+      const cover = coverUrl ? document.createElement("img") : document.createElement("span");
+      if (coverUrl) { cover.src = coverUrl; cover.alt = ""; }
+      else { cover.className = "overview-empty-icon"; cover.textContent = "XD"; }
+      const copy = document.createElement("div");
+      const title = document.createElement("strong");
+      title.textContent = text(next.title || "Untitled release");
+      const time = document.createElement("p");
+      time.textContent = `Goes live ${formatReleaseMoment(next)}`;
+      copy.append(title, time);
+      target.append(cover, copy);
+    } else {
+      const icon = document.createElement("span");
+      icon.className = "overview-empty-icon";
+      icon.textContent = "–";
+      const copy = document.createElement("div");
+      const title = document.createElement("strong");
+      title.textContent = "No release is scheduled";
+      const note = document.createElement("p");
+      note.textContent = "Choose Schedule when preparing the next song.";
+      copy.append(title, note);
+      target.append(icon, copy);
+    }
+    refreshDiagnostics().catch(() => undefined);
+  };
+
   const renderReleases = () => {
     const loading = $("#catalog-loading");
     const list = $("#release-list");
     const empty = $("#manage-empty");
     loading.hidden = true;
-    $("#release-count-badge").textContent = String(state.releases.length);
+    $("#release-count-badge").textContent = String(state.releases.filter((release) => effectiveStatus(release) !== "archived").length);
+    renderOverview();
+    $$('[data-release-filter]').forEach((button) => button.classList.toggle("active", button.dataset.releaseFilter === state.releaseFilter));
+    const filtered = state.releases
+      .map((release, index) => ({ release, timestamp: releaseTimestamp(release, index) }))
+      .filter(({ release }) => state.releaseFilter === "all" || effectiveStatus(release) === state.releaseFilter)
+      .sort((left, right) => right.timestamp - left.timestamp)
+      .map(({ release }) => release);
     list.replaceChildren();
-    if (!state.releases.length) {
+    if (!filtered.length) {
       list.hidden = true;
       empty.hidden = false;
+      $("#manage-empty h3").textContent = state.releases.length ? `No ${state.releaseFilter === "all" ? "matching" : state.releaseFilter} releases` : "No releases yet";
+      $("#manage-empty p").textContent = state.releases.length ? "Choose another filter to see the rest of your catalog." : "Your first published song will appear here.";
+      $("#manage-empty button").hidden = state.releases.length > 0;
       return;
     }
+    $("#manage-empty button").hidden = false;
     empty.hidden = true;
     list.hidden = false;
 
-    [...state.releases].reverse().forEach((release) => {
+    filtered.forEach((release) => {
       const row = document.createElement("article");
       row.className = "managed-release";
       const coverUrl = safeAssetUrl(release.cover);
@@ -360,30 +449,33 @@
       const metadata = document.createElement("p");
       metadata.textContent = `${text(release.artist || "XotiicDuck")} · ${text(release.album || "Single")} · ${formatDuration(Number(release.duration))}`;
       const id = document.createElement("small");
-      id.textContent = `${text(release.releaseDate || "No date")} · ${text(release.id)}`;
+      id.textContent = `${formatReleaseMoment(release)} · ${text(release.id)}`;
       copy.append(title, metadata, id);
 
       const actions = document.createElement("div");
       actions.className = "managed-release-actions";
       const status = document.createElement("span");
-      const published = release.status === "published";
-      status.className = `status-chip${published ? " published" : ""}`;
-      status.textContent = published ? "LIVE" : "DRAFT";
+      const sourceStatus = ["published", "scheduled", "draft", "archived"].includes(release.status) ? release.status : "draft";
+      const displayStatus = effectiveStatus(release);
+      const autoLive = sourceStatus === "scheduled" && displayStatus === "published";
+      status.className = `status-chip ${displayStatus}`;
+      status.textContent = autoLive ? "LIVE · AUTO" : displayStatus === "published" ? "LIVE" : displayStatus.toUpperCase();
       const toggle = document.createElement("button");
       toggle.type = "button";
       toggle.dataset.releaseToggle = text(release.id);
-      toggle.dataset.nextStatus = published ? "draft" : "published";
-      toggle.textContent = published ? "Hide" : "Publish";
+      toggle.dataset.nextStatus = displayStatus === "published" ? "draft" : "published";
+      toggle.textContent = displayStatus === "published" ? "Hide" : sourceStatus === "scheduled" ? "Publish now" : "Publish";
       const edit = document.createElement("button");
       edit.type = "button";
       edit.dataset.releaseEdit = text(release.id);
       edit.textContent = "Edit";
-      const remove = document.createElement("button");
-      remove.type = "button";
-      remove.className = "danger";
-      remove.dataset.releaseDelete = text(release.id);
-      remove.textContent = "Delete";
-      actions.append(status, edit, toggle, remove);
+      const archive = document.createElement("button");
+      archive.type = "button";
+      archive.className = sourceStatus === "archived" ? "" : "danger";
+      if (sourceStatus === "archived") archive.dataset.releaseRestore = text(release.id);
+      else archive.dataset.releaseArchive = text(release.id);
+      archive.textContent = sourceStatus === "archived" ? "Restore draft" : "Archive";
+      actions.append(status, edit, toggle, archive);
       row.append(cover, copy, actions);
       list.append(row);
     });
@@ -393,12 +485,14 @@
     $$('[data-panel]').forEach((panel) => { panel.hidden = panel.dataset.panel !== name; });
     $$('[data-admin-panel]').forEach((button) => button.classList.toggle("active", button.dataset.adminPanel === name));
     const headings = {
+      overview: ["Release overview", "See what is live, scheduled, drafted, and ready for your next move."],
       upload: ["Publish a new release", "Upload the final MP3 and square artwork from this device."],
-      releases: ["Manage your catalog", "Publish, hide, or remove releases already connected to GitHub."],
+      releases: ["Manage your catalog", "Publish, schedule, edit, hide, or archive releases connected to GitHub."],
       security: ["Security and access", "Maintain the encrypted owner vault on this device."],
     };
     $("#dashboard-title").textContent = headings[name][0];
     $("#dashboard-subtitle").textContent = headings[name][1];
+    if (name === "overview") renderOverview();
     if (name === "releases") loadCatalog().catch(() => undefined);
     window.scrollTo({ top: 0, behavior: "smooth" });
   };
@@ -463,13 +557,38 @@
     const title = $("#release-title").value.trim();
     const audioReady = Boolean(state.audioFile && state.audioDuration);
     const coverReady = Boolean(state.coverFile && state.coverObjectUrl);
+    const mode = selectedReleaseMode();
+    const visibility = mode === "published" ? "Publishes now" : mode === "scheduled" ? "Scheduled release" : "Hidden draft";
     $("#summary-title").textContent = title || "Waiting for release details";
     $("#summary-meta").textContent = audioReady && coverReady
-      ? `${formatDuration(state.audioDuration)} · ${$("#publish-now").checked ? "Publishes live" : "Hidden draft"}`
+      ? `${formatDuration(state.audioDuration)} · ${visibility}`
       : "MP3 and cover required";
     const summaryArt = $("#summary-art");
     summaryArt.style.backgroundImage = coverReady ? `url(${JSON.stringify(state.coverObjectUrl).slice(1, -1)})` : "";
     summaryArt.textContent = coverReady ? "" : "XD";
+  };
+
+  const defaultScheduleValue = () => {
+    const date = new Date(Date.now() + 24 * 60 * 60 * 1000);
+    date.setMinutes(Math.ceil(date.getMinutes() / 15) * 15, 0, 0);
+    return localDateTime(date);
+  };
+
+  const updateReleaseMode = () => {
+    const scheduled = selectedReleaseMode() === "scheduled";
+    $$(".release-mode-selector label").forEach((label) => label.classList.toggle("is-selected", Boolean(label.querySelector("input")?.checked)));
+    $("#schedule-fields").hidden = !scheduled;
+    $("#release-schedule").required = scheduled;
+    if (scheduled && !$("#release-schedule").value) $("#release-schedule").value = defaultScheduleValue();
+    $("#release-date").value = scheduled ? $("#release-schedule").value.slice(0, 10) : localDate();
+    updateReleaseSummary();
+  };
+
+  const updateEditScheduleVisibility = () => {
+    const scheduled = $("#edit-status").value === "scheduled";
+    $("#edit-schedule-field").hidden = !scheduled;
+    $("#edit-schedule").required = scheduled;
+    if (scheduled && !$("#edit-schedule").value) $("#edit-schedule").value = defaultScheduleValue();
   };
 
   const resetReleaseForm = () => {
@@ -477,7 +596,8 @@
     $("#release-artist").value = "XotiicDuck";
     $("#release-genre").value = "Anime J-Rock";
     $("#release-date").value = localDate();
-    $("#publish-now").checked = true;
+    $("input[name='release-mode'][value='published']").checked = true;
+    $("#release-schedule").value = defaultScheduleValue();
     $("#audio-file-name").textContent = "Choose the final MP3";
     $("#audio-file-meta").textContent = `Tap to open Files · Maximum ${formatBytes(config.maxAudioBytes)}`;
     $("#cover-file-name").textContent = "Choose cover artwork";
@@ -500,6 +620,7 @@
     $("#review-cover").style.backgroundImage = "";
     $("#description-count").textContent = "0";
     $("#lyrics-count").textContent = "0";
+    updateReleaseMode();
     updateReleaseSummary();
   };
 
@@ -516,18 +637,25 @@
     const description = $("#release-description").value.trim();
     const lyrics = $("#release-lyrics").value.trim();
     const youtubeUrl = safeYouTubeUrl($("#release-youtube").value);
+    const mode = selectedReleaseMode();
+    const now = new Date().toISOString();
+    const scheduleValue = $("#release-schedule").value;
     const release = {
       id,
       title: $("#release-title").value.trim(),
       artist: $("#release-artist").value.trim(),
       album: $("#release-album").value,
       genre: $("#release-genre").value.trim(),
-      releaseDate: $("#release-date").value,
+      releaseDate: mode === "scheduled" ? scheduleValue.slice(0, 10) : localDate(),
       duration: state.audioDuration,
       audio: `music/${id}.mp3`,
       cover: `covers/${id}.${coverExtension(state.coverFile)}`,
-      status: $("#publish-now").checked ? "published" : "draft",
+      status: mode,
+      createdAt: now,
+      updatedAt: now,
     };
+    if (mode === "published") release.publishedAt = now;
+    if (mode === "scheduled") release.releaseAt = new Date(scheduleValue).toISOString();
     if (description) release.description = description;
     if (lyrics) release.lyrics = lyrics;
     if (youtubeUrl) release.youtubeUrl = youtubeUrl;
@@ -558,6 +686,13 @@
       showToast("Use a valid HTTPS youtube.com or youtu.be link.", "error");
       return false;
     }
+    if (selectedReleaseMode() === "scheduled") {
+      const scheduledAt = new Date($("#release-schedule").value).getTime();
+      if (!Number.isFinite(scheduledAt) || scheduledAt <= Date.now() + 60 * 1000) {
+        showToast("Choose a scheduled time at least one minute in the future.", "error");
+        return false;
+      }
+    }
     return true;
   };
 
@@ -569,7 +704,10 @@
     $("#review-file-meta").textContent = `${state.audioFile.name} · ${formatBytes(state.audioFile.size)}`;
     $("#review-visibility").textContent = state.pendingRelease.status === "published"
       ? "This release will become public after GitHub Pages finishes its deployment."
-      : "This release will be uploaded as a hidden draft and will not appear in the public player.";
+      : state.pendingRelease.status === "scheduled"
+        ? `This release stays hidden until ${formatReleaseMoment(state.pendingRelease)}, then appears automatically.`
+        : "This release will be uploaded as a hidden draft and will not appear in the public player.";
+    $("#publish-release").querySelector("span").textContent = state.pendingRelease.status === "published" ? "Publish to GitHub" : state.pendingRelease.status === "scheduled" ? "Schedule on GitHub" : "Save draft to GitHub";
     const cover = $("#review-cover");
     cover.style.backgroundImage = `url(${JSON.stringify(state.coverObjectUrl).slice(1, -1)})`;
     cover.textContent = "";
@@ -590,6 +728,7 @@
 
   const publishPendingRelease = async () => {
     if (!state.pendingRelease || state.busy) return;
+    const pendingStatus = state.pendingRelease.status;
     state.busy = true;
     $("#review-modal").hidden = true;
     $("#progress-modal").hidden = false;
@@ -607,7 +746,7 @@
       await new Promise((resolve) => setTimeout(resolve, 650));
       $("#progress-modal").hidden = true;
       resetReleaseForm();
-      showToast("Release committed. GitHub Pages will update the player shortly.");
+      showToast(pendingStatus === "scheduled" ? "Release scheduled. It will appear automatically at the chosen time." : pendingStatus === "draft" ? "Draft saved privately in the catalog." : "Release committed. GitHub Pages will update the player shortly.");
     } catch (error) {
       $("#progress-modal").hidden = true;
       showToast(friendlyError(error), "error");
@@ -644,7 +783,11 @@
     if (![...album.options].some((option) => option.value === text(release.album))) album.add(new Option(text(release.album || "Single"), text(release.album || "Single")));
     album.value = text(release.album || "Single");
     $("#edit-genre").value = text(release.genre || "Music");
+    const editorStatus = effectiveStatus(release);
+    $("#edit-status").value = editorStatus;
+    $("#edit-schedule").value = release.status === "scheduled" && isoToLocalDateTime(release.releaseAt) ? isoToLocalDateTime(release.releaseAt) : defaultScheduleValue();
     $("#edit-date").value = /^\d{4}-\d{2}-\d{2}$/.test(text(release.releaseDate)) ? release.releaseDate : localDate();
+    updateEditScheduleVisibility();
     $("#edit-youtube").value = text(release.youtubeUrl || release.youtube);
     $("#edit-description").value = text(release.description);
     $("#edit-lyrics").value = text(release.lyrics);
@@ -667,17 +810,53 @@
     const youtubeUrl = safeYouTubeUrl(youtubeInput);
     if (youtubeInput && !youtubeUrl) { showToast("Use a valid HTTPS youtube.com or youtu.be link.", "error"); return; }
 
+    const nextStatus = $("#edit-status").value;
+    const now = new Date().toISOString();
+    const scheduleValue = $("#edit-schedule").value;
+    if (nextStatus === "scheduled") {
+      const scheduledAt = new Date(scheduleValue).getTime();
+      if (!Number.isFinite(scheduledAt) || scheduledAt <= Date.now() + 60 * 1000) {
+        showToast("Choose a scheduled time at least one minute in the future.", "error");
+        return;
+      }
+    }
+
+    const previousEffectiveStatus = effectiveStatus(previous);
     const next = {
       ...previous,
       title: $("#edit-title").value.trim(),
       artist: $("#edit-artist").value.trim(),
       album: $("#edit-album").value,
       genre: $("#edit-genre").value.trim(),
-      releaseDate: $("#edit-date").value,
+      releaseDate: nextStatus === "scheduled"
+        ? scheduleValue.slice(0, 10)
+        : nextStatus === "published" && previousEffectiveStatus !== "published"
+          ? localDate()
+          : /^\d{4}-\d{2}-\d{2}$/.test(text(previous.releaseDate)) ? previous.releaseDate : localDate(),
       duration: state.editAudioFile ? state.editAudioDuration : Number(previous.duration),
       audio: state.editAudioFile ? `music/${previous.id}.mp3` : previous.audio,
       cover: state.editCoverFile ? `covers/${previous.id}.${coverExtension(state.editCoverFile)}` : previous.cover,
+      status: nextStatus,
+      createdAt: previous.createdAt || now,
+      updatedAt: now,
     };
+    if (nextStatus === "published") {
+      next.publishedAt = previousEffectiveStatus === "published" ? previous.publishedAt || now : now;
+      delete next.releaseAt;
+      delete next.archivedAt;
+    } else if (nextStatus === "scheduled") {
+      next.releaseAt = new Date(scheduleValue).toISOString();
+      delete next.publishedAt;
+      delete next.archivedAt;
+    } else if (nextStatus === "archived") {
+      next.archivedAt = previous.archivedAt || now;
+      delete next.publishedAt;
+      delete next.releaseAt;
+    } else {
+      delete next.publishedAt;
+      delete next.releaseAt;
+      delete next.archivedAt;
+    }
     const description = $("#edit-description").value.trim();
     const lyrics = $("#edit-lyrics").value.trim();
     if (description) next.description = description; else delete next.description;
@@ -998,7 +1177,30 @@
   });
   $("#release-description").addEventListener("input", (event) => { $("#description-count").textContent = String(event.target.value.length); });
   $("#release-lyrics").addEventListener("input", (event) => { $("#lyrics-count").textContent = String(event.target.value.length); });
-  $("#publish-now").addEventListener("change", updateReleaseSummary);
+  $$('input[name="release-mode"]').forEach((input) => input.addEventListener("change", updateReleaseMode));
+  $("#release-schedule").addEventListener("input", updateReleaseMode);
+  $("#edit-status").addEventListener("change", updateEditScheduleVisibility);
+  $("#copy-diagnostics").addEventListener("click", async () => {
+    const diagnostics = [
+      "Xotiic Upload diagnostics",
+      `Generated: ${new Date().toISOString()}`,
+      `Catalog format: ${$("#diagnostics-catalog").textContent}`,
+      `Releases: ${state.releases.length}`,
+      `Live: ${$("#overview-live").textContent}`,
+      `Scheduled: ${$("#overview-scheduled").textContent}`,
+      `Drafts: ${$("#overview-drafts").textContent}`,
+      `Archived: ${$("#overview-archived").textContent}`,
+      `Network: ${$("#diagnostics-network").textContent}`,
+      `Storage: ${$("#diagnostics-storage").textContent}`,
+      `Browser: ${navigator.userAgent}`,
+    ].join("\n");
+    try {
+      await navigator.clipboard.writeText(diagnostics);
+      showToast("Diagnostics copied.");
+    } catch {
+      showToast("Diagnostics could not be copied in this browser.", "error");
+    }
+  });
 
   document.addEventListener("click", async (event) => {
     const target = event.target.closest("button, a");
@@ -1010,6 +1212,10 @@
       target.setAttribute("aria-label", input.type === "password" ? "Show password" : "Hide password");
     }
     if (target.dataset.adminPanel) selectAdminPanel(target.dataset.adminPanel);
+    if (target.dataset.releaseFilter) {
+      state.releaseFilter = target.dataset.releaseFilter;
+      renderReleases();
+    }
     if (target.hasAttribute("data-review-close")) closeReview();
     if (target.hasAttribute("data-edit-close")) closeReleaseEditor();
     if (target.hasAttribute("data-install-close")) closeInstallHelp();
@@ -1027,7 +1233,8 @@
       state.busy = true;
       target.disabled = true;
       try {
-        const result = await state.publisher.setReleaseStatus(release.id, target.dataset.nextStatus);
+        const metadata = target.dataset.nextStatus === "published" ? { releaseDate: localDate(), publishedAt: new Date().toISOString() } : {};
+        const result = await state.publisher.setReleaseStatus(release.id, target.dataset.nextStatus, metadata);
         state.releases = result.releases;
         renderReleases();
         showToast(`${release.title} was ${action === "publish" ? "published" : "hidden"}.`);
@@ -1038,18 +1245,20 @@
         resetIdleTimer();
       }
     }
-    if (target.dataset.releaseDelete) {
+    if (target.dataset.releaseArchive || target.dataset.releaseRestore) {
       if (state.busy) return;
-      const release = state.releases.find((entry) => entry.id === target.dataset.releaseDelete);
+      const id = target.dataset.releaseArchive || target.dataset.releaseRestore;
+      const release = state.releases.find((entry) => entry.id === id);
       if (!release) return;
-      if (!window.confirm(`Delete “${release.title}” from the public repository? The old file will remain in Git history.`)) return;
+      const restoring = Boolean(target.dataset.releaseRestore);
+      if (!window.confirm(restoring ? `Restore “${release.title}” as a hidden draft?` : `Archive “${release.title}”? Its MP3 and cover will remain safely in the repository.`)) return;
       state.busy = true;
       target.disabled = true;
       try {
-        const result = await state.publisher.deleteRelease(release.id);
+        const result = await state.publisher.setReleaseStatus(release.id, restoring ? "draft" : "archived", restoring ? {} : { archivedAt: new Date().toISOString() });
         state.releases = result.releases;
         renderReleases();
-        showToast(`${release.title} was removed from the current catalog.`);
+        showToast(restoring ? `${release.title} was restored as a draft.` : `${release.title} was archived without deleting its files.`);
       } catch (error) {
         showToast(friendlyError(error), "error");
       } finally {
@@ -1072,8 +1281,8 @@
     showToast("Installed — open Xotiic Upload from your Home screen or apps.");
   });
   window.addEventListener("pageshow", updateInstallButton);
-  window.addEventListener("online", () => state.token && setConnection(true));
-  window.addEventListener("offline", () => state.token && setConnection(false, "OFFLINE"));
+  window.addEventListener("online", () => { if (state.token) setConnection(true); refreshDiagnostics().catch(() => undefined); });
+  window.addEventListener("offline", () => { if (state.token) setConnection(false, "OFFLINE"); refreshDiagnostics().catch(() => undefined); });
   for (const eventName of ["pointerdown", "keydown", "touchstart"]) {
     window.addEventListener(eventName, resetIdleTimer, { passive: true });
   }

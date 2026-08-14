@@ -34,6 +34,8 @@
     reader.readAsDataURL(file);
   });
 
+  const CATALOG_VERSION = 2;
+
   const parseCatalog = (source) => {
     const match = String(source || "").match(/window\.XOTIICDUCK_RELEASES\s*=\s*(\[[\s\S]*\])\s*;?\s*$/);
     if (!match) throw new GitHubError("catalog.js is not in the expected XotiicDuck format.", { code: "CATALOG_FORMAT" });
@@ -47,7 +49,7 @@
   };
 
   const formatCatalog = (releases) =>
-    `// Managed by Xotiic Upload. Only complete releases are shown publicly.\nwindow.XOTIICDUCK_RELEASES = ${JSON.stringify(releases, null, 2)};\n`;
+    `// Managed by Xotiic Upload. Only complete releases are shown publicly.\nwindow.XOTIICDUCK_CATALOG_VERSION = ${CATALOG_VERSION};\nwindow.XOTIICDUCK_RELEASES = ${JSON.stringify(releases, null, 2)};\n`;
 
   class GitHubPublisher {
     constructor({ token, owner, repository, branch = "main", requiredLogin, apiVersion = "2022-11-28" }) {
@@ -237,17 +239,39 @@
       return { ...result, releases: nextReleases };
     }
 
-    async setReleaseStatus(id, status) {
+    async setReleaseStatus(id, status, metadata = {}) {
       const { headSha, treeSha } = await this.getHeadContext();
       const { releases } = await this.getCatalogAt(headSha);
       const index = releases.findIndex((entry) => entry.id === id);
       if (index < 0) throw new GitHubError("That release is no longer in the catalog.", { code: "RELEASE_MISSING" });
-      const nextReleases = releases.map((entry, entryIndex) => entryIndex === index ? { ...entry, status } : entry);
+      if (!["published", "scheduled", "draft", "archived"].includes(status)) {
+        throw new GitHubError("That release status is not supported.", { code: "RELEASE_STATUS" });
+      }
+      const now = new Date().toISOString();
+      const nextReleases = releases.map((entry, entryIndex) => {
+        if (entryIndex !== index) return entry;
+        const next = { ...entry, ...metadata, status, updatedAt: now };
+        if (status === "published") {
+          next.publishedAt = metadata.publishedAt || now;
+          delete next.releaseAt;
+          delete next.archivedAt;
+        } else if (status === "scheduled") {
+          delete next.publishedAt;
+          delete next.archivedAt;
+        } else if (status === "archived") {
+          next.archivedAt = metadata.archivedAt || now;
+          delete next.releaseAt;
+        } else {
+          delete next.releaseAt;
+          delete next.archivedAt;
+        }
+        return next;
+      });
       const catalogSha = await this.createBlob(formatCatalog(nextReleases), "utf-8");
       const result = await this.finalizeCommit({
         headSha,
         treeSha,
-        message: `${status === "published" ? "Publish" : "Hide"} ${releases[index].title}`,
+        message: `${status === "published" ? "Publish" : status === "scheduled" ? "Schedule" : status === "archived" ? "Archive" : "Hide"} ${releases[index].title}`,
         entries: [{ path: "catalog.js", mode: "100644", type: "blob", sha: catalogSha }],
       });
       return { ...result, releases: nextReleases };
@@ -276,7 +300,7 @@
     }
   }
 
-  const api = { GitHubPublisher, GitHubError, parseCatalog, formatCatalog, readFileAsBase64 };
+  const api = { GitHubPublisher, GitHubError, parseCatalog, formatCatalog, readFileAsBase64, CATALOG_VERSION };
   globalThis.XotiicGitHub = api;
   if (typeof module !== "undefined" && module.exports) module.exports = api;
 })();

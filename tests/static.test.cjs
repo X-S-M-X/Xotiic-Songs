@@ -14,6 +14,7 @@ test("public player exposes offline, recovery, and safe update controls", () => 
   assert.match(html, /crossorigin="anonymous"/);
   const ids = [...html.matchAll(/\sid="([^"]+)"/g)].map((match) => match[1]);
   assert.equal(new Set(ids).size, ids.length, "public HTML IDs must be unique");
+  for (const id of ["recently-played-section", "monthly-chart-section", "global-chart-section"]) assert.match(html, new RegExp(`id=["']${id}["']`));
 });
 
 test("service worker serves explicitly saved media with range support", () => {
@@ -46,6 +47,12 @@ test("admin supports metadata edits, encrypted backup, and atomic updates", () =
   assert.match(app, /prepareCoverFile/);
   assert.match(github, /async updateRelease/);
   assert.match(styles, /input\[type="file"\]::file-selector-button/);
+  assert.match(html, /name="release-mode" value="scheduled"/);
+  assert.match(html, /id="overview-scheduled"/);
+  assert.match(app, /effectiveStatus/);
+  assert.match(app, /releaseArchive/);
+  const ids = [...html.matchAll(/\sid="([^"]+)"/g)].map((match) => match[1]);
+  assert.equal(new Set(ids).size, ids.length, "admin HTML IDs must be unique");
 });
 
 test("async admin forms retain their form reference after awaited work", () => {
@@ -56,10 +63,34 @@ test("async admin forms retain their form reference after awaited work", () => {
 });
 
 test("web app manifests are valid and use current versioned icons", () => {
-  for (const [file, version] of [["manifest.webmanifest", "v=10"], ["admin/manifest.webmanifest", "v=10"]]) {
+  for (const [file, version] of [["manifest.webmanifest", "v=11"], ["admin/manifest.webmanifest", "v=11"]]) {
     const manifest = JSON.parse(read(file));
     assert.ok(Array.isArray(manifest.icons) && manifest.icons.length >= 4);
     assert.ok(manifest.icons.every((icon) => icon.src.includes(version)));
     assert.ok(Array.isArray(manifest.shortcuts) && manifest.shortcuts.length >= 2);
   }
+});
+
+test("versioned HTML assets exist in both app scopes", () => {
+  for (const file of ["index.html", "admin/index.html"]) {
+    const html = read(file);
+    const base = path.dirname(path.join(root, file));
+    const references = [...html.matchAll(/(?:src|href)="([^"]+)"/g)].map((match) => match[1]);
+    for (const reference of references) {
+      if (/^(?:#|https?:|data:|mailto:|tel:|\?)/.test(reference)) continue;
+      const clean = reference.split(/[?#]/)[0];
+      assert.ok(fs.existsSync(path.resolve(base, clean)), `${file} references missing asset ${clean}`);
+    }
+  }
+});
+
+test("optional global chart is private by default and backed by a guarded Worker", () => {
+  const config = read("analytics.js");
+  const worker = read("analytics-worker/src/index.js");
+  const schema = read("analytics-worker/migrations/0001_initial.sql");
+  assert.match(config, /enabled: false/);
+  assert.match(worker, /originAllowed/);
+  assert.match(worker, /ANALYTICS_HASH_SECRET/);
+  assert.match(worker, /INSERT OR IGNORE INTO qualified_listens/);
+  assert.doesNotMatch(schema, /raw_ip|ip_address/i);
 });

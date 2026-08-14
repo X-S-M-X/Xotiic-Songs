@@ -30,25 +30,29 @@ Push the complete package and wait for GitHub Pages to finish before creating th
 
 Music published through Xotiic Upload is committed directly to `main`. GitHub Pages will redeploy automatically. Source changes made in VS Code can still be committed and pushed normally.
 
-Before copying a replacement package, pull the newest catalog and songs that Xotiic Upload may already have published. Then copy only the app files, leaving `.git`, `catalog.js`, `music/`, and `covers/` untouched:
+Before copying Update 11, pull the newest catalog and songs that Xotiic Upload may already have published. Then copy only the app files, leaving `.git`, `catalog.js`, `music/`, and `covers/` untouched:
 
 ```powershell
-cd "C:\path\to\your\existing\XotiicDuck-Music-Portable"
+$repo = "C:\Users\Xotii\Downloads\XotiicDuck-Music-Portable"
+$update = "C:\Users\Xotii\Downloads\XotiicDuck-Music-Portable-Update-11"
+
+Set-Location $repo
 git pull --rebase origin main
 
-$repo = "C:\path\to\your\existing\XotiicDuck-Music-Portable"
-$update = "C:\path\to\the\newly-extracted\XotiicDuck-Music-Portable"
 Get-ChildItem -LiteralPath $update -Force |
   Where-Object { $_.Name -notin @(".git", "catalog.js", "music", "covers") } |
   Copy-Item -Destination $repo -Recurse -Force
 
-cd $repo
+Set-Location $repo
+npm test
 git add -A
-git commit -m "Update XotiicDuck Music"
+git commit -m "Add release scheduling and listening charts"
 git push origin main
 ```
 
-Change the two example paths before running the copy. Do not copy the new package's empty `catalog.js` over the live one, and do not replace the live `music/` or `covers/` folders. After GitHub Pages finishes, reopen the website. Update 9 shows a **Player update ready** prompt so the running page and new service worker switch versions together safely. Update 9.1 refreshes the artist-console cache for the corrected release editor, and Update 9.2 refreshes the player cache for synchronized song and playlist controls.
+The paths above match the established project folder and the Update 11 extracted folder. Do not copy the package's `catalog.js` over the live one, and do not replace the live `music/` or `covers/` folders. The upgraded admin console converts the live catalog to version 2 on its next successful release change. After GitHub Pages finishes, reopen the website and accept the **Player update ready** prompt.
+
+The global monthly chart is optional and disabled by default. Follow `GLOBAL-CHART-SETUP.md` only after the main update is online.
 
 Update 9 adds `offline.js`, `range.js`, automated tests, and a GitHub Actions validation workflow. The `music/` and `covers/` folders remain user data and are intentionally not included in application replacement copies.
 

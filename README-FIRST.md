@@ -5,7 +5,7 @@ This folder contains two connected installable web apps:
 - The public XotiicDuck Music player at the repository root.
 - The private Xotiic Upload artist console at `admin/`.
 
-There are no demo songs or fake covers. The public catalog remains empty until a complete release is published.
+There are no demo songs or fake covers. Every visible entry comes from the live owner-managed catalog and requires a complete MP3 and square cover.
 
 ## Publish the complete project
 
@@ -27,7 +27,7 @@ Each device has its own encrypted vault. Resetting a device vault does not delet
 
 ## Publishing from a phone
 
-Open Xotiic Upload, unlock it, select the MP3 from Files, select the square cover from Gallery, enter the release information, and publish. The console commits the MP3, cover, and `catalog.js` together. GitHub Pages updates the player shortly afterward.
+Open Xotiic Upload, unlock it, select the MP3 from Files, select the square cover from Gallery, enter the release information, then choose **Publish now**, **Schedule**, or **Draft**. Publish now uses the current date automatically. Scheduled releases stay hidden until the chosen local date and time, then the player makes them public automatically. The console commits the MP3, cover, and `catalog.js` together.
 
 ## Phone and tablet support
 
@@ -48,6 +48,18 @@ Lyrics are optional. The Lyrics control appears only when a published catalog en
 Installation support belongs to the browser. On browsers without installable-web-app support, the complete website still works normally.
 
 Background controls use the browser Media Session API where supported, so installed copies can continue audio when the app is in the background and provide lock-screen controls. Force-closing the browser/PWA or an operating-system battery rule can still stop playback.
+
+## What Update 11 adds
+
+- A new owner overview with live, scheduled, draft, and archived counts, the next release, quick actions, and copyable diagnostics.
+- Publish now, exact date/time scheduling, automatic dates, hidden drafts, and recoverable archiving instead of destructive deletion.
+- A versioned catalog format that remains compatible with every existing song.
+- Correct date-based Latest Releases on Home and newest-first Discover ordering.
+- Private Recently Played and Your Top Tracks This Month sections stored only on the listener's device.
+- An optional real global monthly chart backed by the included Cloudflare Worker and D1 project. It remains hidden until deliberately deployed and enabled.
+- Automatic scheduled visibility without needing to reopen the admin console or edit a date on release day.
+
+See `GLOBAL-CHART-SETUP.md` for the optional worldwide chart. The player and all local features work without it.
 
 ## Update 9.2 playback-state polish
 

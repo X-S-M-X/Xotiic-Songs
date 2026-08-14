@@ -20,6 +20,15 @@
 
 The token is encrypted locally with PBKDF2-SHA256 and AES-256-GCM. The token is decrypted only into memory after a successful login. The console locks after 30 minutes without activity. The `/admin/` page itself is public because GitHub Pages is public, but publishing still requires the encrypted local vault, its username/password, a valid GitHub token belonging to the required owner, and repository write permission.
 
+## Release timing
+
+- **Publish now** applies the current date automatically and publishes after GitHub Pages deploys.
+- **Schedule** stores an exact UTC timestamp calculated from the phone/computer's displayed local time. The public player makes it visible automatically when that instant arrives.
+- **Draft** uploads the complete release but keeps it hidden.
+- **Archive** hides an existing release without deleting its current MP3 or cover. It can later be restored as a draft.
+
+Scheduling controls when the song appears in the player. Because the GitHub repository itself is public, a determined person could inspect repository files before that time. Treat this as automatic storefront timing, not a confidential pre-release embargo.
+
 ## Add another phone or computer
 
 Open the admin address on that device and repeat first-time setup using a valid fine-grained token. Alternatively, download the already-encrypted file from **Security → Back up this device vault**, restore it on the new device, then enter its existing username and password. Device vaults remain separate after restoration.

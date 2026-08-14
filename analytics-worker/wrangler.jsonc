@@ -1,0 +1,23 @@
+{
+  "$schema": "node_modules/wrangler/config-schema.json",
+  "name": "xotiic-song-stats",
+  "main": "src/index.js",
+  "compatibility_date": "2026-08-15",
+  "vars": {
+    "ALLOWED_ORIGIN": "https://x-s-m-x.github.io"
+  },
+  "d1_databases": [
+    {
+      "binding": "DB",
+      "database_name": "xotiic-song-stats",
+      "database_id": "PASTE_DATABASE_ID_HERE",
+      "migrations_dir": "migrations"
+    }
+  ],
+  "triggers": {
+    "crons": ["17 4 1 * *"]
+  },
+  "observability": {
+    "enabled": true
+  }
+}
