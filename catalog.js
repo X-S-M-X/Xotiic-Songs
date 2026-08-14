@@ -501,5 +501,17 @@ window.XOTIICDUCK_RELEASES = [
     "audio": "music/blessing-of-the-void.mp3",
     "cover": "covers/blessing-of-the-void.webp",
     "status": "draft"
+  },
+  {
+    "id": "judgement-of-the-void",
+    "title": "Judgement of the Void",
+    "artist": "XotiicDuck",
+    "album": "Single",
+    "genre": "Anime J-Rock",
+    "releaseDate": "2026-08-14",
+    "duration": 432,
+    "audio": "music/judgement-of-the-void.mp3",
+    "cover": "covers/judgement-of-the-void.webp",
+    "status": "draft"
   }
 ];
