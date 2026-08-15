@@ -628,6 +628,7 @@
       }
 
       const copy = document.createElement("div");
+      copy.className = "managed-release-copy";
       const title = document.createElement("h3");
       title.textContent = text(release.title || "Untitled release");
       const metadata = document.createElement("p");
@@ -636,7 +637,6 @@
       metadata.textContent = `${text(release.artist || "XotiicDuck")} · ${collection || releaseType} · ${formatDuration(Number(release.duration))}`;
       const id = document.createElement("small");
       id.textContent = `${formatReleaseMoment(release)} · ${text(release.id)}`;
-      copy.append(title, metadata, id);
 
       const actions = document.createElement("div");
       actions.className = "managed-release-actions";
@@ -668,7 +668,11 @@
       if (sourceStatus === "archived") archive.dataset.releaseRestore = text(release.id);
       else archive.dataset.releaseArchive = text(release.id);
       archive.textContent = sourceStatus === "archived" ? "Restore draft" : "Archive";
-      actions.append(status, preview, edit, toggle, archive);
+      const heading = document.createElement("div");
+      heading.className = "managed-release-heading";
+      heading.append(title, status);
+      copy.append(heading, metadata, id);
+      actions.append(preview, edit, toggle, archive);
       row.append(cover, copy, actions);
       list.append(row);
     });

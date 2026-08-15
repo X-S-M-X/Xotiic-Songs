@@ -1,0 +1,666 @@
+/* Admin Player V2
+ * A compact public-player-style preview bar and uncluttered release manager.
+ * Loaded last so one responsive system wins over legacy admin breakpoints.
+ */
+
+.release-list,
+.managed-release,
+.managed-release > *,
+.managed-release-actions,
+.managed-release-heading {
+  min-width: 0;
+  box-sizing: border-box;
+}
+
+.release-list {
+  width: 100%;
+  display: grid;
+  gap: 12px;
+}
+
+.managed-release {
+  width: 100%;
+  display: grid;
+  grid-template-columns: 68px minmax(180px, 1fr) minmax(350px, auto);
+  align-items: center;
+  gap: 14px;
+  padding: 12px;
+  overflow: hidden;
+}
+
+.managed-release img,
+.managed-cover-fallback {
+  width: 68px;
+  height: 68px;
+  align-self: start;
+  object-fit: cover;
+}
+
+.managed-release > div:nth-child(2) {
+  display: grid;
+  align-content: center;
+  gap: 5px;
+}
+
+.managed-release-heading {
+  display: flex;
+  align-items: center;
+  gap: 9px;
+}
+
+.managed-release-heading h3 {
+  min-width: 0;
+  margin: 0;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.managed-release-heading .status-chip {
+  flex: 0 0 auto;
+  min-height: 24px;
+  padding: 0 8px;
+  display: inline-grid;
+  place-items: center;
+  white-space: nowrap;
+}
+
+.managed-release p,
+.managed-release small {
+  max-width: 100%;
+  margin: 0;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.managed-release-actions {
+  display: grid;
+  grid-template-columns: minmax(112px, 1.25fr) repeat(3, minmax(72px, 1fr));
+  align-items: stretch;
+  gap: 7px;
+}
+
+.managed-release-actions button {
+  width: 100%;
+  min-width: 0;
+  min-height: 44px;
+  padding: 0 10px;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.managed-release-actions .release-test-button {
+  border-color: rgba(var(--acid-rgb), 0.42);
+  background: rgba(var(--acid-rgb), 0.075);
+  color: var(--acid-soft);
+}
+
+.managed-release-actions .release-test-button:hover,
+.managed-release-actions .release-test-button.is-previewing {
+  border-color: var(--acid);
+  background: var(--acid);
+  color: #091007;
+}
+
+.release-filters {
+  max-width: 100%;
+  overflow-x: auto;
+  overscroll-behavior-inline: contain;
+  scrollbar-width: none;
+  -webkit-overflow-scrolling: touch;
+}
+
+.release-filters::-webkit-scrollbar {
+  display: none;
+}
+
+.release-filters button {
+  flex: 0 0 auto;
+  min-height: 40px;
+  white-space: nowrap;
+}
+
+/* The private preview follows the same visual hierarchy as the public bar:
+ * artwork and title, centered transport controls, seek rail, close action.
+ */
+.admin-preview-player {
+  position: fixed;
+  z-index: 86;
+  left: calc(246px + clamp(18px, 2.5vw, 38px));
+  right: clamp(18px, 2.5vw, 38px);
+  bottom: 14px;
+  width: auto;
+  min-width: 0;
+  min-height: 78px;
+  box-sizing: border-box;
+  display: grid;
+  grid-template-columns: 52px minmax(150px, 1fr) minmax(260px, 0.82fr) 44px;
+  grid-template-rows: 42px 20px;
+  grid-template-areas:
+    "art copy controls close"
+    "art copy timeline close";
+  align-items: center;
+  gap: 0 13px;
+  padding: 8px 10px;
+  overflow: visible;
+  border: 1px solid rgba(var(--acid-rgb), 0.27);
+  border-radius: 16px;
+  background: rgba(7, 11, 8, 0.97);
+  box-shadow: 0 18px 54px rgba(0, 0, 0, 0.5);
+  backdrop-filter: blur(22px);
+  -webkit-backdrop-filter: blur(22px);
+}
+
+.admin-preview-player[hidden],
+.admin-preview-player audio {
+  display: none !important;
+}
+
+.admin-preview-player::before {
+  content: "";
+  position: absolute;
+  inset: 0 0 auto;
+  height: 1px;
+  border-radius: inherit;
+  background: linear-gradient(90deg, transparent, rgba(var(--acid-rgb), 0.72), transparent);
+  pointer-events: none;
+}
+
+.admin-preview-art {
+  grid-area: art;
+  width: 52px;
+  height: 52px;
+  box-sizing: border-box;
+  border-radius: 10px;
+  background-position: center;
+  background-size: cover;
+  box-shadow: none;
+}
+
+.admin-preview-copy {
+  grid-area: copy;
+  min-width: 0;
+  display: grid;
+  align-content: center;
+  gap: 2px;
+}
+
+.admin-preview-copy small,
+.admin-preview-copy strong,
+.admin-preview-copy span {
+  min-width: 0;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.admin-preview-copy small {
+  color: var(--acid);
+  font-size: 7px;
+  font-weight: 900;
+  letter-spacing: 0.13em;
+}
+
+.admin-preview-copy strong {
+  color: var(--text);
+  font-size: 12px;
+  line-height: 1.25;
+}
+
+.admin-preview-copy span {
+  color: var(--muted);
+  font-size: 8px;
+}
+
+.admin-preview-controls {
+  grid-area: controls;
+  min-width: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 12px;
+}
+
+.admin-preview-controls button,
+.admin-preview-close {
+  width: 38px;
+  height: 38px;
+  min-width: 38px;
+  min-height: 38px;
+  padding: 0;
+  display: inline-grid;
+  place-items: center;
+  border: 0;
+  border-radius: 50%;
+  background: transparent;
+  color: var(--muted);
+  box-shadow: none;
+  cursor: pointer;
+}
+
+.admin-preview-controls button:hover,
+.admin-preview-close:hover {
+  color: var(--text);
+  background: rgba(255, 255, 255, 0.06);
+}
+
+.admin-preview-controls button:disabled {
+  opacity: 0.28;
+  cursor: default;
+}
+
+.admin-preview-controls .admin-preview-toggle {
+  width: 40px;
+  height: 40px;
+  min-width: 40px;
+  min-height: 40px;
+  border: 0;
+  border-radius: 50%;
+  background: var(--acid);
+  color: #071006;
+  box-shadow: 0 0 18px rgba(var(--acid-rgb), 0.12);
+}
+
+.admin-preview-controls .admin-preview-toggle:hover {
+  background: var(--acid-soft);
+  color: #071006;
+  transform: none;
+}
+
+.admin-preview-controls .ui-icon,
+.admin-preview-close .ui-icon {
+  width: 17px;
+  height: 17px;
+}
+
+.admin-preview-toggle .ui-icon {
+  width: 16px;
+  height: 16px;
+}
+
+.admin-preview-close {
+  grid-area: close;
+  align-self: center;
+  justify-self: center;
+}
+
+.admin-preview-timeline {
+  grid-area: timeline;
+  min-width: 0;
+  width: 100%;
+  display: grid;
+  grid-template-columns: 34px minmax(0, 1fr) 34px;
+  align-items: center;
+  gap: 7px;
+}
+
+.admin-preview-timeline span {
+  color: var(--muted);
+  font-size: 8px;
+  font-variant-numeric: tabular-nums;
+  text-align: center;
+}
+
+.admin-preview-timeline input[type="range"] {
+  --preview-rail-height: 3px;
+  --preview-fill: 0%;
+  width: 100%;
+  height: 24px;
+  min-height: 24px;
+  margin: 0;
+  padding: 0;
+  border: 0;
+  border-radius: 0;
+  appearance: none;
+  -webkit-appearance: none;
+  background: transparent;
+  cursor: pointer;
+  touch-action: pan-y;
+  user-select: none;
+  -webkit-tap-highlight-color: transparent;
+}
+
+.admin-preview-timeline input[type="range"]::-webkit-slider-runnable-track {
+  width: 100%;
+  height: var(--preview-rail-height);
+  border: 0;
+  border-radius: 999px;
+  background: linear-gradient(
+    to right,
+    var(--acid) 0,
+    var(--acid) var(--preview-fill),
+    rgba(255, 255, 255, 0.16) var(--preview-fill),
+    rgba(255, 255, 255, 0.16) 100%
+  );
+}
+
+.admin-preview-timeline input[type="range"]::-webkit-slider-thumb,
+.admin-preview-timeline input[type="range"]:hover::-webkit-slider-thumb,
+.admin-preview-timeline input[type="range"]:active::-webkit-slider-thumb,
+.admin-preview-timeline input[type="range"]:focus::-webkit-slider-thumb,
+.admin-preview-timeline input[type="range"]:focus-visible::-webkit-slider-thumb {
+  width: 24px;
+  height: 24px;
+  margin-top: -10.5px;
+  border: 0;
+  border-radius: 0;
+  appearance: none;
+  -webkit-appearance: none;
+  background: transparent;
+  box-shadow: none;
+  opacity: 0;
+}
+
+.admin-preview-timeline input[type="range"]::-moz-range-track {
+  width: 100%;
+  height: var(--preview-rail-height);
+  border: 0;
+  border-radius: 999px;
+  background: rgba(255, 255, 255, 0.16);
+}
+
+.admin-preview-timeline input[type="range"]::-moz-range-progress {
+  height: var(--preview-rail-height);
+  border: 0;
+  border-radius: 999px;
+  background: var(--acid);
+}
+
+.admin-preview-timeline input[type="range"]::-moz-range-thumb,
+.admin-preview-timeline input[type="range"]:hover::-moz-range-thumb,
+.admin-preview-timeline input[type="range"]:active::-moz-range-thumb,
+.admin-preview-timeline input[type="range"]:focus::-moz-range-thumb,
+.admin-preview-timeline input[type="range"]:focus-visible::-moz-range-thumb {
+  width: 24px;
+  height: 24px;
+  border: 0;
+  border-radius: 0;
+  background: transparent;
+  box-shadow: none;
+  opacity: 0;
+}
+
+.admin-preview-timeline input[type="range"]:focus-visible {
+  outline: 0;
+}
+
+.admin-preview-timeline input[type="range"]:focus-visible::-webkit-slider-runnable-track,
+.admin-preview-timeline input[type="range"]:active::-webkit-slider-runnable-track,
+.admin-preview-timeline input[type="range"]:focus-visible::-moz-range-track,
+.admin-preview-timeline input[type="range"]:active::-moz-range-track {
+  box-shadow: 0 0 0 2px rgba(var(--acid-rgb), 0.2);
+}
+
+body.admin-preview-active .dashboard-main {
+  padding-bottom: 148px;
+}
+
+body.admin-preview-active .toast,
+body.admin-preview-active .admin-update-banner {
+  bottom: 106px;
+}
+
+@media (max-width: 1240px) {
+  .managed-release {
+    grid-template-columns: 64px minmax(0, 1fr);
+  }
+
+  .managed-release img,
+  .managed-cover-fallback {
+    width: 64px;
+    height: 64px;
+  }
+
+  .managed-release-actions {
+    grid-column: 1 / -1;
+    grid-template-columns: minmax(120px, 1.25fr) repeat(3, minmax(82px, 1fr));
+    padding-top: 11px;
+    border-top: 1px solid var(--line);
+  }
+}
+
+@media (max-width: 1160px) {
+  .admin-preview-player {
+    left: 18px;
+    right: 18px;
+  }
+}
+
+@media (max-width: 720px) {
+  .manage-toolbar {
+    gap: 12px;
+  }
+
+  .manage-toolbar h2 {
+    line-height: 1.1;
+  }
+
+  .private-preview-notice {
+    align-items: flex-start;
+    gap: 10px;
+    margin-bottom: 12px;
+    padding: 11px;
+  }
+
+  .private-preview-notice > span {
+    flex: 0 0 auto;
+  }
+
+  .private-preview-notice small {
+    line-height: 1.45;
+  }
+
+  .managed-release {
+    grid-template-columns: 56px minmax(0, 1fr);
+    align-items: start;
+    gap: 10px;
+    padding: 11px;
+    border-radius: 15px;
+  }
+
+  .managed-release img,
+  .managed-cover-fallback {
+    width: 56px;
+    height: 56px;
+    border-radius: 10px;
+  }
+
+  .managed-release-heading {
+    align-items: flex-start;
+    flex-wrap: wrap;
+    gap: 5px 7px;
+  }
+
+  .managed-release-heading h3 {
+    flex: 1 1 130px;
+    line-height: 1.25;
+  }
+
+  .managed-release-heading .status-chip {
+    min-height: 22px;
+    padding-inline: 7px;
+  }
+
+  .managed-release p,
+  .managed-release small {
+    line-height: 1.35;
+  }
+
+  .managed-release-actions {
+    grid-column: 1 / -1;
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+    gap: 7px;
+    padding-top: 10px;
+  }
+
+  .managed-release-actions .release-test-button {
+    grid-column: 1 / -1;
+  }
+
+  .managed-release-actions button {
+    min-height: 44px;
+    padding-inline: 7px;
+    font-size: 9px;
+  }
+
+  .admin-preview-player {
+    left: max(8px, env(safe-area-inset-left));
+    right: max(8px, env(safe-area-inset-right));
+    bottom: calc(76px + env(safe-area-inset-bottom));
+    min-height: 66px;
+    grid-template-columns: 48px minmax(0, 1fr) 44px 44px;
+    grid-template-rows: 50px;
+    grid-template-areas: "art copy controls close";
+    gap: 0 9px;
+    padding: 8px 9px;
+    border-radius: 14px;
+  }
+
+  .admin-preview-art {
+    width: 48px;
+    height: 48px;
+    border-radius: 9px;
+  }
+
+  .admin-preview-copy {
+    gap: 2px;
+  }
+
+  .admin-preview-copy small {
+    display: none;
+  }
+
+  .admin-preview-copy strong {
+    font-size: 12px;
+  }
+
+  .admin-preview-copy span {
+    font-size: 9px;
+  }
+
+  .admin-preview-controls {
+    gap: 0;
+  }
+
+  .admin-preview-controls #admin-preview-previous,
+  .admin-preview-controls #admin-preview-next {
+    display: none;
+  }
+
+  .admin-preview-controls .admin-preview-toggle,
+  .admin-preview-close {
+    width: 44px;
+    height: 44px;
+    min-width: 44px;
+    min-height: 44px;
+  }
+
+  .admin-preview-timeline {
+    position: absolute;
+    z-index: 2;
+    top: -11px;
+    left: 0;
+    right: 0;
+    width: 100%;
+    height: 24px;
+    display: grid;
+    grid-template-columns: 1fr;
+    gap: 0;
+    pointer-events: none;
+  }
+
+  .admin-preview-timeline span {
+    display: none;
+  }
+
+  .admin-preview-timeline input[type="range"] {
+    --preview-rail-height: 2px;
+    pointer-events: auto;
+  }
+
+  body.admin-preview-active .dashboard-main {
+    padding-bottom: calc(180px + env(safe-area-inset-bottom));
+  }
+
+  body.admin-preview-active .toast,
+  body.admin-preview-active .admin-update-banner {
+    bottom: calc(158px + env(safe-area-inset-bottom));
+  }
+}
+
+@media (max-width: 390px) {
+  .managed-release-actions {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+
+  .managed-release-actions .release-test-button,
+  .managed-release-actions .danger,
+  .managed-release-actions button[data-release-restore] {
+    grid-column: 1 / -1;
+  }
+
+  .admin-preview-player {
+    grid-template-columns: 44px minmax(0, 1fr) 44px 44px;
+    gap: 0 7px;
+    padding-inline: 8px;
+  }
+
+  .admin-preview-art {
+    width: 44px;
+    height: 44px;
+  }
+}
+
+@media (max-width: 340px) {
+  .managed-release {
+    grid-template-columns: 50px minmax(0, 1fr);
+    padding: 9px;
+  }
+
+  .managed-release img,
+  .managed-cover-fallback {
+    width: 50px;
+    height: 50px;
+  }
+
+  .managed-release-actions {
+    grid-template-columns: 1fr;
+  }
+
+  .managed-release-actions .release-test-button,
+  .managed-release-actions .danger,
+  .managed-release-actions button[data-release-restore] {
+    grid-column: 1;
+  }
+
+  .admin-preview-copy span {
+    display: none;
+  }
+}
+
+@media (max-width: 900px) and (orientation: landscape) and (max-height: 620px) {
+  .admin-preview-player {
+    left: max(10px, env(safe-area-inset-left));
+    right: max(10px, env(safe-area-inset-right));
+    bottom: calc(10px + env(safe-area-inset-bottom));
+  }
+}
+
+@media (pointer: coarse) {
+  .managed-release-actions button,
+  .release-filters button,
+  .admin-preview-controls button,
+  .admin-preview-close {
+    min-height: 44px;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .managed-release-actions button,
+  .admin-preview-controls button,
+  .admin-preview-close {
+    transition: none;
+  }
+}

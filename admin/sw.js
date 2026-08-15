@@ -1,4 +1,4 @@
-const CACHE_NAME = "xotiic-upload-v12-1-admin-hotfix-1";
+const CACHE_NAME = "xotiic-upload-v12-1-admin-player-v2";
 const scoped = (file) => new URL(file, self.registration.scope).href;
 const SHELL = [
   "./",
@@ -6,11 +6,12 @@ const SHELL = [
   "./styles.css?v=12",
   "./update-12.css?v=12.1",
   "./admin-hotfix.css?v=12",
+  "./admin-player-v2.css?v=12.2",
   "./theme-sync.js?v=12",
   "./config.js?v=12",
   "./crypto.js?v=12",
   "./github.js?v=12",
-  "./app.js?v=12.1",
+  "./app.js?v=12.2",
   "./manifest.webmanifest?v=12",
   "../favicon.svg?v=12",
   "../apple-touch-icon.png?v=12",
