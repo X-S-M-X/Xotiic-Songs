@@ -1,4 +1,4 @@
-# XotiicDuck Music — GitHub release package
+# XotiicDuck Music | GitHub release package
 
 This folder contains two connected installable web apps:
 
@@ -33,11 +33,11 @@ Open Xotiic Upload, unlock it, select the MP3 from Files, select the square cove
 
 Both apps adapt from 320-pixel phones through large tablets, including portrait and landscape layouts. Navigation, the music player, upload forms, dialogs, and safe areas for notches/home indicators are handled separately from the desktop layout.
 
-On phones and tablets, tap the compact player above the navigation bar to open **Now Playing**. The expanded view includes the square cover, elapsed and total time, touch seeking, restart/previous, play/pause, next, shuffle, repeat Off/All/One, editable queue, favorites, sharing, local playlists, and an explicit **Save offline** control. Playback position, volume, and the current queue resume on the same device.
+On phones and tablets, tap the compact player above the navigation bar to open **Now Playing**. Swipe that compact player left for the next song or right for the previous song. The expanded view includes the square cover, elapsed and total time, touch seeking, restart/previous, play/pause, next, shuffle, repeat Off/All/One, editable queue, favorites, sharing, local playlists, and an explicit **Save offline** control. Playback position, volume, and the current queue resume on the same device.
 
 To listen without internet, open a song while online and choose **Save offline**. The player downloads that song's complete MP3 and cover and shows it under **Library → Offline songs**. Offline seeking works because the service worker serves byte ranges from the saved complete file. Browser storage can still be removed by the operating system, private-browsing mode, or a user clearing site data; the app requests persistent storage where the browser supports it, but no website can promise permanent device storage.
 
-Favorites and playlists can be backed up from **Your library → Back up** and restored from the JSON file. That small backup contains playlist names, track IDs, and favorites—not MP3s, covers, passwords, or GitHub access.
+The Library is split into **Playlists**, **Liked**, and **Offline** tabs so small screens do not need to render one very long page. Every offline row says **Saved** and has a clearly labeled **Remove** action. Favorites and playlists can be backed up from **Your library → Back up** and restored from the JSON file. That small backup contains playlist names, track IDs, and favorites, but not MP3s, covers, passwords, or GitHub access.
 
 Lyrics are optional. The Lyrics control appears only when a published catalog entry contains lyric text, so releases without lyrics keep a clean player.
 
@@ -49,17 +49,18 @@ Installation support belongs to the browser. On browsers without installable-web
 
 Background controls use the browser Media Session API where supported, so installed copies can continue audio when the app is in the background and provide lock-screen controls. Force-closing the browser/PWA or an operating-system battery rule can still stop playback.
 
-## What Update 11 adds
+## What Update 12 adds
 
-- A new owner overview with live, scheduled, draft, and archived counts, the next release, quick actions, and copyable diagnostics.
-- Publish now, exact date/time scheduling, automatic dates, hidden drafts, and recoverable archiving instead of destructive deletion.
-- A versioned catalog format that remains compatible with every existing song.
-- Correct date-based Latest Releases on Home and newest-first Discover ordering.
-- Private Recently Played and Your Top Tracks This Month sections stored only on the listener's device.
-- An optional real global monthly chart backed by the included Cloudflare Worker and D1 project. It remains hidden until deliberately deployed and enabled.
-- Automatic scheduled visibility without needing to reopen the admin console or edit a date on release day.
+- **Anime Pulse**, a responsive visual redesign built around the artist's own cover artwork, plus a **Classic** appearance option in Settings.
+- Pulse, Sakura, and Aqua accents, with system, full, or reduced motion preferences.
+- A rebuilt alignment layer for phones from 320 pixels wide, tablets, desktop, portrait, landscape, notches, and home indicators.
+- Mobile and tablet mini-player gestures: swipe left for next, swipe right for previous, or tap to open Now Playing.
+- Compact Library tabs for Playlists, Liked, and Offline, with counts and keyboard support.
+- Clear offline states using **Saved**, **Save offline**, and **Remove** labels instead of unexplained icons.
+- A redesigned artist console with aligned file controls, visible device timezone details, and recoverable metadata drafts while preparing a release.
+- Private Recently Played and Your Top Tracks This Month sections stored only on the listener's device. Update 12 has no global listening backend.
 
-See `GLOBAL-CHART-SETUP.md` for the optional worldwide chart. The player and all local features work without it.
+See `UPDATE-12-INSTRUCTIONS.md` for the protected Windows update process that keeps the live catalog, songs, and covers intact.
 
 ## Update 9.2 playback-state polish
 

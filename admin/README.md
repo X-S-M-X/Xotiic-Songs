@@ -18,6 +18,8 @@ Create a fine-grained personal access token with access to only `Xotiic-Songs` a
 
 The console validates the MP3, verifies and optimizes square artwork, accepts an optional description, YouTube link, and lyrics, reads the latest `catalog.js`, creates Git blobs, and publishes the MP3, cover, and catalog as one atomic commit. GitHub Pages then updates the public player.
 
-The console supports immediate publishing with an automatic date, exact date/time scheduling, hidden drafts, editing existing metadata, optional MP3/cover replacement, hiding live releases, recoverable archiving, token renewal, encrypted vault backup/restore, diagnostics, and a 30-minute idle lock. Archived files remain in the repository and can be restored as drafts.
+The console supports immediate publishing with an automatic date, exact date/time scheduling in the displayed device timezone, hidden drafts, editing existing metadata, optional MP3/cover replacement, hiding live releases, recoverable archiving, token renewal, encrypted vault backup/restore, diagnostics, recoverable release-metadata drafts, and a 30-minute idle lock. Archived files remain in the repository and can be restored as drafts. Browser security requires MP3 and cover files to be selected again after restoring a metadata draft.
+
+Update 12 gives the console a responsive artist-studio layout: a desktop sidebar, tablet toolbar, phone bottom navigation, aligned file selectors, and safe-area handling for portrait and landscape devices.
 
 The console's URL is visible because the repository and GitHub Pages site are public. That does not grant upload access: every repository change is verified by GitHub using the owner's limited token, and the token stays encrypted while the local console is locked.

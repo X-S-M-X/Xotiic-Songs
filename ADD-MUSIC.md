@@ -7,10 +7,10 @@
 3. Select the final MP3 from Files.
 4. Select the square JPG, PNG, or WebP cover from Gallery.
 5. Enter the title, artist, release type, genre, optional description, optional YouTube link, and optional lyrics.
-6. Choose **Publish now**, **Schedule**, or **Draft**. Publish now fills today's date automatically; Schedule asks for the exact local date and time.
+6. Choose **Publish now**, **Schedule**, or **Draft**. Publish now fills today's date automatically; Schedule asks for the exact date and time in the device timezone shown beside the field.
 7. Review the release and save it to GitHub.
 
-The console detects the MP3 duration, verifies square artwork, optimizes large phone covers to a high-quality square WebP, prevents duplicate release IDs, and commits the audio, cover, and catalog together.
+The console detects the MP3 duration, verifies square artwork, optimizes large phone covers to a high-quality square WebP, prevents duplicate release IDs, and commits the audio, cover, and catalog together. Release metadata is also saved as a private draft in that browser while you type. If the page closes, the console can restore the text and schedule, but MP3 and cover files must be selected again for browser security.
 
 ## Correct an existing release
 

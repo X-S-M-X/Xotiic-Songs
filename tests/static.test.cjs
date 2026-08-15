@@ -14,13 +14,15 @@ test("public player exposes offline, recovery, and safe update controls", () => 
   assert.match(html, /crossorigin="anonymous"/);
   const ids = [...html.matchAll(/\sid="([^"]+)"/g)].map((match) => match[1]);
   assert.equal(new Set(ids).size, ids.length, "public HTML IDs must be unique");
-  for (const id of ["recently-played-section", "monthly-chart-section", "global-chart-section"]) assert.match(html, new RegExp(`id=["']${id}["']`));
+  for (const id of ["recently-played-section", "monthly-chart-section", "library-switcher", "settings-layer"]) assert.match(html, new RegExp(`id=["']${id}["']`));
+  assert.doesNotMatch(html, /id=["']global-chart-section["']/);
 });
 
 test("service worker serves explicitly saved media with range support", () => {
   const worker = read("sw.js");
   assert.match(worker, /xotiic-media-v1/);
   assert.match(worker, /createPartialResponse/);
+  assert.match(worker, /anime-theme\.css\?v=12/);
   assert.match(worker, /SKIP_WAITING/);
   assert.doesNotMatch(worker, /addEventListener\("install"[\s\S]{0,220}skipWaiting/);
 });
@@ -37,11 +39,29 @@ test("song and playlist surfaces share synchronized play and pause state", () =>
   assert.match(styles, /\.playlist-card\.is-current-playlist/);
 });
 
+test("anime appearance, compact library, and mobile swipe controls are wired", () => {
+  const html = read("index.html");
+  const app = read("app.js");
+  const layout = read("layout.css");
+  const anime = read("anime-theme.css");
+  const theme = read("theme.js");
+  assert.match(theme, /theme: "anime"/);
+  assert.match(theme, /\["anime", "classic"\]/);
+  assert.match(html, /role="tablist" aria-label="Library collections"/);
+  assert.match(app, /const setLibraryTab =/);
+  assert.match(app, /startMiniPlayerGesture/);
+  assert.match(app, /skip\(dx < 0 \? 1 : -1\)/);
+  assert.match(layout, /touch-action: pan-y/);
+  assert.match(anime, /html\[data-theme="anime"\]/);
+  assert.match(anime, /--current-cover-image/);
+});
+
 test("admin supports metadata edits, encrypted backup, and atomic updates", () => {
   const html = read("admin/index.html");
   const app = read("admin/app.js");
   const github = read("admin/github.js");
   const styles = read("admin/styles.css");
+  const updateStyles = read("admin/update-12.css");
   assert.match(html, /id="edit-release-form"/);
   assert.match(html, /id="export-vault"/);
   assert.match(app, /prepareCoverFile/);
@@ -51,6 +71,11 @@ test("admin supports metadata edits, encrypted backup, and atomic updates", () =
   assert.match(html, /id="overview-scheduled"/);
   assert.match(app, /effectiveStatus/);
   assert.match(app, /releaseArchive/);
+  assert.match(html, /id="release-draft-banner"/);
+  assert.match(app, /RELEASE_DRAFT_KEY/);
+  assert.match(app, /restoreReleaseDraft/);
+  assert.doesNotMatch(app.match(/const saveReleaseDraft = \(\) => \{[\s\S]*?\n  \};/)?.[0] || "", /audioFile|coverFile|token/);
+  assert.match(updateStyles, /\.replacement-file-field input\[type="file"\]/);
   const ids = [...html.matchAll(/\sid="([^"]+)"/g)].map((match) => match[1]);
   assert.equal(new Set(ids).size, ids.length, "admin HTML IDs must be unique");
 });
@@ -63,7 +88,7 @@ test("async admin forms retain their form reference after awaited work", () => {
 });
 
 test("web app manifests are valid and use current versioned icons", () => {
-  for (const [file, version] of [["manifest.webmanifest", "v=11"], ["admin/manifest.webmanifest", "v=11"]]) {
+  for (const [file, version] of [["manifest.webmanifest", "v=12"], ["admin/manifest.webmanifest", "v=12"]]) {
     const manifest = JSON.parse(read(file));
     assert.ok(Array.isArray(manifest.icons) && manifest.icons.length >= 4);
     assert.ok(manifest.icons.every((icon) => icon.src.includes(version)));
@@ -84,13 +109,11 @@ test("versioned HTML assets exist in both app scopes", () => {
   }
 });
 
-test("optional global chart is private by default and backed by a guarded Worker", () => {
-  const config = read("analytics.js");
-  const worker = read("analytics-worker/src/index.js");
-  const schema = read("analytics-worker/migrations/0001_initial.sql");
-  assert.match(config, /enabled: false/);
-  assert.match(worker, /originAllowed/);
-  assert.match(worker, /ANALYTICS_HASH_SECRET/);
-  assert.match(worker, /INSERT OR IGNORE INTO qualified_listens/);
-  assert.doesNotMatch(schema, /raw_ip|ip_address/i);
+test("global analytics remains out of the active player", () => {
+  const html = read("index.html");
+  const app = read("app.js");
+  const worker = read("sw.js");
+  assert.doesNotMatch(html, /analytics\.js|workers\.dev|global-chart-section/);
+  assert.doesNotMatch(app, /analyticsEndpoint|submitGlobalListen|loadGlobalChart/);
+  assert.doesNotMatch(worker, /analytics\.js/);
 });

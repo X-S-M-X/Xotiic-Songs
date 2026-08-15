@@ -5,7 +5,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover, interactive-widget=resizes-content" />
     <meta http-equiv="Content-Security-Policy" content="default-src 'self'; base-uri 'self'; object-src 'none'; script-src 'self'; style-src 'self' 'unsafe-inline'; img-src 'self' blob: data:; media-src 'self' blob:; connect-src 'self' https://api.github.com; manifest-src 'self'; worker-src 'self'; form-action 'self'; upgrade-insecure-requests" />
     <meta name="referrer" content="strict-origin-when-cross-origin" />
-    <meta name="theme-color" content="#070a08" />
+    <meta name="theme-color" content="#0a0711" />
     <meta name="description" content="Private release publishing for XotiicDuck Music." />
     <meta name="application-name" content="Xotiic Upload" />
     <meta name="apple-mobile-web-app-capable" content="yes" />
@@ -13,15 +13,16 @@
     <meta name="apple-mobile-web-app-title" content="Xotiic Upload" />
     <meta name="format-detection" content="telephone=no" />
     <meta name="robots" content="noindex, nofollow, noarchive" />
-    <title>Xotiic Upload — Artist Console</title>
-    <link rel="manifest" href="./manifest.webmanifest?v=11" />
-    <link rel="icon" href="../favicon.svg?v=11" />
-    <link rel="apple-touch-icon" href="../apple-touch-icon.png?v=11" />
-    <link rel="stylesheet" href="./styles.css?v=11" />
-    <script src="./config.js?v=11" defer></script>
-    <script src="./crypto.js?v=11" defer></script>
-    <script src="./github.js?v=11" defer></script>
-    <script src="./app.js?v=11" defer></script>
+    <title>Xotiic Upload | Artist Console</title>
+    <link rel="manifest" href="./manifest.webmanifest?v=12" />
+    <link rel="icon" href="../favicon.svg?v=12" />
+    <link rel="apple-touch-icon" href="../apple-touch-icon.png?v=12" />
+    <link rel="stylesheet" href="./styles.css?v=12" />
+    <link rel="stylesheet" href="./update-12.css?v=12" />
+    <script src="./config.js?v=12" defer></script>
+    <script src="./crypto.js?v=12" defer></script>
+    <script src="./github.js?v=12" defer></script>
+    <script src="./app.js?v=12" defer></script>
   </head>
   <body>
     <svg class="icon-sprite" aria-hidden="true" focusable="false">
@@ -164,9 +165,10 @@
 
             <section class="admin-panel" data-panel="upload" hidden>
               <form id="release-form" class="release-form">
+                <div id="release-draft-banner" class="release-draft-banner" role="status" hidden><span class="draft-signal"><svg class="ui-icon" aria-hidden="true"><use href="#admin-icon-check"></use></svg></span><div><strong>Release details restored</strong><p>Your local metadata draft is back. Select the MP3 and square cover again before reviewing.</p></div><button id="discard-release-draft" type="button">Discard draft</button></div>
                 <div class="form-column asset-column">
                   <div class="panel-card">
-                    <div class="panel-heading"><div><p class="section-label">01 — RELEASE FILES</p><h2>Master and artwork</h2></div><span class="required-note">BOTH REQUIRED</span></div>
+                    <div class="panel-heading"><div><p class="section-label">01 / RELEASE FILES</p><h2>Master and artwork</h2></div><span class="required-note">BOTH REQUIRED</span></div>
                     <label id="audio-drop" class="file-drop audio-drop">
                       <input id="audio-file" type="file" accept=".mp3,audio/mpeg" required />
                       <span class="drop-icon"><svg class="ui-icon" aria-hidden="true"><use href="#admin-icon-music"></use></svg></span>
@@ -189,7 +191,7 @@
                       <label><input type="radio" name="release-mode" value="scheduled" /><span><strong>Schedule</strong><small>Go live at an exact time.</small></span></label>
                       <label><input type="radio" name="release-mode" value="draft" /><span><strong>Draft</strong><small>Keep completely hidden.</small></span></label>
                     </fieldset>
-                    <div id="schedule-fields" class="schedule-fields" hidden><label class="field"><span>Release date and time</span><input id="release-schedule" type="datetime-local" /><small>Uses this device’s current timezone.</small></label></div>
+                    <div id="schedule-fields" class="schedule-fields" hidden><label class="field"><span>Release date and time</span><input id="release-schedule" type="datetime-local" /><small id="release-timezone-copy">Uses this device's current timezone.</small></label></div>
                     <input id="release-date" type="hidden" />
                     <button id="review-release" class="primary-action" type="submit"><span>Review release</span><span class="icon-frame"><svg class="ui-icon" aria-hidden="true"><use href="#admin-icon-arrow-right"></use></svg></span></button>
                     <p class="publish-note">The MP3, cover and catalog are committed together. Listeners never see a half-finished release.</p>
@@ -198,7 +200,7 @@
 
                 <div class="form-column details-column">
                   <div class="panel-card">
-                    <div class="panel-heading"><div><p class="section-label">02 — METADATA</p><h2>Release details</h2></div><span class="autosave-note">LOCAL FORM</span></div>
+                    <div class="panel-heading"><div><p class="section-label">02 / METADATA</p><h2>Release details</h2></div><span id="metadata-save-state" class="autosave-note">LOCAL DRAFT READY</span></div>
                     <div class="field-grid">
                       <label class="field field-wide"><span>Song title</span><input id="release-title" required maxlength="100" placeholder="e.g. Monarchs Collide" /></label>
                       <label class="field"><span>Artist</span><input id="release-artist" required maxlength="80" value="XotiicDuck" /></label>
@@ -285,13 +287,13 @@
           <label class="field"><span>Release type</span><select id="edit-album"><option>Single</option><option>EP</option><option>Album</option><option>Soundtrack</option></select></label>
           <label class="field"><span>Genre</span><input id="edit-genre" required maxlength="60" /></label>
           <label class="field"><span>Visibility</span><select id="edit-status"><option value="published">Published now</option><option value="scheduled">Scheduled</option><option value="draft">Hidden draft</option><option value="archived">Archived</option></select></label>
-          <label id="edit-schedule-field" class="field" hidden><span>Release date and time</span><input id="edit-schedule" type="datetime-local" /><small>Uses this device’s current timezone.</small></label>
+          <label id="edit-schedule-field" class="field" hidden><span>Release date and time</span><input id="edit-schedule" type="datetime-local" /><small id="edit-timezone-copy">Uses this device's current timezone.</small></label>
           <input id="edit-date" type="hidden" />
           <label class="field field-wide"><span>YouTube link <small>optional</small></span><input id="edit-youtube" type="url" maxlength="500" inputmode="url" /></label>
           <label class="field field-wide"><span>Short description <small>optional</small></span><textarea id="edit-description" maxlength="280" rows="3"></textarea></label>
           <label class="field field-wide"><span>Lyrics <small>optional</small></span><textarea id="edit-lyrics" maxlength="30000" rows="7"></textarea></label>
-          <label class="field"><span>Replacement MP3 <small>optional</small></span><input id="edit-audio-file" type="file" accept=".mp3,audio/mpeg" /><small id="edit-audio-copy">Keep current MP3</small></label>
-          <label class="field"><span>Replacement square cover <small>optional</small></span><input id="edit-cover-file" type="file" accept="image/jpeg,image/png,image/webp" /><small id="edit-cover-copy">Keep current cover</small></label>
+          <label class="field replacement-file-field"><span>Replacement MP3 <small>optional</small></span><input id="edit-audio-file" type="file" accept=".mp3,audio/mpeg" /><small id="edit-audio-copy">Keep current MP3</small></label>
+          <label class="field replacement-file-field"><span>Replacement square cover <small>optional</small></span><input id="edit-cover-file" type="file" accept="image/jpeg,image/png,image/webp" /><small id="edit-cover-copy">Keep current cover</small></label>
         </div>
         <div class="modal-actions"><button class="ghost-action" type="button" data-edit-close>Cancel</button><button id="save-release-edit" class="primary-action" type="submit"><span>Save release update</span><span class="icon-frame"><svg class="ui-icon" aria-hidden="true"><use href="#admin-icon-upload"></use></svg></span></button></div>
       </form>

@@ -3,24 +3,26 @@
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover, interactive-widget=resizes-content" />
-    <meta http-equiv="Content-Security-Policy" content="default-src 'self'; base-uri 'self'; object-src 'none'; script-src 'self'; style-src 'self' 'unsafe-inline'; img-src 'self' blob: data:; media-src 'self' blob:; connect-src 'self' https://*.workers.dev; manifest-src 'self'; worker-src 'self'; form-action 'self'; upgrade-insecure-requests" />
+    <meta http-equiv="Content-Security-Policy" content="default-src 'self'; base-uri 'self'; object-src 'none'; script-src 'self'; style-src 'self' 'unsafe-inline'; img-src 'self' blob: data:; media-src 'self' blob:; connect-src 'self'; manifest-src 'self'; worker-src 'self'; form-action 'self'; upgrade-insecure-requests" />
     <meta name="referrer" content="strict-origin-when-cross-origin" />
-    <meta name="theme-color" content="#050705" />
+    <meta name="theme-color" content="#08050f" />
     <meta name="description" content="The official home of XotiicDuck Music." />
     <meta name="application-name" content="XotiicDuck Music" />
     <meta name="apple-mobile-web-app-capable" content="yes" />
     <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent" />
     <meta name="apple-mobile-web-app-title" content="XotiicDuck" />
     <meta name="format-detection" content="telephone=no" />
-    <title>XotiicDuck Music — Anime Worlds. Original Sound.</title>
-    <link rel="manifest" href="./manifest.webmanifest?v=11" />
-    <link rel="icon" href="./favicon.svg?v=11" />
-    <link rel="apple-touch-icon" href="./apple-touch-icon.png?v=11" />
-    <link rel="stylesheet" href="./styles.css?v=11" />
-    <script src="./catalog.js?v=11" defer></script>
-    <script src="./analytics.js?v=11" defer></script>
-    <script src="./offline.js?v=11" defer></script>
-    <script src="./app.js?v=11" defer></script>
+    <title>XotiicDuck Music | Anime Worlds. Original Sound.</title>
+    <link rel="manifest" href="./manifest.webmanifest?v=12" />
+    <link rel="icon" href="./favicon.svg?v=12" />
+    <link rel="apple-touch-icon" href="./apple-touch-icon.png?v=12" />
+    <script src="./theme.js?v=12"></script>
+    <link rel="stylesheet" href="./styles.css?v=12" />
+    <link rel="stylesheet" href="./layout.css?v=12" />
+    <link rel="stylesheet" href="./anime-theme.css?v=12" />
+    <script src="./catalog.js?v=12" defer></script>
+    <script src="./offline.js?v=12" defer></script>
+    <script src="./app.js?v=12" defer></script>
   </head>
   <body>
     <svg class="icon-sprite" aria-hidden="true" focusable="false">
@@ -54,6 +56,9 @@
       <symbol id="icon-arrow-up" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="m7 14 5-5 5 5"></path></symbol>
       <symbol id="icon-arrow-down" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="m7 10 5 5 5-5"></path></symbol>
       <symbol id="icon-play-next" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M4 6h10M4 12h7M4 18h6"></path><path d="m15 13 5 3-5 3v-6Z"></path></symbol>
+      <symbol id="icon-settings" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="3"></circle><path d="M19.4 15a1.7 1.7 0 0 0 .34 1.88l.06.06-2.83 2.83-.06-.06A1.7 1.7 0 0 0 15 19.4a1.7 1.7 0 0 0-1 .6 1.7 1.7 0 0 0-.4 1.1V21h-4v-.09A1.7 1.7 0 0 0 8.6 19.4a1.7 1.7 0 0 0-1.88.34l-.06.06-2.83-2.83.06-.06A1.7 1.7 0 0 0 4.6 15a1.7 1.7 0 0 0-.6-1 1.7 1.7 0 0 0-1.1-.4H3v-4h.09A1.7 1.7 0 0 0 4.6 8.6a1.7 1.7 0 0 0-.34-1.88l-.06-.06 2.83-2.83.06.06A1.7 1.7 0 0 0 9 4.6a1.7 1.7 0 0 0 1-.6 1.7 1.7 0 0 0 .4-1.1V3h4v.09A1.7 1.7 0 0 0 15.4 4.6a1.7 1.7 0 0 0 1.88-.34l.06-.06 2.83 2.83-.06.06A1.7 1.7 0 0 0 19.4 9c.13.38.34.73.6 1 .3.28.68.42 1.1.4H21v4h-.09c-.42-.02-.8.12-1.1.4-.26.27-.47.62-.6 1Z"></path></symbol>
+      <symbol id="icon-sparkles" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="m12 3 1.2 3.8L17 8l-3.8 1.2L12 13l-1.2-3.8L7 8l3.8-1.2L12 3Z"></path><path d="m18.5 14 .8 2.2 2.2.8-2.2.8-.8 2.2-.8-2.2-2.2-.8 2.2-.8.8-2.2Z"></path><path d="m5 13 1 2.8 2.8 1-2.8 1L5 21l-1-3.2-3-1 3-1L5 13Z"></path></symbol>
+      <symbol id="icon-motion" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 12h5l2-7 4 14 2-7h5"></path></symbol>
     </svg>
     <div id="app" class="app-shell catalog-empty">
       <audio id="audio" preload="metadata" crossorigin="anonymous"></audio>
@@ -72,6 +77,7 @@
         <div class="sidebar-section">
           <p class="nav-label">MY COLLECTION</p>
           <button data-view="library"><span class="mini-tile liked"><svg class="ui-icon" aria-hidden="true"><use href="#icon-heart-filled"></use></svg></span><span>Liked songs</span></button>
+          <button data-settings-open><span class="mini-tile appearance"><svg class="ui-icon" aria-hidden="true"><use href="#icon-settings"></use></svg></span><span>Appearance</span></button>
         </div>
         <div class="sidebar-spacer"></div>
         <div class="install-card">
@@ -87,6 +93,7 @@
           <div class="mobile-brand"><span class="brand-mark"><span>XD</span></span><strong>XOTIICDUCK</strong></div>
           <button class="search-trigger" data-search-open><span class="icon-frame"><svg class="ui-icon" aria-hidden="true"><use href="#icon-search"></use></svg></span><span>Search the official catalog...</span><kbd>/</kbd></button>
           <div class="top-actions">
+            <button class="round-button settings-button" data-settings-open aria-label="Open appearance settings" title="Appearance settings"><svg class="ui-icon" aria-hidden="true"><use href="#icon-settings"></use></svg></button>
             <button class="profile-button" data-install aria-label="Install XotiicDuck Music"><span data-install-icon class="icon-frame" aria-hidden="true"><svg class="ui-icon"><use href="#icon-download"></use></svg></span><span data-install-label>Install app</span></button>
           </div>
         </header>
@@ -114,7 +121,13 @@
                   <span class="hero-record"><strong>XD</strong><i></i></span>
                   <span class="hero-wave"><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i></span>
                 </div>
-                <div class="hero-track-tag"><span>OFFICIAL PLAYER</span><strong>XotiicDuck Music</strong><small>Direct from the artist</small></div>
+                <div class="hero-anime-art" aria-hidden="true">
+                  <span class="hero-anime-orbit orbit-one"></span><span class="hero-anime-orbit orbit-two"></span>
+                  <span class="hero-kanji">音</span>
+                  <span class="hero-cover-frame"><img id="hero-anime-cover" alt="" /></span>
+                  <span class="hero-anime-stamp">XD<br />音楽</span>
+                </div>
+                <div class="hero-track-tag"><span id="hero-track-label">OFFICIAL PLAYER</span><strong id="hero-track-title">XotiicDuck Music</strong><small id="hero-track-meta">Direct from the artist</small></div>
               </div>
             </section>
 
@@ -134,12 +147,6 @@
               <div id="monthly-chart"></div>
             </section>
 
-            <section id="global-chart-section" class="section-block listening-section global-chart-section" hidden>
-              <div class="section-heading"><div><p class="section-kicker">WORLDWIDE LISTENING</p><h2>Top tracks this month</h2></div><span class="global-data-label">GLOBAL CHART</span></div>
-              <p class="listening-privacy">Based on qualified plays across the XotiicDuck player. No listener names, emails, or raw IP addresses are stored.</p>
-              <div id="global-monthly-chart"></div>
-            </section>
-
             <section class="signal-banner">
               <div class="signal-icon"><svg class="ui-icon" aria-hidden="true"><use href="#icon-music"></use></svg></div>
               <div><p class="section-kicker">BUILT FOR LISTENERS</p><h2>No ads. No algorithms. Just the music.</h2><p>Install the web app, keep your library close, and hear every XotiicDuck release from one focused home.</p></div>
@@ -155,9 +162,14 @@
 
           <section class="view-panel page-section" data-panel="library" hidden>
             <div class="page-title library-title"><div><p class="section-kicker">SAVED ON THIS DEVICE</p><h1>Your library</h1><p>Favorites, playlists, and offline songs stay on this device.</p></div><div class="library-title-actions"><button class="library-create" data-playlist-create><span class="icon-frame"><svg class="ui-icon" aria-hidden="true"><use href="#icon-plus"></use></svg></span>Create playlist</button><button id="library-export" type="button"><span class="icon-frame"><svg class="ui-icon" aria-hidden="true"><use href="#icon-download"></use></svg></span>Back up</button><button id="library-import" type="button"><span class="icon-frame"><svg class="ui-icon" aria-hidden="true"><use href="#icon-upload"></use></svg></span>Restore</button><input id="library-import-file" type="file" accept="application/json,.json" hidden /></div></div>
-            <section class="library-section"><div class="library-section-heading"><p class="section-kicker">YOUR PLAYLISTS</p><h2>Playlists</h2></div><div id="playlist-library"></div></section>
-            <section class="library-section liked-library-section"><div class="library-section-heading"><p class="section-kicker">QUICK COLLECTION</p><h2>Liked songs</h2></div><div id="library-catalog"></div></section>
-            <section class="library-section offline-library-section"><div class="library-section-heading offline-heading"><div><p class="section-kicker">AVAILABLE WITHOUT INTERNET</p><h2>Offline songs</h2></div><span id="offline-storage-copy">Checking storage…</span></div><div id="offline-catalog"></div></section>
+            <div id="library-switcher" class="library-switcher" role="tablist" aria-label="Library collections">
+              <button id="library-tab-playlists" type="button" role="tab" aria-selected="true" aria-controls="library-panel-playlists" data-library-tab="playlists"><span class="icon-frame"><svg class="ui-icon" aria-hidden="true"><use href="#icon-library"></use></svg></span><span>Playlists</span><b id="library-playlist-count">0</b></button>
+              <button id="library-tab-liked" type="button" role="tab" aria-selected="false" aria-controls="library-panel-liked" data-library-tab="liked" tabindex="-1"><span class="icon-frame"><svg class="ui-icon" aria-hidden="true"><use href="#icon-heart-filled"></use></svg></span><span>Liked</span><b id="library-liked-count">0</b></button>
+              <button id="library-tab-offline" type="button" role="tab" aria-selected="false" aria-controls="library-panel-offline" data-library-tab="offline" tabindex="-1"><span class="icon-frame"><svg class="ui-icon" aria-hidden="true"><use href="#icon-download"></use></svg></span><span>Offline</span><b id="library-offline-count">0</b></button>
+            </div>
+            <section id="library-panel-playlists" class="library-section library-tab-panel" role="tabpanel" aria-labelledby="library-tab-playlists" data-library-panel="playlists"><div class="library-section-heading"><p class="section-kicker">YOUR PLAYLISTS</p><h2>Playlists</h2></div><div id="playlist-library"></div></section>
+            <section id="library-panel-liked" class="library-section library-tab-panel liked-library-section" role="tabpanel" aria-labelledby="library-tab-liked" data-library-panel="liked" hidden><div class="library-section-heading"><p class="section-kicker">QUICK COLLECTION</p><h2>Liked songs</h2></div><div id="library-catalog"></div></section>
+            <section id="library-panel-offline" class="library-section library-tab-panel offline-library-section" role="tabpanel" aria-labelledby="library-tab-offline" data-library-panel="offline" hidden><div class="library-section-heading offline-heading"><div><p class="section-kicker">AVAILABLE WITHOUT INTERNET</p><h2>Offline songs</h2></div><span id="offline-storage-copy">Checking storage…</span></div><div id="offline-catalog"></div></section>
           </section>
 
           <footer class="site-footer">
@@ -180,7 +192,7 @@
       <footer id="player" class="player-bar" hidden>
         <span class="mini-player-progress-track" aria-hidden="true"><span id="mini-progress"></span></span>
         <div id="player-status" class="player-status" role="status" aria-live="polite" hidden><span class="status-spinner" aria-hidden="true"></span><span id="player-status-copy"></span></div>
-        <div class="player-track"><button id="player-open" class="player-open" aria-label="Open Now Playing"><span id="player-art"></span><span class="player-copy"><strong id="player-title"></strong><span id="player-artist"></span></span></button><button id="player-favorite" class="icon-only-button" aria-label="Save current track"><svg class="ui-icon" aria-hidden="true"><use href="#icon-heart"></use></svg></button></div>
+        <div class="player-track"><button id="player-open" class="player-open" aria-label="Open Now Playing"><span id="player-art"></span><span class="player-copy"><strong id="player-title"></strong><span id="player-artist"></span><small class="mini-player-gesture-hint" aria-hidden="true">Swipe for previous or next</small></span></button><button id="player-favorite" class="icon-only-button" aria-label="Save current track"><svg class="ui-icon" aria-hidden="true"><use href="#icon-heart"></use></svg></button></div>
         <div class="player-controls">
           <div class="control-buttons"><button id="shuffle" class="icon-only-button" aria-label="Turn shuffle on" aria-pressed="false"><svg class="ui-icon" aria-hidden="true"><use href="#icon-shuffle"></use></svg></button><button id="previous" class="icon-only-button" aria-label="Previous track or restart"><svg class="ui-icon" aria-hidden="true"><use href="#icon-previous"></use></svg></button><button id="play" class="main-play icon-only-button" aria-label="Play"><svg class="ui-icon" aria-hidden="true"><use href="#icon-play"></use></svg></button><button id="next" class="icon-only-button" aria-label="Next track"><svg class="ui-icon" aria-hidden="true"><use href="#icon-next"></use></svg></button><button id="repeat" class="repeat-control icon-only-button" aria-label="Repeat mode: off" aria-pressed="false"><svg class="ui-icon" aria-hidden="true"><use href="#icon-repeat"></use></svg></button></div>
           <div class="progress-row"><span id="elapsed">0:00</span><input id="progress" type="range" min="0" max="1" step="0.1" value="0" aria-label="Track progress" /><span id="duration">0:00</span></div>
@@ -269,6 +281,27 @@
       <div id="info-layer" class="modal-layer" role="dialog" aria-modal="true" aria-label="Information" hidden>
         <button class="modal-backdrop" data-modal-close aria-label="Close information"></button>
         <article class="portable-info-modal"><button class="modal-close icon-only-button" data-modal-close aria-label="Close"><svg class="ui-icon" aria-hidden="true"><use href="#icon-close"></use></svg></button><p id="info-eyebrow" class="section-kicker"></p><h2 id="info-title"></h2><div id="info-copy"></div></article>
+      </div>
+
+      <div id="settings-layer" class="modal-layer settings-layer" role="dialog" aria-modal="true" aria-labelledby="settings-title" hidden>
+        <button class="modal-backdrop" data-settings-close aria-label="Close appearance settings"></button>
+        <article class="settings-modal">
+          <button class="modal-close icon-only-button" data-settings-close aria-label="Close appearance settings"><svg class="ui-icon" aria-hidden="true"><use href="#icon-close"></use></svg></button>
+          <header class="settings-heading"><span><svg class="ui-icon" aria-hidden="true"><use href="#icon-sparkles"></use></svg></span><div><p class="section-kicker">PLAYER CUSTOMISATION</p><h2 id="settings-title">Choose your visual world</h2><p>Alignment and playback fixes stay active in every appearance.</p></div></header>
+          <fieldset class="appearance-options">
+            <legend>INTERFACE</legend>
+            <label class="appearance-card anime-choice"><input type="radio" name="appearance-theme" value="anime" /><span class="appearance-preview anime-preview"><i></i><b>XD</b></span><span><strong>Anime Pulse</strong><small>New energetic redesign with cover-driven visuals.</small></span><svg class="ui-icon appearance-check" aria-hidden="true"><use href="#icon-check"></use></svg></label>
+            <label class="appearance-card classic-choice"><input type="radio" name="appearance-theme" value="classic" /><span class="appearance-preview classic-preview"><i></i><b>XD</b></span><span><strong>Classic Xotiic</strong><small>The previous dark-green interface, with every alignment repair.</small></span><svg class="ui-icon appearance-check" aria-hidden="true"><use href="#icon-check"></use></svg></label>
+          </fieldset>
+          <fieldset id="accent-settings" class="accent-options">
+            <legend>ANIME ACCENT</legend>
+            <label><input type="radio" name="appearance-accent" value="pulse" /><span class="accent-swatch pulse"></span><span><strong>Pulse</strong><small>Lime and violet</small></span></label>
+            <label><input type="radio" name="appearance-accent" value="sakura" /><span class="accent-swatch sakura"></span><span><strong>Sakura</strong><small>Pink and violet</small></span></label>
+            <label><input type="radio" name="appearance-accent" value="aqua" /><span class="accent-swatch aqua"></span><span><strong>Aqua</strong><small>Cyan and blue</small></span></label>
+          </fieldset>
+          <label class="motion-setting" for="appearance-motion"><span><svg class="ui-icon" aria-hidden="true"><use href="#icon-motion"></use></svg></span><span><strong>Interface motion</strong><small>System follows your device accessibility setting.</small></span><select id="appearance-motion"><option value="system">Use device setting</option><option value="full">Full anime energy</option><option value="reduced">Reduced motion</option></select></label>
+          <footer class="settings-footer"><span>Saved only on this device.</span><button id="appearance-reset" type="button">Restore defaults</button></footer>
+        </article>
       </div>
 
       <div id="network-banner" class="network-banner" role="status" aria-live="polite" hidden><span class="status-dot"></span><span>You are offline. Saved songs remain playable.</span></div>

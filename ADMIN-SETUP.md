@@ -29,6 +29,8 @@ The token is encrypted locally with PBKDF2-SHA256 and AES-256-GCM. The token is 
 
 Scheduling controls when the song appears in the player. Because the GitHub repository itself is public, a determined person could inspect repository files before that time. Treat this as automatic storefront timing, not a confidential pre-release embargo.
 
+The release form shows the active device timezone. While preparing a release, its text fields and chosen timing mode are saved locally as a recoverable metadata draft. The browser does not allow the console to restore selected MP3 or cover files, so those must be selected again after a page reload. Tokens and passwords are never included in release drafts.
+
 ## Add another phone or computer
 
 Open the admin address on that device and repeat first-time setup using a valid fine-grained token. Alternatively, download the already-encrypted file from **Security → Back up this device vault**, restore it on the new device, then enter its existing username and password. Device vaults remain separate after restoration.

@@ -4,16 +4,6 @@
   const rawCatalog = Array.isArray(window.XOTIICDUCK_RELEASES)
     ? window.XOTIICDUCK_RELEASES
     : [];
-  const analyticsConfig = window.XOTIIC_ANALYTICS || {};
-  const analyticsEndpoint = (() => {
-    if (analyticsConfig.enabled !== true || typeof analyticsConfig.endpoint !== "string") return "";
-    try {
-      const url = new URL(analyticsConfig.endpoint);
-      const local = ["localhost", "127.0.0.1"].includes(url.hostname);
-      if ((!local && url.protocol !== "https:") || (!local && !url.hostname.endsWith(".workers.dev"))) return "";
-      return url.href.replace(/\/+$/, "");
-    } catch { return ""; }
-  })();
 
   const safePath = (value) => {
     if (typeof value !== "string") return "";
@@ -102,9 +92,10 @@
   const PLAYBACK_KEY = "xotiicduck-playback-v1";
   const SESSION_KEY = "xotiicduck-session-v1";
   const LISTENING_KEY = "xotiicduck-listening-v1";
-  const ANALYTICS_SESSION_KEY = "xotiicduck-analytics-session-v1";
+  const LIBRARY_TAB_KEY = "xotiicduck-library-tab-v1";
   const BACKUP_VERSION = 1;
   const offlineApi = globalThis.XotiicOffline;
+  const appearanceApi = globalThis.XotiicAppearance;
   const params = new URLSearchParams(location.search);
   let restoredSession = {};
   try { restoredSession = JSON.parse(localStorage.getItem(SESSION_KEY) || "{}"); } catch { restoredSession = {}; }
@@ -142,7 +133,9 @@
   let scheduleTimer = null;
   let listening = { recent: [], months: {} };
   let listenProgress = { trackId: null, seconds: 0, counted: false, lastPosition: 0 };
-  let globalChart = [];
+  let activeLibraryTab = "playlists";
+  let miniPlayerGesture = null;
+  let suppressPlayerOpenUntil = 0;
   const downloadingIds = new Set();
 
   try {
@@ -183,6 +176,13 @@
     };
   } catch {
     listening = { recent: [], months: {} };
+  }
+
+  try {
+    const storedTab = localStorage.getItem(LIBRARY_TAB_KEY);
+    activeLibraryTab = ["playlists", "liked", "offline"].includes(storedTab) ? storedTab : "playlists";
+  } catch {
+    activeLibraryTab = "playlists";
   }
 
   const saveFavorites = () => {
@@ -308,58 +308,6 @@
   const latestTracks = () => [...tracks].sort((left, right) => right.catalogTimestamp - left.catalogTimestamp || right.id.localeCompare(left.id));
   const monthKey = (date = new Date()) => `${date.getFullYear()}-${String(date.getMonth() + 1).padStart(2, "0")}`;
 
-  const analyticsListenerId = () => {
-    const currentMonth = monthKey();
-    try {
-      const stored = JSON.parse(localStorage.getItem(ANALYTICS_SESSION_KEY) || "{}");
-      if (stored.month === currentMonth && /^[a-zA-Z0-9_-]{20,100}$/.test(stored.id || "")) return stored.id;
-      const bytes = crypto.getRandomValues(new Uint8Array(24));
-      const id = btoa(String.fromCharCode(...bytes)).replaceAll("+", "-").replaceAll("/", "_").replaceAll("=", "");
-      localStorage.setItem(ANALYTICS_SESSION_KEY, JSON.stringify({ month: currentMonth, id }));
-      return id;
-    } catch { return ""; }
-  };
-
-  const renderGlobalChart = () => {
-    const section = $("#global-chart-section");
-    section.hidden = globalChart.length === 0;
-    $("#global-monthly-chart").innerHTML = globalChart.length
-      ? `<div class="monthly-track-list global-track-list">${globalChart.map(({ track, plays }, index) => `<button class="monthly-track-row${trackStateClass(track.id)}" data-play="${escapeHtml(track.id)}" data-play-context="all" data-track-action="${escapeHtml(track.id)}" aria-label="${escapeHtml(trackActionLabel(track))}"><span class="monthly-rank">${String(index + 1).padStart(2, "0")}</span>${artwork(track, true)}<span class="monthly-track-copy"><strong>${escapeHtml(track.title)}</strong><small>${escapeHtml(track.artist)} · ${plays} global qualified play${plays === 1 ? "" : "s"}</small></span><span class="monthly-play" data-track-play-icon>${iconMarkup(isTrackPlaying(track.id) ? "pause" : "play")}</span></button>`).join("")}</div>`
-      : "";
-  };
-
-  const loadGlobalChart = async () => {
-    if (!analyticsEndpoint) return;
-    try {
-      const response = await fetch(`${analyticsEndpoint}/v1/charts/monthly?limit=5`, { credentials: "omit", headers: { Accept: "application/json" } });
-      if (!response.ok) throw new Error("Chart unavailable");
-      const payload = await response.json();
-      globalChart = Array.isArray(payload?.tracks)
-        ? payload.tracks.map((entry) => ({ track: byId(entry.trackId), plays: Math.max(0, Number(entry.plays) || 0) })).filter((entry) => entry.track && entry.plays > 0)
-        : [];
-      renderGlobalChart();
-    } catch {
-      globalChart = [];
-      renderGlobalChart();
-    }
-  };
-
-  const submitGlobalListen = async (track) => {
-    if (!analyticsEndpoint || !track) return;
-    const listenerId = analyticsListenerId();
-    if (!listenerId) return;
-    try {
-      const response = await fetch(`${analyticsEndpoint}/v1/listens`, {
-        method: "POST",
-        credentials: "omit",
-        keepalive: true,
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ trackId: track.id, listenerId }),
-      });
-      if (response.ok) setTimeout(() => loadGlobalChart(), 800);
-    } catch { /* Global analytics never interrupts music playback. */ }
-  };
-
   const recentlyPlayedTracks = () => listening.recent
     .map((entry) => byId(entry.id))
     .filter(Boolean)
@@ -411,8 +359,6 @@
     listening.months = Object.fromEntries(retainedMonths.map((month) => [month, listening.months[month]]));
     saveListening();
     renderListeningSections();
-    renderGlobalChart();
-    submitGlobalListen(track);
   };
 
   const resetListenProgress = () => {
@@ -446,6 +392,13 @@
     const primary = $("#hero-primary");
     if (tracks.length) {
       const latestTrack = latest[0];
+      const heroCover = $("#hero-anime-cover");
+      heroCover.src = latestTrack.cover;
+      heroCover.hidden = false;
+      $("#hero-track-label").textContent = "LATEST TRANSMISSION";
+      $("#hero-track-title").textContent = latestTrack.title;
+      $("#hero-track-meta").textContent = `${latestTrack.artist} · ${latestTrack.album}`;
+      document.documentElement.style.setProperty("--hero-cover-image", `url(${JSON.stringify(latestTrack.cover)})`);
       const playing = isTrackPlaying(latestTrack.id);
       primary.removeAttribute("href");
       primary.removeAttribute("target");
@@ -456,6 +409,9 @@
       primary.classList.toggle("is-playing", playing);
       primary.setAttribute("aria-label", `${playing ? "Pause" : "Play"} ${latestTrack.title}`);
       primary.innerHTML = `<span data-track-play-icon>${iconMarkup(playing ? "pause" : "play")}</span><span data-track-play-label data-track-play-label-suffix=" latest">${playing ? "Pause" : "Play"} latest</span>`;
+    } else {
+      $("#hero-anime-cover").hidden = true;
+      document.documentElement.style.removeProperty("--hero-cover-image");
     }
   };
 
@@ -553,9 +509,26 @@
     }
   };
 
+  const setLibraryTab = (tab, { focus = false } = {}) => {
+    if (!["playlists", "liked", "offline"].includes(tab)) return;
+    activeLibraryTab = tab;
+    try { localStorage.setItem(LIBRARY_TAB_KEY, tab); } catch { /* The switcher still works for this visit. */ }
+    for (const button of $$('[data-library-tab]')) {
+      const selected = button.dataset.libraryTab === tab;
+      button.setAttribute("aria-selected", String(selected));
+      button.tabIndex = selected ? 0 : -1;
+      button.classList.toggle("active", selected);
+      if (selected && focus) button.focus();
+    }
+    for (const panel of $$('[data-library-panel]')) panel.hidden = panel.dataset.libraryPanel !== tab;
+  };
+
   const renderLibrary = () => {
     const liked = tracks.filter((track) => favorites.has(track.id));
     const saved = tracks.filter((track) => offlineIds.has(track.id));
+    $("#library-playlist-count").textContent = String(playlists.length);
+    $("#library-liked-count").textContent = String(liked.length);
+    $("#library-offline-count").textContent = String(saved.length);
     $("#playlist-library").innerHTML = playlists.length
       ? `<div class="playlist-grid">${playlists.map(playlistCard).join("")}</div>`
       : `<div class="playlist-empty"><span aria-hidden="true">${iconMarkup("plus")}</span><div><strong>Create your first playlist</strong><p>Build your own listening order from the XotiicDuck catalog.</p></div><button data-playlist-create>Create playlist</button></div>`;
@@ -567,10 +540,11 @@
       : emptyFavorites();
     $("#offline-catalog").innerHTML = saved.length
       ? `<div class="offline-track-list">${saved.map((track) => `<article class="offline-track-row${trackStateClass(track.id)}">
-          <button class="offline-track-main${trackStateClass(track.id)}" data-play="${escapeHtml(track.id)}" data-play-context="offline" data-track-action="${escapeHtml(track.id)}" aria-label="${escapeHtml(trackActionLabel(track))}">${artwork(track, true)}<span><strong>${escapeHtml(track.title)}</strong><small>${escapeHtml(track.artist)} · ${formatTime(track.duration)}</small></span><span class="offline-ready" data-track-play-icon>${iconMarkup(isTrackPlaying(track.id) ? "pause" : "play")}<span data-track-play-label>${isTrackPlaying(track.id) ? "Pause" : "Play"}</span></span></button>
-          <button class="offline-remove icon-only-button" data-offline-toggle="${escapeHtml(track.id)}" aria-label="Remove ${escapeHtml(track.title)} from offline songs">${iconMarkup("close")}</button>
+          <button class="offline-track-main${trackStateClass(track.id)}" data-play="${escapeHtml(track.id)}" data-play-context="offline" data-track-action="${escapeHtml(track.id)}" aria-label="${escapeHtml(trackActionLabel(track))}">${artwork(track, true)}<span><strong>${escapeHtml(track.title)}</strong><small>${escapeHtml(track.artist)} · ${formatTime(track.duration)} <span class="offline-saved-copy">${iconMarkup("check")} Saved</span></small></span><span class="offline-ready" data-track-play-icon>${iconMarkup(isTrackPlaying(track.id) ? "pause" : "play")}<span data-track-play-label>${isTrackPlaying(track.id) ? "Pause" : "Play"}</span></span></button>
+          <button class="offline-remove" data-offline-toggle="${escapeHtml(track.id)}" aria-label="Remove offline download for ${escapeHtml(track.title)}">${iconMarkup("close")}<span>Remove</span></button>
         </article>`).join("")}</div>`
       : `<div class="offline-empty"><span>${iconMarkup("download")}</span><div><strong>No offline songs yet</strong><p>Open a song, then choose “Save offline.” Download it once and it can play without internet on this device.</p></div></div>`;
+    setLibraryTab(activeLibraryTab);
     updateStorageCopy();
   };
 
@@ -622,6 +596,7 @@
     $("#now-playing-artist").textContent = currentTrack.artist;
     $("#now-playing-album").textContent = `${currentTrack.album}${currentTrack.year ? ` · ${currentTrack.year}` : ""}`;
     $("#now-playing-context").textContent = playbackContextLabel;
+    document.documentElement.style.setProperty("--current-cover-image", `url(${JSON.stringify(currentTrack.cover)})`);
     $("#duration").textContent = formatTime(currentTrack.duration);
     for (const button of [$("#now-favorite"), $("#player-favorite"), $("#now-playing-favorite")]) {
       setIcon(button, favorites.has(currentTrack.id) ? "heart-filled" : "heart");
@@ -701,7 +676,7 @@
     syncPlaybackIndicators();
   };
 
-  const modalLayers = () => [$("#search-layer"), $("#queue-layer"), $("#info-layer"), $("#playlist-layer"), $("#playlist-picker-layer"), $("#playlist-editor-layer")];
+  const modalLayers = () => [$("#search-layer"), $("#queue-layer"), $("#info-layer"), $("#playlist-layer"), $("#playlist-picker-layer"), $("#playlist-editor-layer"), $("#settings-layer")];
 
   const openModal = (layer, focusSelector = "button:not([disabled]), input, select, textarea, a[href]") => {
     if (!layer) return;
@@ -711,6 +686,32 @@
     layer.hidden = false;
     document.body.classList.add("modal-open");
     requestAnimationFrame(() => layer.querySelector(focusSelector)?.focus());
+  };
+
+  const syncAppearanceControls = (settings = appearanceApi?.read?.()) => {
+    if (!settings) return;
+    const theme = $(`input[name="appearance-theme"][value="${settings.theme}"]`);
+    const accent = $(`input[name="appearance-accent"][value="${settings.accent}"]`);
+    if (theme) theme.checked = true;
+    if (accent) accent.checked = true;
+    $("#appearance-motion").value = settings.motion;
+  };
+
+  const saveAppearanceFromControls = () => {
+    if (!appearanceApi) return;
+    const previous = appearanceApi.read();
+    const settings = appearanceApi.apply({
+      theme: $('input[name="appearance-theme"]:checked')?.value || previous.theme,
+      accent: $('input[name="appearance-accent"]:checked')?.value || previous.accent,
+      motion: $("#appearance-motion").value || previous.motion,
+    }, { persist: true, announce: true });
+    syncAppearanceControls(settings);
+    showToast(settings.theme === "anime" ? "Anime Pulse appearance saved." : "Classic Xotiic appearance saved.");
+  };
+
+  const openSettings = () => {
+    syncAppearanceControls();
+    openModal($("#settings-layer"), 'input[name="appearance-theme"]:checked');
   };
 
   const openPlaylist = (id) => {
@@ -1180,6 +1181,52 @@
     skip(-1);
   };
 
+  const resetMiniPlayerGesture = (settle = false) => {
+    const opener = $("#player-open");
+    miniPlayerGesture = null;
+    opener.style.setProperty("--mini-swipe-x", "0px");
+    opener.classList.remove("is-swiping", "swipe-next", "swipe-previous");
+    opener.classList.toggle("is-settling", settle);
+    if (settle) setTimeout(() => opener.classList.remove("is-settling"), 230);
+  };
+
+  const startMiniPlayerGesture = (event) => {
+    if (!currentTrack || !window.matchMedia("(max-width: 1040px)").matches || event.pointerType === "mouse" || !event.isPrimary) return;
+    miniPlayerGesture = { pointerId: event.pointerId, startX: event.clientX, startY: event.clientY, dx: 0, horizontal: false };
+    event.currentTarget.setPointerCapture?.(event.pointerId);
+  };
+
+  const moveMiniPlayerGesture = (event) => {
+    if (!miniPlayerGesture || miniPlayerGesture.pointerId !== event.pointerId) return;
+    const dx = event.clientX - miniPlayerGesture.startX;
+    const dy = event.clientY - miniPlayerGesture.startY;
+    if (!miniPlayerGesture.horizontal && Math.abs(dy) > Math.abs(dx) && Math.abs(dy) > 10) {
+      resetMiniPlayerGesture();
+      return;
+    }
+    if (Math.abs(dx) < 8 || Math.abs(dx) <= Math.abs(dy) * 1.15) return;
+    miniPlayerGesture.horizontal = true;
+    miniPlayerGesture.dx = dx;
+    const opener = $("#player-open");
+    const resisted = Math.max(-110, Math.min(110, dx * 0.64));
+    opener.style.setProperty("--mini-swipe-x", `${resisted}px`);
+    opener.classList.add("is-swiping");
+    opener.classList.toggle("swipe-next", dx < 0);
+    opener.classList.toggle("swipe-previous", dx > 0);
+  };
+
+  const finishMiniPlayerGesture = (event) => {
+    if (!miniPlayerGesture || miniPlayerGesture.pointerId !== event.pointerId) return;
+    const { dx, horizontal } = miniPlayerGesture;
+    const threshold = Math.min(92, Math.max(54, $("#player-open").clientWidth * 0.16));
+    const completed = horizontal && Math.abs(dx) >= threshold;
+    resetMiniPlayerGesture(true);
+    if (!completed) return;
+    suppressPlayerOpenUntil = Date.now() + 450;
+    skip(dx < 0 ? 1 : -1);
+    showToast(dx < 0 ? `Next: ${currentTrack?.title || "track"}` : `Previous: ${currentTrack?.title || "track"}`);
+  };
+
   const toggleFavorite = (id) => {
     if (!byId(id)) return;
     if (favorites.has(id)) favorites.delete(id);
@@ -1194,7 +1241,7 @@
     url.search = "";
     url.hash = "";
     url.searchParams.set("track", currentTrack.id);
-    const shareData = { title: `${currentTrack.title} — XotiicDuck`, text: `Listen to ${currentTrack.title} by ${currentTrack.artist}.`, url: url.href };
+    const shareData = { title: `${currentTrack.title} by XotiicDuck`, text: `Listen to ${currentTrack.title} by ${currentTrack.artist}.`, url: url.href };
     if (navigator.share) {
       try { await navigator.share(shareData); return; } catch (error) { if (error?.name === "AbortError") return; }
     }
@@ -1362,7 +1409,7 @@
       if (icon) setIcon(icon, installed ? "check" : "download");
       button.classList.toggle("is-installed", installed);
       button.setAttribute("aria-label", installed ? "XotiicDuck Music is installed" : "Install XotiicDuck Music");
-      button.title = installed ? "Already installed — tap for details" : "Install XotiicDuck Music";
+      button.title = installed ? "Already installed. Tap for details" : "Install XotiicDuck Music";
     }
   };
 
@@ -1376,7 +1423,7 @@
     privacy: {
       eyebrow: "PRIVACY",
       title: "A small player should collect very little.",
-      copy: `<section><h3>Saved on this device</h3><p>Favorites, playlists, playback position, Recently Played, and Your Top Tracks stay in this browser. They are not connected to a listener account.</p></section><section><h3>Qualified global plays</h3><p>${analyticsEndpoint ? "After meaningful playback, the player sends the song ID and a rotating anonymous token to the XotiicDuck chart service. The service stores keyed hashes for deduplication, not names, emails, raw IP addresses, or precise locations." : "The optional worldwide chart service is currently disabled, so this player sends no global listening events."} There are no advertising trackers.</p></section><section><h3>Separate artist access</h3><p>The owner publishing console stores its GitHub connection in an encrypted device vault. Public listeners cannot publish releases without the verified repository owner’s GitHub access.</p></section><section><h3>External links</h3><p>YouTube links open an external service governed by its own privacy terms. This player does not embed a YouTube video.</p></section>`,
+      copy: `<section><h3>Saved on this device</h3><p>Favorites, playlists, playback position, Recently Played, and Your Top Tracks stay in this browser. They are not connected to a listener account.</p></section><section><h3>No global listening tracker</h3><p>This release does not send song plays to a chart service, advertising network, or analytics backend.</p></section><section><h3>Separate artist access</h3><p>The owner publishing console stores its GitHub connection in an encrypted device vault. Public listeners cannot publish releases without the verified repository owner’s GitHub access.</p></section><section><h3>External links</h3><p>YouTube links open an external service governed by its own privacy terms. This player does not embed a YouTube video.</p></section>`,
     },
     terms: {
       eyebrow: "TERMS",
@@ -1499,11 +1546,14 @@
     if (target.dataset.queueMove) { event.preventDefault(); moveQueueItem(target.dataset.queueMove, target.dataset.direction); }
     if (target.dataset.queueRemove) { event.preventDefault(); removeQueueItem(target.dataset.queueRemove); }
     if (target.dataset.offlineToggle) { event.preventDefault(); toggleOffline(byId(target.dataset.offlineToggle)); }
+    if (target.dataset.libraryTab) { event.preventDefault(); setLibraryTab(target.dataset.libraryTab); }
     if (target.hasAttribute("data-playlist-create")) { event.preventDefault(); openPlaylistEditor(); }
     if (target.hasAttribute("data-playlist-create-current")) { event.preventDefault(); openPlaylistEditor({ trackId: currentTrack?.id }); }
     if (target.dataset.favorite) { event.preventDefault(); toggleFavorite(target.dataset.favorite); }
     if (target.hasAttribute("data-install")) { event.preventDefault(); requestInstall(); }
     if (target.hasAttribute("data-search-open")) { event.preventDefault(); openSearch(); }
+    if (target.hasAttribute("data-settings-open")) { event.preventDefault(); openSettings(); }
+    if (target.hasAttribute("data-settings-close")) { event.preventDefault(); closeModals(); }
     if (target.hasAttribute("data-modal-close")) { event.preventDefault(); closeModals(); }
     if (target.dataset.info) { event.preventDefault(); openInfo(target.dataset.info); }
     if (target.dataset.genre) { selectedGenre = target.dataset.genre; renderDiscover(); }
@@ -1518,7 +1568,14 @@
   $("#now-favorite").addEventListener("click", () => currentTrack && toggleFavorite(currentTrack.id));
   $("#player-favorite").addEventListener("click", () => currentTrack && toggleFavorite(currentTrack.id));
   $("#now-playing-favorite").addEventListener("click", () => currentTrack && toggleFavorite(currentTrack.id));
-  $("#player-open").addEventListener("click", openNowPlaying);
+  $("#player-open").addEventListener("click", () => {
+    if (Date.now() < suppressPlayerOpenUntil) return;
+    openNowPlaying();
+  });
+  $("#player-open").addEventListener("pointerdown", startMiniPlayerGesture);
+  $("#player-open").addEventListener("pointermove", moveMiniPlayerGesture);
+  $("#player-open").addEventListener("pointerup", finishMiniPlayerGesture);
+  $("#player-open").addEventListener("pointercancel", () => resetMiniPlayerGesture());
   $("#now-playing-close").addEventListener("click", closeNowPlaying);
   $("#now-playing-add-playlist").addEventListener("click", openPlaylistPicker);
   $("#now-playing-offline").addEventListener("click", () => currentTrack && toggleOffline(currentTrack));
@@ -1539,6 +1596,22 @@
   $("#volume").addEventListener("input", (event) => { audio.volume = Number(event.target.value); saveSession(); });
   for (const input of [$("#progress"), $("#now-playing-progress")]) input.addEventListener("input", (event) => seekTo(event.target.value));
   $("#search-input").addEventListener("input", (event) => renderSearch(event.target.value));
+  for (const input of $$('input[name="appearance-theme"], input[name="appearance-accent"]')) input.addEventListener("change", saveAppearanceFromControls);
+  $("#appearance-motion").addEventListener("change", saveAppearanceFromControls);
+  $("#appearance-reset").addEventListener("click", () => {
+    if (!appearanceApi) return;
+    const settings = appearanceApi.apply(appearanceApi.defaults, { persist: true, announce: true });
+    syncAppearanceControls(settings);
+    showToast("Anime Pulse defaults restored.");
+  });
+  $("#library-switcher").addEventListener("keydown", (event) => {
+    const tabs = $$('[data-library-tab]');
+    const index = tabs.indexOf(event.target.closest?.('[data-library-tab]'));
+    if (index < 0 || !["ArrowLeft", "ArrowRight", "Home", "End"].includes(event.key)) return;
+    event.preventDefault();
+    const nextIndex = event.key === "Home" ? 0 : event.key === "End" ? tabs.length - 1 : (index + (event.key === "ArrowRight" ? 1 : -1) + tabs.length) % tabs.length;
+    setLibraryTab(tabs[nextIndex].dataset.libraryTab, { focus: true });
+  });
 
   $("#playlist-detail-play").addEventListener("click", () => playPlaylist(activePlaylistId));
   $("#playlist-detail-shuffle").addEventListener("click", () => playPlaylist(activePlaylistId, true));
@@ -1585,7 +1658,7 @@
   audio.addEventListener("timeupdate", () => { updateProgressUI(); updateListeningProgress(); saveSession(); });
   audio.addEventListener("loadstart", () => setPlaybackStatus("loading", navigator.onLine ? "Loading song…" : "Opening saved song…"));
   audio.addEventListener("waiting", () => setPlaybackStatus("loading", "Buffering…"));
-  audio.addEventListener("stalled", () => setPlaybackStatus("loading", navigator.onLine ? "Connection slowed — still trying…" : "Trying to open the saved song…"));
+  audio.addEventListener("stalled", () => setPlaybackStatus("loading", navigator.onLine ? "Connection slowed. Still trying…" : "Trying to open the saved song…"));
   audio.addEventListener("canplay", () => setPlaybackStatus());
   audio.addEventListener("error", () => setPlaybackStatus("error", navigator.onLine ? "This song could not load. Check the connection and retry." : offlineIds.has(currentTrack?.id) ? "The saved song could not be opened. Retry once." : "This song is not saved offline. Reconnect to play it."));
   audio.addEventListener("loadedmetadata", () => {
@@ -1618,7 +1691,7 @@
     installPrompt = null;
     installAccepted = true;
     updateInstallButtons();
-    showToast("Installed — open XotiicDuck Music from your Home screen or apps.");
+    showToast("Installed. Open XotiicDuck Music from your Home screen or apps.");
   });
   window.addEventListener("pageshow", updateInstallButtons);
   window.addEventListener("pagehide", () => saveSession(true));
@@ -1720,11 +1793,11 @@
     updateMediaSession();
   }
   renderAll();
+  syncAppearanceControls();
   switchView(currentView);
   updateInstallButtons();
   updateNetworkState();
   refreshOfflineState();
-  loadGlobalChart();
   scheduleCatalogRefresh();
   if (params.get("search") === "1") openSearch();
 })();

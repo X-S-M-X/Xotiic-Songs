@@ -11,6 +11,7 @@
 
   const $ = (selector) => document.querySelector(selector);
   const $$ = (selector) => [...document.querySelectorAll(selector)];
+  const RELEASE_DRAFT_KEY = "xotiic-upload-release-draft-v1";
   const setIcon = (target, name) => {
     const use = target?.matches?.("use") ? target : target?.querySelector?.("use");
     if (use) use.setAttribute("href", `#admin-icon-${name}`);
@@ -40,6 +41,8 @@
     serviceWorkerRegistration: null,
     reloadingForUpdate: false,
     releaseFilter: "all",
+    draftTimer: null,
+    suppressDraftSave: false,
   };
 
   const views = {
@@ -189,7 +192,7 @@
     if (button) {
       button.classList.toggle("is-installed", installed);
       button.setAttribute("aria-label", installed ? "Xotiic Upload is installed" : "Install Xotiic Upload");
-      button.title = installed ? "Already installed — tap for details" : "Install Xotiic Upload";
+      button.title = installed ? "Already installed. Tap for details" : "Install Xotiic Upload";
     }
   };
 
@@ -591,7 +594,89 @@
     if (scheduled && !$("#edit-schedule").value) $("#edit-schedule").value = defaultScheduleValue();
   };
 
-  const resetReleaseForm = () => {
+  const draftValue = (selector, maximum) => $(selector).value.trim().slice(0, maximum);
+
+  const clearReleaseDraft = ({ quiet = false } = {}) => {
+    clearTimeout(state.draftTimer);
+    try { localStorage.removeItem(RELEASE_DRAFT_KEY); } catch { /* Draft storage may be unavailable in private mode. */ }
+    $("#release-draft-banner").hidden = true;
+    $("#metadata-save-state").textContent = "LOCAL DRAFT READY";
+    if (!quiet) showToast("Local release draft discarded.");
+  };
+
+  const saveReleaseDraft = () => {
+    if (state.suppressDraftSave) return;
+    const mode = selectedReleaseMode();
+    const draft = {
+      version: 1,
+      updatedAt: Date.now(),
+      title: draftValue("#release-title", 100),
+      artist: draftValue("#release-artist", 80),
+      album: $("#release-album").value,
+      genre: draftValue("#release-genre", 60),
+      id: draftValue("#release-id", 80),
+      youtube: draftValue("#release-youtube", 500),
+      description: $("#release-description").value.slice(0, 280),
+      lyrics: $("#release-lyrics").value.slice(0, 30000),
+      mode,
+      schedule: mode === "scheduled" ? $("#release-schedule").value : "",
+    };
+    const meaningful = draft.title || draft.id || draft.youtube || draft.description || draft.lyrics
+      || draft.artist !== "XotiicDuck" || draft.genre !== "Anime J-Rock" || draft.album !== "Single" || draft.mode !== "published";
+    if (!meaningful) {
+      clearReleaseDraft({ quiet: true });
+      return;
+    }
+    try {
+      localStorage.setItem(RELEASE_DRAFT_KEY, JSON.stringify(draft));
+      $("#metadata-save-state").textContent = "SAVED LOCALLY";
+    } catch {
+      $("#metadata-save-state").textContent = "DRAFT NOT SAVED";
+    }
+  };
+
+  const scheduleReleaseDraftSave = (event) => {
+    if (state.suppressDraftSave || event?.target?.matches?.('input[type="file"], #release-duration, #release-date')) return;
+    clearTimeout(state.draftTimer);
+    $("#metadata-save-state").textContent = "SAVING...";
+    state.draftTimer = setTimeout(saveReleaseDraft, 420);
+  };
+
+  const restoreReleaseDraft = () => {
+    let draft;
+    try { draft = JSON.parse(localStorage.getItem(RELEASE_DRAFT_KEY) || "null"); } catch { draft = null; }
+    if (!draft || draft.version !== 1 || !Number.isFinite(draft.updatedAt)) return false;
+    const albums = ["Single", "EP", "Album", "Soundtrack"];
+    const modes = ["published", "scheduled", "draft"];
+    state.suppressDraftSave = true;
+    $("#release-title").value = text(draft.title).slice(0, 100);
+    $("#release-artist").value = text(draft.artist).slice(0, 80) || "XotiicDuck";
+    $("#release-album").value = albums.includes(draft.album) ? draft.album : "Single";
+    $("#release-genre").value = text(draft.genre).slice(0, 60) || "Anime J-Rock";
+    $("#release-id").value = slugify(text(draft.id));
+    $("#release-youtube").value = text(draft.youtube).slice(0, 500);
+    $("#release-description").value = text(draft.description).slice(0, 280);
+    $("#release-lyrics").value = text(draft.lyrics).slice(0, 30000);
+    const mode = modes.includes(draft.mode) ? draft.mode : "published";
+    const modeInput = $(`input[name='release-mode'][value='${mode}']`);
+    if (modeInput) modeInput.checked = true;
+    const scheduledAt = Date.parse(text(draft.schedule));
+    $("#release-schedule").value = mode === "scheduled" && Number.isFinite(scheduledAt) && scheduledAt > Date.now() + 60000
+      ? text(draft.schedule).slice(0, 16)
+      : defaultScheduleValue();
+    state.idTouched = Boolean($("#release-id").value);
+    $("#description-count").textContent = String($("#release-description").value.length);
+    $("#lyrics-count").textContent = String($("#release-lyrics").value.length);
+    state.suppressDraftSave = false;
+    updateReleaseMode();
+    updateReleaseSummary();
+    $("#release-draft-banner").hidden = false;
+    $("#metadata-save-state").textContent = "RESTORED LOCALLY";
+    return true;
+  };
+
+  const resetReleaseForm = ({ clearDraft = false } = {}) => {
+    state.suppressDraftSave = true;
     $("#release-form").reset();
     $("#release-artist").value = "XotiicDuck";
     $("#release-genre").value = "Anime J-Rock";
@@ -620,6 +705,9 @@
     $("#review-cover").style.backgroundImage = "";
     $("#description-count").textContent = "0";
     $("#lyrics-count").textContent = "0";
+    $("#release-draft-banner").hidden = true;
+    state.suppressDraftSave = false;
+    if (clearDraft) clearReleaseDraft({ quiet: true });
     updateReleaseMode();
     updateReleaseSummary();
   };
@@ -745,7 +833,7 @@
       $("#catalog-health").textContent = `${state.releases.length} release${state.releases.length === 1 ? "" : "s"} connected`;
       await new Promise((resolve) => setTimeout(resolve, 650));
       $("#progress-modal").hidden = true;
-      resetReleaseForm();
+      resetReleaseForm({ clearDraft: true });
       showToast(pendingStatus === "scheduled" ? "Release scheduled. It will appear automatically at the chosen time." : pendingStatus === "draft" ? "Draft saved privately in the catalog." : "Release committed. GitHub Pages will update the player shortly.");
     } catch (error) {
       $("#progress-modal").hidden = true;
@@ -998,7 +1086,7 @@
     const confirmed = window.confirm("Reset owner access on this device? Published music will stay online.");
     if (!confirmed) return;
     vaultApi.clearVault();
-    resetReleaseForm();
+    resetReleaseForm({ clearDraft: true });
     lockConsole();
     showToast("This device was reset. Published music was not changed.");
   };
@@ -1046,6 +1134,8 @@
   $("#login-form").addEventListener("submit", login);
   $("#replace-token-form").addEventListener("submit", replaceToken);
   $("#release-form").addEventListener("submit", (event) => { event.preventDefault(); openReview(); });
+  $("#release-form").addEventListener("input", scheduleReleaseDraftSave);
+  $("#release-form").addEventListener("change", scheduleReleaseDraftSave);
   $("#edit-release-form").addEventListener("submit", saveReleaseEdit);
   $("#publish-release").addEventListener("click", publishPendingRelease);
   $("#logout-button").addEventListener("click", () => lockConsole("Console locked."));
@@ -1054,6 +1144,7 @@
   $("#export-vault").addEventListener("click", exportVault);
   $("#import-vault").addEventListener("click", () => $("#import-vault-file").click());
   $("#import-vault-file").addEventListener("change", (event) => importVault(event.target.files?.[0]));
+  $("#discard-release-draft").addEventListener("click", () => resetReleaseForm({ clearDraft: true }));
   $("#refresh-catalog").addEventListener("click", () => loadCatalog().then(() => showToast("Catalog refreshed.")).catch(() => undefined));
   $("#token-help-link").href = config.tokenHelpUrl;
 
@@ -1087,6 +1178,7 @@
         if (!state.idTouched) $("#release-id").value = slugify(guessedTitle);
       }
       updateReleaseSummary();
+      scheduleReleaseDraftSave();
     } catch (error) {
       event.target.value = "";
       showToast(error.message, "error");
@@ -1278,7 +1370,7 @@
     state.installPrompt = null;
     state.installAccepted = true;
     updateInstallButton();
-    showToast("Installed — open Xotiic Upload from your Home screen or apps.");
+    showToast("Installed. Open Xotiic Upload from your Home screen or apps.");
   });
   window.addEventListener("pageshow", updateInstallButton);
   window.addEventListener("online", () => { if (state.token) setConnection(true); refreshDiagnostics().catch(() => undefined); });
@@ -1329,7 +1421,11 @@
 
   $("#release-date").value = localDate();
   $("#audio-file-meta").textContent = `Tap to open Files · Maximum ${formatBytes(config.maxAudioBytes)}`;
+  const deviceTimezone = Intl.DateTimeFormat().resolvedOptions().timeZone || "your device timezone";
+  $("#release-timezone-copy").textContent = `Times use ${deviceTimezone}. The public date updates automatically.`;
+  $("#edit-timezone-copy").textContent = `Times use ${deviceTimezone}. The public date updates automatically.`;
   resetReleaseForm();
+  restoreReleaseDraft();
   const existingVault = vaultApi.readVault();
   if (existingVault) {
     $("#login-username").value = existingVault.username || "";

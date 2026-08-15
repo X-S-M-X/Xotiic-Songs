@@ -1,25 +1,27 @@
-importScripts("./range.js?v=11");
+importScripts("./range.js?v=12");
 
-const CACHE_NAME = "xotiicduck-portable-v11";
+const CACHE_NAME = "xotiicduck-portable-v12";
 const MEDIA_CACHE = "xotiic-media-v1";
 const scoped = (file) => new URL(file, self.registration.scope).href;
 const CATALOG_URL = scoped("./catalog.js");
 const SHELL = [
   "./",
   "./index.html",
-  "./styles.css?v=11",
+  "./theme.js?v=12",
+  "./styles.css?v=12",
+  "./layout.css?v=12",
+  "./anime-theme.css?v=12",
   "./catalog.js",
-  "./analytics.js?v=11",
-  "./range.js?v=11",
-  "./offline.js?v=11",
-  "./app.js?v=11",
-  "./manifest.webmanifest?v=11",
-  "./favicon.svg?v=11",
-  "./apple-touch-icon.png?v=11",
-  "./icon-192.png?v=11",
-  "./icon-512.png?v=11",
-  "./icon-maskable-192.png?v=11",
-  "./icon-maskable-512.png?v=11",
+  "./range.js?v=12",
+  "./offline.js?v=12",
+  "./app.js?v=12",
+  "./manifest.webmanifest?v=12",
+  "./favicon.svg?v=12",
+  "./apple-touch-icon.png?v=12",
+  "./icon-192.png?v=12",
+  "./icon-512.png?v=12",
+  "./icon-maskable-192.png?v=12",
+  "./icon-maskable-512.png?v=12",
 ].map(scoped);
 
 self.addEventListener("install", (event) => {
