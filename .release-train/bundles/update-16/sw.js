@@ -1,6 +1,6 @@
 importScripts("./range.js?v=16");
 
-const CACHE_NAME = "xotiicduck-portable-v16";
+const CACHE_NAME = "xotiicduck-portable-v16-player-hotfix-1";
 const MEDIA_CACHE = "xotiic-media-v1";
 const scoped = (file) => new URL(file, self.registration.scope).href;
 const CATALOG_URL = scoped("./catalog.js");
@@ -9,6 +9,7 @@ const SHELL = [
   "./index.html",
   "./theme.js?v=16",
   "./styles.css?v=16",
+  "./player-hotfix.css?v=1",
   "./layout.css?v=16",
   "./anime-theme.css?v=16",
   "./update-13-14.css?v=16",
