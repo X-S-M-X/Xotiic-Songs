@@ -75,7 +75,11 @@ try {
   if (-not $SkipPwaValidation) {
     Invoke-Bubblewrap @("validate", "--url=https://x-s-m-x.github.io/Xotiic-Songs/")
   }
-  Invoke-Bubblewrap @("build")
+  if ($SkipPwaValidation) {
+    Invoke-Bubblewrap @("build", "--skipPwaValidation")
+  } else {
+    Invoke-Bubblewrap @("build")
+  }
 } finally {
   Pop-Location
 }
