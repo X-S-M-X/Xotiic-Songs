@@ -95,6 +95,14 @@
   const LIBRARY_TAB_KEY = "xotiicduck-library-tab-v1";
   const LISTENING_INSIGHTS_ENABLED = false;
   const BACKUP_VERSION = 1;
+  const ANDROID_RELEASE = Object.freeze({
+    version: "1",
+    size: "1.50 MB",
+    apkUrl: "https://github.com/X-S-M-X/Xotiic-Songs/releases/latest/download/XotiicDuck-Music-Android.apk",
+    checksumUrl: "https://github.com/X-S-M-X/Xotiic-Songs/releases/latest/download/APK-SHA256.txt",
+    releaseUrl: "https://github.com/X-S-M-X/Xotiic-Songs/releases/latest",
+    sha256: "513cb8895ad6b8c94db08227d95b3e2a5bb0f41ecc62716527c83a89402bb32f",
+  });
   const offlineApi = globalThis.XotiicOffline;
   const appearanceApi = globalThis.XotiicAppearance;
   const params = new URLSearchParams(location.search);
@@ -1418,8 +1426,8 @@
       if (label) label.textContent = installed ? "Installed" : button.dataset.installLabel;
       if (icon) setIcon(icon, installed ? "check" : "download");
       button.classList.toggle("is-installed", installed);
-      button.setAttribute("aria-label", installed ? "XotiicDuck Music is installed" : "Install XotiicDuck Music");
-      button.title = installed ? "Already installed. Tap for details" : "Install XotiicDuck Music";
+      button.setAttribute("aria-label", installed ? "The XotiicDuck Music web app is installed" : "Install the XotiicDuck Music web app");
+      button.title = installed ? "Web app installed. Tap for details" : "Install the XotiicDuck Music web app";
     }
   };
 
@@ -1430,6 +1438,16 @@
       copy: `<section><h3>Direct from XotiicDuck</h3><p>This player keeps the catalog focused on one artist, with no unrelated recommendation feed and no audio pulled from somebody else’s channel.</p></section><section><h3>Complete releases only</h3><p>Every public track is paired with its final master, square cover, title, release date, and credits before it becomes playable.</p></section>`,
     },
     install: installGuide(),
+    android: {
+      eyebrow: "SIGNED ANDROID APP",
+      title: "Download XotiicDuck Music for Android.",
+      copy: `<div class="android-release-card"><div class="android-release-heading"><span class="android-release-icon" aria-hidden="true">${iconMarkup("download")}</span><div><p>OFFICIAL ANDROID RELEASE</p><h3>XotiicDuck Music</h3><span>Version ${escapeHtml(ANDROID_RELEASE.version)} · Signed APK</span></div><b>VERIFIED</b></div><div class="android-release-meta"><div><strong>${escapeHtml(ANDROID_RELEASE.size)}</strong><span>DOWNLOAD</span></div><div><strong>V2 + V3</strong><span>SIGNATURES</span></div><div><strong>ANDROID</strong><span>PHONES + TABLETS</span></div></div><a class="android-download-button" href="${escapeHtml(ANDROID_RELEASE.apkUrl)}"><span>${iconMarkup("download")}</span><strong>Download signed APK</strong></a><div class="android-release-links"><a href="${escapeHtml(ANDROID_RELEASE.checksumUrl)}" target="_blank" rel="noopener noreferrer">Checksum file</a><a href="${escapeHtml(ANDROID_RELEASE.releaseUrl)}" target="_blank" rel="noopener noreferrer">Release details</a></div></div>${installSteps([
+        "Download the APK only from this official page or the linked <strong>X-S-M-X GitHub release</strong>.",
+        "Open the completed download and allow <strong>Install unknown apps</strong> only for the browser or Files app you used.",
+        "Keep <strong>Google Play Protect</strong> enabled, then approve the installation.",
+        "Open XotiicDuck Music, then disable that browser or Files app installation permission again.",
+      ])}<section><h3>Verify the download</h3><p>The official APK SHA-256 is:</p><code class="android-checksum">${escapeHtml(ANDROID_RELEASE.sha256)}</code><p>If a downloaded file produces a different value, do not install it.</p></section><section class="android-web-option"><h3>Prefer the lightweight web app?</h3><p>The browser-installed version remains available on Android, iPhone, iPad, tablets, and desktop computers.</p><button type="button" data-install><span aria-hidden="true">${iconMarkup("download")}</span><span>Install web app</span></button></section>`,
+    },
     privacy: {
       eyebrow: "PRIVACY",
       title: "A small player should collect very little.",
@@ -1448,6 +1466,7 @@
     $("#info-eyebrow").textContent = content.eyebrow;
     $("#info-title").textContent = content.title;
     $("#info-copy").innerHTML = content.copy;
+    $("#info-layer").setAttribute("aria-label", content.title);
     openModal($("#info-layer"), "[data-modal-close]");
   };
 

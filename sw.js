@@ -1,6 +1,6 @@
 importScripts("./range.js?v=12");
 
-const CACHE_NAME = "xotiicduck-portable-v12-1-player-hotfix-1";
+const CACHE_NAME = "xotiicduck-portable-v12-2-android-download";
 const MEDIA_CACHE = "xotiic-media-v1";
 const scoped = (file) => new URL(file, self.registration.scope).href;
 const CATALOG_URL = scoped("./catalog.js");
@@ -8,14 +8,14 @@ const SHELL = [
   "./",
   "./index.html",
   "./theme.js?v=12.1",
-  "./styles.css?v=12",
+  "./styles.css?v=12.2",
   "./player-hotfix.css?v=1",
-  "./layout.css?v=12.1",
+  "./layout.css?v=12.2",
   "./anime-theme.css?v=12",
   "./catalog.js",
   "./range.js?v=12",
   "./offline.js?v=12",
-  "./app.js?v=12.1",
+  "./app.js?v=12.2",
   "./manifest.webmanifest?v=12.1",
   "./favicon.svg?v=12",
   "./apple-touch-icon.png?v=12",

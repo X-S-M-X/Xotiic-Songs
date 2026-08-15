@@ -59,6 +59,28 @@ test("anime appearance, compact library, and mobile swipe controls are wired", (
   assert.match(layout, /Keep the expanded Now Playing seek line clean/);
 });
 
+test("official Android download is separate, verified, and release-backed", () => {
+  const html = read("index.html");
+  const app = read("app.js");
+  const styles = read("styles.css");
+  const builder = read("android-twa/BUILD-ANDROID.ps1");
+  const verifier = read("android-twa/VERIFY-APK.ps1");
+  const publisher = read("android-twa/PUBLISH-ANDROID-RELEASE.ps1");
+  assert.ok((html.match(/data-info="android"/g) || []).length >= 3);
+  assert.match(html, /Install web app/);
+  assert.match(app, /releases\/latest\/download\/XotiicDuck-Music-Android\.apk/);
+  assert.match(app, /513cb8895ad6b8c94db08227d95b3e2a5bb0f41ecc62716527c83a89402bb32f/);
+  assert.match(app, /Keep <strong>Google Play Protect<\/strong> enabled/);
+  assert.match(styles, /\.android-release-card/);
+  assert.match(styles, /\.android-checksum/);
+  assert.match(builder, /"build", "--skipPwaValidation"/);
+  assert.match(verifier, /config\.jdkPath/);
+  assert.match(verifier, /Android signature verification passed/);
+  assert.match(publisher, /XotiicDuck-Music-Android\.apk/);
+  assert.match(publisher, /gh release create/);
+  assert.doesNotMatch(html + app, /\.keystore/);
+});
+
 test("admin supports metadata edits, encrypted backup, and atomic updates", () => {
   const html = read("admin/index.html");
   const app = read("admin/app.js");

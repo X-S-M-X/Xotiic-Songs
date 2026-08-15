@@ -30,6 +30,8 @@ Push the complete package and wait for GitHub Pages to finish before creating th
 
 Music published through Xotiic Upload is committed directly to `main`. GitHub Pages will redeploy automatically. Source changes made in VS Code can still be committed and pushed normally.
 
+Update 12.2 adds the official Android APK download centre. Apply it using `UPDATE-12.2-INSTRUCTIONS.md`, then publish the already signed APK with `android-twa\PUBLISH-ANDROID-RELEASE.ps1`. The APK and checksum are stored as GitHub Release assets, not committed into the website source or service-worker cache.
+
 Before copying Update 12.1, save and pull the newest catalog and songs that Xotiic Upload may already have published. Then copy only the app files, leaving `.git`, `catalog.js`, `music/`, and `covers/` untouched:
 
 ```powershell

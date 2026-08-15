@@ -972,6 +972,19 @@ html[data-theme="classic"] #accent-settings {
     grid-template-columns: minmax(0, 1.08fr) minmax(260px, 0.92fr);
   }
 
+  .hero-actions {
+    flex-wrap: wrap;
+  }
+
+  .hero-actions > .primary-button,
+  .hero-actions > .secondary-button:not(.apk-option-button) {
+    flex: 1 1 calc(50% - 5px);
+  }
+
+  .hero-actions > .apk-option-button {
+    flex: 1 1 100%;
+  }
+
   .release-grid,
   .release-grid.expanded {
     grid-template-columns: repeat(3, minmax(0, 1fr));
@@ -1102,6 +1115,10 @@ html[data-theme="classic"] #accent-settings {
   .hero-actions {
     display: grid;
     grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+
+  .hero-actions .apk-option-button {
+    grid-column: 1 / -1;
   }
 
   .hero-stats {

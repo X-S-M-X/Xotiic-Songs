@@ -17,12 +17,12 @@
     <link rel="icon" href="./favicon.svg?v=12" />
     <link rel="apple-touch-icon" href="./apple-touch-icon.png?v=12" />
     <script src="./theme.js?v=12.1"></script>
-    <link rel="stylesheet" href="./styles.css?v=12" />
-    <link rel="stylesheet" href="./layout.css?v=12.1" />
+    <link rel="stylesheet" href="./styles.css?v=12.2" />
+    <link rel="stylesheet" href="./layout.css?v=12.2" />
     <link rel="stylesheet" href="./anime-theme.css?v=12" />
     <script src="./catalog.js?v=12" defer></script>
     <script src="./offline.js?v=12" defer></script>
-    <script src="./app.js?v=12.1" defer></script>
+    <script src="./app.js?v=12.2" defer></script>
       <link rel="stylesheet" href="./player-hotfix.css?v=1" />
   </head>
   <body>
@@ -83,8 +83,8 @@
         <div class="sidebar-spacer"></div>
         <div class="install-card">
           <span class="install-icon"><svg class="ui-icon" aria-hidden="true"><use href="#icon-download"></use></svg></span>
-          <div><strong>Take it with you</strong><p>Install the player on this device.</p></div>
-          <button data-install aria-label="Install XotiicDuck Music"><span data-install-icon class="icon-frame" aria-hidden="true"><svg class="ui-icon"><use href="#icon-download"></use></svg></span></button>
+          <div><strong>Take it with you</strong><p>Install the web app on this device.</p></div>
+          <button data-install aria-label="Install the XotiicDuck Music web app"><span data-install-icon class="icon-frame" aria-hidden="true"><svg class="ui-icon"><use href="#icon-download"></use></svg></span></button>
         </div>
         <a class="channel-link" href="https://www.youtube.com/@XotiicDuck" target="_blank" rel="noreferrer"><span class="icon-frame" aria-hidden="true"><svg class="ui-icon"><use href="#icon-play"></use></svg></span><span>@XotiicDuck on YouTube</span></a>
       </aside>
@@ -95,7 +95,7 @@
           <button class="search-trigger" data-search-open><span class="icon-frame"><svg class="ui-icon" aria-hidden="true"><use href="#icon-search"></use></svg></span><span>Search the official catalog...</span><kbd>/</kbd></button>
           <div class="top-actions">
             <button class="round-button settings-button" data-settings-open aria-label="Open appearance settings" title="Appearance settings"><svg class="ui-icon" aria-hidden="true"><use href="#icon-settings"></use></svg></button>
-            <button class="profile-button" data-install aria-label="Install XotiicDuck Music"><span data-install-icon class="icon-frame" aria-hidden="true"><svg class="ui-icon"><use href="#icon-download"></use></svg></span><span data-install-label>Install app</span></button>
+            <button class="profile-button" data-install aria-label="Install the XotiicDuck Music web app"><span data-install-icon class="icon-frame" aria-hidden="true"><svg class="ui-icon"><use href="#icon-download"></use></svg></span><span data-install-label>Web app</span></button>
           </div>
         </header>
 
@@ -108,11 +108,12 @@
                 <p class="hero-description">High-impact tracks inspired by the stories, rivalries, and final battles that refuse to leave your head.</p>
                 <div class="hero-actions">
                   <a id="hero-primary" class="primary-button" href="https://www.youtube.com/@XotiicDuck" target="_blank" rel="noreferrer"><svg class="ui-icon" aria-hidden="true"><use href="#icon-play"></use></svg><span>Open YouTube</span></a>
-                  <button class="secondary-button" data-install><span data-install-icon class="icon-frame" aria-hidden="true"><svg class="ui-icon"><use href="#icon-download"></use></svg></span><span data-install-label>Install player</span></button>
+                  <button class="secondary-button" data-install><span data-install-icon class="icon-frame" aria-hidden="true"><svg class="ui-icon"><use href="#icon-download"></use></svg></span><span data-install-label>Install web app</span></button>
+                  <button class="secondary-button apk-option-button" data-info="android"><span class="icon-frame" aria-hidden="true"><svg class="ui-icon"><use href="#icon-download"></use></svg></span><span>Android APK</span></button>
                 </div>
                 <div class="hero-stats">
                   <div><strong id="live-count">00</strong><span>LIVE TRACKS</span></div>
-                  <div><strong>PWA</strong><span>INSTALLABLE</span></div>
+                  <div><strong>2 WAYS</strong><span>WEB APP + APK</span></div>
                   <div><strong>XD</strong><span>DIRECT FROM ARTIST</span></div>
                 </div>
               </div>
@@ -150,8 +151,8 @@
 
             <section class="signal-banner">
               <div class="signal-icon"><svg class="ui-icon" aria-hidden="true"><use href="#icon-music"></use></svg></div>
-              <div><p class="section-kicker">BUILT FOR LISTENERS</p><h2>No ads. No algorithms. Just the music.</h2><p>Install the web app, keep your library close, and hear every XotiicDuck release from one focused home.</p></div>
-              <button data-install><span data-install-label>Install app</span><span data-install-icon class="icon-frame" aria-hidden="true"><svg class="ui-icon"><use href="#icon-download"></use></svg></span></button>
+              <div><p class="section-kicker">BUILT FOR LISTENERS</p><h2>No ads. No algorithms. Just the music.</h2><p>Install the lightweight web app or download the signed Android APK directly from the official GitHub release.</p></div>
+              <button data-info="android"><span>Get Android APK</span><span class="icon-frame" aria-hidden="true"><svg class="ui-icon"><use href="#icon-download"></use></svg></span></button>
             </section>
           </section>
 
@@ -175,7 +176,7 @@
 
           <footer class="site-footer">
             <div><strong>XOTIICDUCK MUSIC</strong><span>Independent music. Direct from the artist.</span></div>
-            <nav><button data-info="about">About</button><button data-info="install">Install</button><button data-info="privacy">Privacy</button><button data-info="terms">Terms</button><a href="./admin/" rel="nofollow">Artist access</a></nav>
+            <nav><button data-info="about">About</button><button data-info="install">Web app</button><button data-info="android">Android APK</button><button data-info="privacy">Privacy</button><button data-info="terms">Terms</button><a href="./admin/" rel="nofollow">Artist access</a></nav>
             <span>© <span id="year"></span> XotiicDuck</span>
           </footer>
         </div>
