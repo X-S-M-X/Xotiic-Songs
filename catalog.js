@@ -1,4 +1,5 @@
 // Managed by Xotiic Upload. Only complete releases are shown publicly.
+window.XOTIICDUCK_CATALOG_VERSION = 2;
 window.XOTIICDUCK_RELEASES = [
   {
     "id": "void-crown-treasury",
@@ -513,5 +514,19 @@ window.XOTIICDUCK_RELEASES = [
     "audio": "music/judgement-of-the-void.mp3",
     "cover": "covers/judgement-of-the-void.webp",
     "status": "draft"
+  },
+  {
+    "id": "servants-of-the-abyss",
+    "title": "Servants Of The Abyss",
+    "artist": "XotiicDuck",
+    "album": "Single",
+    "genre": "Anime J-Rock",
+    "releaseDate": "2026-08-15",
+    "duration": 359,
+    "audio": "music/servants-of-the-abyss.mp3",
+    "cover": "covers/servants-of-the-abyss.webp",
+    "status": "draft",
+    "createdAt": "2026-08-15T09:09:58.742Z",
+    "updatedAt": "2026-08-15T09:09:58.742Z"
   }
 ];
