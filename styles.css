@@ -306,6 +306,26 @@ input:focus-visible {
   cursor: pointer;
 }
 
+/* Installation choices belong to browser visits, not installed app windows. */
+.app-shell.app-installed [data-install-surface],
+.app-shell.app-installed [data-install],
+.app-shell.app-installed [data-info="install"],
+.app-shell.app-installed [data-info="android"] {
+  display: none !important;
+}
+
+@media (display-mode: standalone),
+  (display-mode: fullscreen),
+  (display-mode: minimal-ui),
+  (display-mode: window-controls-overlay) {
+  [data-install-surface],
+  [data-install],
+  [data-info="install"],
+  [data-info="android"] {
+    display: none !important;
+  }
+}
+
 .channel-link {
   color: #7d877f;
   text-decoration: none;

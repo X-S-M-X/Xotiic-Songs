@@ -81,6 +81,29 @@ test("official Android download is separate, verified, and release-backed", () =
   assert.doesNotMatch(html + app, /\.keystore/);
 });
 
+test("installed APK and PWA contexts hide redundant installation surfaces", () => {
+  const html = read("index.html");
+  const app = read("app.js");
+  const styles = read("styles.css");
+  const worker = read("sw.js");
+  const manifest = JSON.parse(read("manifest.webmanifest"));
+  assert.ok((html.match(/data-install-surface/g) || []).length >= 2);
+  for (const mode of ["standalone", "fullscreen", "minimal-ui", "window-controls-overlay"]) {
+    assert.match(app, new RegExp(`APP_DISPLAY_MODES[\\s\\S]*?${mode}`));
+    assert.match(styles, new RegExp(`display-mode: ${mode}`));
+  }
+  assert.match(app, /android-app:\/\/music\.xotiicduck\.player/);
+  assert.match(app, /sessionStorage\.setItem\(APP_CONTEXT_KEY, "android"\)/);
+  assert.match(app, /app\.classList\.toggle\("app-installed", installed\)/);
+  assert.match(app, /navigator\.getInstalledRelatedApps\(\)/);
+  assert.match(app, /relatedApp\.id === "music\.xotiicduck\.player"/);
+  assert.match(styles, /\.app-shell\.app-installed \[data-install-surface\]/);
+  assert.match(styles, /\.app-shell\.app-installed \[data-info="android"\]/);
+  assert.match(worker, /xotiicduck-portable-v12-2-1-installed-context/);
+  assert.ok(manifest.related_applications.some((appEntry) => appEntry.platform === "play" && appEntry.id === "music.xotiicduck.player"));
+  assert.ok(manifest.related_applications.some((appEntry) => appEntry.platform === "webapp"));
+});
+
 test("admin supports metadata edits, encrypted backup, and atomic updates", () => {
   const html = read("admin/index.html");
   const app = read("admin/app.js");

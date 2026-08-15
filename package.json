@@ -1,6 +1,6 @@
 {
   "name": "xotiicduck-music-portable",
-  "version": "12.2.0",
+  "version": "12.2.1",
   "private": true,
   "description": "Static PWA validation for the XotiicDuck Music responsive redesign and artist console.",
   "scripts": {

@@ -51,6 +51,14 @@ Installation support belongs to the browser. On browsers without installable-web
 
 Background controls use the browser Media Session API where supported, so installed copies can continue audio when the app is in the background and provide lock-screen controls. Force-closing the browser/PWA or an operating-system battery rule can still stop playback.
 
+## What Update 12.2.1 adds
+
+- Installation cards and download choices now appear only during normal browser visits.
+- The signed Android APK and installed PWA hide the Web App and Android APK prompts automatically.
+- Supported Android Chrome visits also detect the already installed signed APK and suppress duplicate installation promotion.
+- Standalone, fullscreen, minimal UI, iOS standalone, and the verified Android TWA launch context are supported.
+- A refreshed service-worker shell delivers the change to existing installations without rebuilding or re-signing the APK.
+
 ## What Update 12.2 adds
 
 - A responsive Android download centre in the Home hero, install banner, and footer.

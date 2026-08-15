@@ -32,6 +32,8 @@ Music published through Xotiic Upload is committed directly to `main`. GitHub Pa
 
 Update 12.2 adds the official Android APK download centre. Apply it using `UPDATE-12.2-INSTRUCTIONS.md`, then publish the already signed APK with `android-twa\PUBLISH-ANDROID-RELEASE.ps1`. The APK and checksum are stored as GitHub Release assets, not committed into the website source or service-worker cache.
 
+Update 12.2.1 hides browser installation and APK download promotions whenever the player is already running as the installed PWA or verified Android TWA. Supported Android Chrome visits can also recognize that the related signed APK is already installed. This is a website-only update. The existing signed APK and GitHub Release remain valid and must not be rebuilt or replaced.
+
 Before copying Update 12.1, save and pull the newest catalog and songs that Xotiic Upload may already have published. Then copy only the app files, leaving `.git`, `catalog.js`, `music/`, and `covers/` untouched:
 
 ```powershell

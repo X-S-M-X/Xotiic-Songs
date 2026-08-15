@@ -1330,9 +1330,19 @@
     if (lyricsExpanded) setTimeout(() => $("#lyrics-panel").scrollIntoView({ behavior: "smooth", block: "start" }), 0);
   };
 
-  const isStandalone = () => window.matchMedia("(display-mode: standalone)").matches
+  const APP_CONTEXT_KEY = "xotiicduck-installed-context";
+  const APP_DISPLAY_MODES = ["standalone", "fullscreen", "minimal-ui", "window-controls-overlay"];
+  const launchedFromAndroidApp = document.referrer.startsWith("android-app://music.xotiicduck.player");
+  if (launchedFromAndroidApp) {
+    try { sessionStorage.setItem(APP_CONTEXT_KEY, "android"); } catch { /* Storage can be unavailable. */ }
+  }
+
+  const isStandalone = () => APP_DISPLAY_MODES.some((mode) => window.matchMedia(`(display-mode: ${mode})`).matches)
     || window.navigator.standalone === true
-    || document.referrer.startsWith("android-app://");
+    || launchedFromAndroidApp
+    || (() => {
+      try { return sessionStorage.getItem(APP_CONTEXT_KEY) === "android"; } catch { return false; }
+    })();
 
   const device = (() => {
     const ua = navigator.userAgent || "";
@@ -1419,6 +1429,7 @@
   const updateInstallButtons = () => {
     const installed = isStandalone() || installAccepted;
     app.classList.toggle("app-installed", installed);
+    app.dataset.appContext = installed ? "installed" : "browser";
     for (const button of $$('[data-install]')) {
       const label = button.querySelector("[data-install-label]");
       const icon = button.querySelector("[data-install-icon]");
@@ -1429,6 +1440,18 @@
       button.setAttribute("aria-label", installed ? "The XotiicDuck Music web app is installed" : "Install the XotiicDuck Music web app");
       button.title = installed ? "Web app installed. Tap for details" : "Install the XotiicDuck Music web app";
     }
+  };
+
+  const detectInstalledRelatedApps = async () => {
+    if (isStandalone() || typeof navigator.getInstalledRelatedApps !== "function") return;
+    try {
+      const relatedApps = await navigator.getInstalledRelatedApps();
+      const alreadyInstalled = relatedApps.some((relatedApp) => relatedApp.id === "music.xotiicduck.player"
+        || (relatedApp.platform === "webapp" && relatedApp.id === "https://x-s-m-x.github.io/Xotiic-Songs/"));
+      if (!alreadyInstalled) return;
+      installAccepted = true;
+      updateInstallButtons();
+    } catch { /* Installation detection is an optional progressive enhancement. */ }
   };
 
   const infoContent = {
@@ -1723,6 +1746,9 @@
     showToast("Installed. Open XotiicDuck Music from your Home screen or apps.");
   });
   window.addEventListener("pageshow", updateInstallButtons);
+  for (const mode of APP_DISPLAY_MODES) {
+    window.matchMedia(`(display-mode: ${mode})`).addEventListener?.("change", updateInstallButtons);
+  }
   window.addEventListener("pagehide", () => saveSession(true));
   window.addEventListener("beforeunload", () => saveSession(true));
   document.addEventListener("visibilitychange", () => { if (!document.hidden) refreshScheduledCatalog(); });
@@ -1825,6 +1851,7 @@
   syncAppearanceControls();
   switchView(currentView);
   updateInstallButtons();
+  detectInstalledRelatedApps();
   updateNetworkState();
   refreshOfflineState();
   scheduleCatalogRefresh();

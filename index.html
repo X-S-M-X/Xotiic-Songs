@@ -13,16 +13,16 @@
     <meta name="apple-mobile-web-app-title" content="XotiicDuck" />
     <meta name="format-detection" content="telephone=no" />
     <title>XotiicDuck Music | Anime Worlds. Original Sound.</title>
-    <link rel="manifest" href="./manifest.webmanifest?v=12.1" />
+    <link rel="manifest" href="./manifest.webmanifest?v=12.2.1" />
     <link rel="icon" href="./favicon.svg?v=12" />
     <link rel="apple-touch-icon" href="./apple-touch-icon.png?v=12" />
     <script src="./theme.js?v=12.1"></script>
-    <link rel="stylesheet" href="./styles.css?v=12.2" />
+    <link rel="stylesheet" href="./styles.css?v=12.2.1" />
     <link rel="stylesheet" href="./layout.css?v=12.2" />
     <link rel="stylesheet" href="./anime-theme.css?v=12" />
     <script src="./catalog.js?v=12" defer></script>
     <script src="./offline.js?v=12" defer></script>
-    <script src="./app.js?v=12.2" defer></script>
+    <script src="./app.js?v=12.2.1" defer></script>
       <link rel="stylesheet" href="./player-hotfix.css?v=1" />
   </head>
   <body>
@@ -81,7 +81,7 @@
           <button data-settings-open><span class="mini-tile appearance"><svg class="ui-icon" aria-hidden="true"><use href="#icon-settings"></use></svg></span><span>Appearance</span></button>
         </div>
         <div class="sidebar-spacer"></div>
-        <div class="install-card">
+        <div class="install-card" data-install-surface>
           <span class="install-icon"><svg class="ui-icon" aria-hidden="true"><use href="#icon-download"></use></svg></span>
           <div><strong>Take it with you</strong><p>Install the web app on this device.</p></div>
           <button data-install aria-label="Install the XotiicDuck Music web app"><span data-install-icon class="icon-frame" aria-hidden="true"><svg class="ui-icon"><use href="#icon-download"></use></svg></span></button>
@@ -149,7 +149,7 @@
               <div id="monthly-chart"></div>
             </section>
 
-            <section class="signal-banner">
+            <section class="signal-banner" data-install-surface>
               <div class="signal-icon"><svg class="ui-icon" aria-hidden="true"><use href="#icon-music"></use></svg></div>
               <div><p class="section-kicker">BUILT FOR LISTENERS</p><h2>No ads. No algorithms. Just the music.</h2><p>Install the lightweight web app or download the signed Android APK directly from the official GitHub release.</p></div>
               <button data-info="android"><span>Get Android APK</span><span class="icon-frame" aria-hidden="true"><svg class="ui-icon"><use href="#icon-download"></use></svg></span></button>
