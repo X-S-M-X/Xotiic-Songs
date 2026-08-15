@@ -251,6 +251,8 @@
       toast("Choose one or more MP3 files.", "error");
       return;
     }
+    const tools = $("#creator-studio-tools");
+    if (tools) tools.open = true;
     for (const file of audioFiles) {
       if (batch.some((entry) => entry.file.name === file.name && entry.file.size === file.size && entry.file.lastModified === file.lastModified)) continue;
       const entry = { id: `${Date.now()}-${Math.random().toString(36).slice(2)}`, file, metadata: {}, error: false };

@@ -58,7 +58,7 @@ Background controls use the browser Media Session API where supported, so instal
 - Compact Library tabs for Playlists, Liked, and Offline, with counts and keyboard support.
 - Clear offline states using **Saved**, **Save offline**, and **Remove** labels instead of unexplained icons.
 - A redesigned artist console with aligned file controls, visible device timezone details, and recoverable metadata drafts while preparing a release.
-- A private full-song admin preview player for live, scheduled, draft, archived, and newly selected MP3 files.
+- A private full-song admin test player for live, scheduled, draft, and archived catalog MP3 files.
 - The multi-song play tracker is paused, so partially played tracks do not fill the Home screen. Only the active player's timeline is shown. There is no global listening backend.
 
 See `UPDATE-12.1-INSTRUCTIONS.md` for the protected Windows update process that keeps the live catalog, songs, and covers intact.

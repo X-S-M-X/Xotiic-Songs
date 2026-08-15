@@ -11,3 +11,5 @@ android-twa/**/local.properties
 android-twa/**/*-release*.apk
 android-twa/**/*-release*.aab
 android-twa/**/.gradle/
+android-twa/generated/
+android-twa/output/

@@ -22,6 +22,6 @@ The console supports immediate publishing with an automatic date, exact date/tim
 
 Update 12 gives the console a responsive artist-studio layout: a desktop sidebar, tablet toolbar, phone bottom navigation, aligned file selectors, and safe-area handling for portrait and landscape devices.
 
-The private preview player can play the complete MP3 for published, scheduled, draft, and archived catalog entries without changing their visibility. It can also test the MP3 selected in the new-release form before upload. Only the single active preview shows a timeline, and closing or locking the console stops it.
+The private preview player can play the complete MP3 for published, scheduled, draft, and archived catalog entries without changing their visibility. Open **Manage music** and use **Play test** beside any song. Only the single active preview shows a timeline, and closing or locking the console stops it.
 
 The console's URL is visible because the repository and GitHub Pages site are public. That does not grant upload access: every repository change is verified by GitHub using the owner's limited token, and the token stays encrypted while the local console is locked.

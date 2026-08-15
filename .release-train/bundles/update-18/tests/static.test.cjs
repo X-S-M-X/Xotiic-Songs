@@ -76,11 +76,11 @@ test("admin supports metadata edits, encrypted backup, and atomic updates", () =
   assert.match(app, /effectiveStatus/);
   assert.match(app, /releaseArchive/);
   assert.match(html, /id="release-draft-banner"/);
-  for (const id of ["admin-preview-player", "admin-preview-audio", "admin-preview-progress", "preview-selected-audio"]) assert.match(html, new RegExp(`id=["']${id}["']`));
+  for (const id of ["admin-preview-player", "admin-preview-audio", "admin-preview-progress"]) assert.match(html, new RegExp(`id=["']${id}["']`));
   assert.match(app, /RELEASE_DRAFT_KEY/);
   assert.match(app, /restoreReleaseDraft/);
   assert.match(app, /const playCatalogPreview =/);
-  assert.match(app, /const playSelectedPreview =/);
+  assert.doesNotMatch(app, /playSelectedPreview/);
   assert.match(app, /dataset\.releasePreview/);
   assert.doesNotMatch(app.match(/const saveReleaseDraft = \(\) => \{[\s\S]*?\n  \};/)?.[0] || "", /audioFile|coverFile|token/);
   assert.match(updateStyles, /\.replacement-file-field input\[type="file"\]/);

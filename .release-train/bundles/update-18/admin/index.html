@@ -5,7 +5,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover, interactive-widget=resizes-content" />
     <meta http-equiv="Content-Security-Policy" content="default-src 'self'; base-uri 'self'; object-src 'none'; script-src 'self'; style-src 'self' 'unsafe-inline'; img-src 'self' blob: data:; media-src 'self' blob:; connect-src 'self' https://api.github.com; manifest-src 'self'; worker-src 'self'; form-action 'self'; upgrade-insecure-requests" />
     <meta name="referrer" content="strict-origin-when-cross-origin" />
-    <meta name="theme-color" content="#0a0711" />
+    <meta name="theme-color" content="#050705" />
     <meta name="description" content="Private release publishing for XotiicDuck Music." />
     <meta name="application-name" content="Xotiic Upload" />
     <meta name="apple-mobile-web-app-capable" content="yes" />
@@ -17,10 +17,12 @@
     <link rel="manifest" href="./manifest.webmanifest?v=18" />
     <link rel="icon" href="../favicon.svg?v=18" />
     <link rel="apple-touch-icon" href="../apple-touch-icon.png?v=18" />
+    <script src="./theme-sync.js?v=18"></script>
     <link rel="stylesheet" href="./styles.css?v=18" />
     <link rel="stylesheet" href="./update-12.css?v=18" />
     <link rel="stylesheet" href="./update-13-14.css?v=18" />
     <link rel="stylesheet" href="./update-15-16.css?v=18" />
+    <link rel="stylesheet" href="./admin-hotfix.css?v=18" />
     <script src="./config.js?v=18" defer></script>
     <script src="./crypto.js?v=18" defer></script>
     <script src="./github.js?v=18" defer></script>
@@ -175,8 +177,8 @@
             </section>
 
             <section class="admin-panel" data-panel="upload" hidden>
-              <section id="creator-studio-tools" class="creator-studio-tools" aria-labelledby="creator-studio-title">
-                <div class="studio-heading"><div><p class="section-label">CREATOR STUDIO 2.0</p><h2 id="creator-studio-title">Prepare a release run</h2><p>Import several MP3s, read common ID3 tags, reuse album details, and keep separate metadata workspaces on this device.</p></div><span id="studio-batch-count">0 queued</span></div>
+              <details id="creator-studio-tools" class="creator-studio-tools">
+                <summary class="studio-heading"><div><p class="section-label">ADVANCED RELEASE TOOLS</p><h2 id="creator-studio-title">Batch and workspace tools</h2><p>Open this only when you need multi-MP3 intake, shared album details, saved metadata workspaces, or preflight checks.</p></div><span id="studio-batch-count">0 queued</span></summary>
                 <div class="studio-grid">
                   <article class="panel-card studio-batch-card">
                     <div class="panel-heading"><div><p class="section-label">BATCH INTAKE</p><h3>MP3 queue</h3></div></div>
@@ -204,7 +206,7 @@
                     <div id="release-preflight" class="release-preflight" role="status" aria-live="polite"></div>
                   </article>
                 </div>
-              </section>
+              </details>
               <form id="release-form" class="release-form">
                 <div id="release-draft-banner" class="release-draft-banner" role="status" hidden><span class="draft-signal"><svg class="ui-icon" aria-hidden="true"><use href="#admin-icon-check"></use></svg></span><div><strong>Release details restored</strong><p>Your local metadata draft is back. Select the MP3 and square cover again before reviewing.</p></div><button id="discard-release-draft" type="button">Discard draft</button></div>
                 <div class="form-column asset-column">
@@ -216,7 +218,6 @@
                       <span class="drop-copy"><strong id="audio-file-name">Choose the final MP3</strong><small id="audio-file-meta">Tap to open Files · Maximum 40 MB</small></span>
                       <span class="drop-action">Browse</span>
                     </label>
-                    <button id="preview-selected-audio" class="selected-audio-preview" type="button" disabled><span class="icon-frame"><svg class="ui-icon" aria-hidden="true"><use href="#admin-icon-play"></use></svg></span><span>Test selected MP3</span></button>
                     <label id="cover-drop" class="cover-drop">
                       <input id="cover-file" type="file" accept="image/jpeg,image/png,image/webp" required />
                       <span id="cover-preview" class="cover-preview"><b><svg class="ui-icon" aria-hidden="true"><use href="#admin-icon-plus"></use></svg></b><small>SQUARE<br />COVER</small></span>
@@ -274,6 +275,7 @@
 
             <section class="admin-panel" data-panel="releases" hidden>
               <div class="manage-toolbar"><div><p class="section-label">CATALOG CONTROL</p><h2>Your releases</h2></div><button id="refresh-catalog" type="button"><span class="icon-frame"><svg class="ui-icon" aria-hidden="true"><use href="#admin-icon-refresh"></use></svg></span><span>Refresh</span></button></div>
+              <div class="private-preview-notice"><span><svg class="ui-icon" aria-hidden="true"><use href="#admin-icon-play"></use></svg></span><div><strong>Private full-song testing</strong><small>Use Play test on any release below. Draft, scheduled, and archived tracks remain hidden from listeners while you check the complete MP3.</small></div></div>
               <div class="release-filters" role="group" aria-label="Filter releases"><button class="active" type="button" data-release-filter="all">All</button><button type="button" data-release-filter="published">Live</button><button type="button" data-release-filter="scheduled">Scheduled</button><button type="button" data-release-filter="draft">Drafts</button><button type="button" data-release-filter="archived">Archived</button></div>
               <div id="catalog-loading" class="loading-card"><span></span><div><strong>Reading the GitHub catalog</strong><p>Checking the latest main branch.</p></div></div>
               <div id="release-list" class="release-list" hidden></div>

@@ -173,18 +173,10 @@
     $$('[data-release-preview]').forEach((button) => {
       const active = state.previewSourceKind === "catalog" && state.previewReleaseId === button.dataset.releasePreview;
       button.classList.toggle("is-previewing", active);
-      button.textContent = active ? playing ? "Pause" : "Resume" : "Preview";
+      button.setAttribute("aria-pressed", active && playing ? "true" : "false");
+      button.textContent = active ? playing ? "Pause test" : "Resume test" : "Play test";
     });
 
-    const selectedButton = $("#preview-selected-audio");
-    if (selectedButton) {
-      const active = state.previewSourceKind === "local";
-      selectedButton.disabled = !state.audioFile;
-      selectedButton.classList.toggle("is-previewing", active);
-      setIcon(selectedButton, active && playing ? "pause" : "play");
-      const label = selectedButton.querySelector("span:last-child");
-      if (label) label.textContent = active ? playing ? "Pause selected MP3" : "Resume selected MP3" : "Test selected MP3";
-    }
 
     if (navigator.mediaSession) {
       try { navigator.mediaSession.playbackState = playing ? "playing" : audio.src ? "paused" : "none"; } catch { /* Optional browser integration. */ }
@@ -282,24 +274,6 @@
       duration: Number(release.duration) || 0,
       releaseId: release.id,
       sourceKind: "catalog",
-    });
-  };
-
-  const playSelectedPreview = () => {
-    if (!state.audioFile) {
-      showToast("Choose an MP3 before testing it.", "error");
-      return;
-    }
-    const objectUrl = URL.createObjectURL(state.audioFile);
-    openAdminPreview({
-      src: objectUrl,
-      title: $("#release-title").value.trim() || state.audioFile.name.replace(/\.mp3$/i, ""),
-      artist: $("#release-artist").value.trim() || "XotiicDuck",
-      coverUrl: state.coverObjectUrl,
-      status: "LOCAL MP3 CHECK",
-      duration: state.audioDuration,
-      sourceKind: "local",
-      objectUrl,
     });
   };
 
@@ -682,9 +656,11 @@
       edit.textContent = "Edit";
       const preview = document.createElement("button");
       preview.type = "button";
+      preview.className = "release-test-button";
       preview.dataset.releasePreview = text(release.id);
-      preview.textContent = "Preview";
-      preview.title = `Play the complete ${sourceStatus} MP3 in the private console`;
+      preview.setAttribute("aria-pressed", "false");
+      preview.textContent = "Play test";
+      preview.title = `Privately play the complete ${sourceStatus} MP3`;
       const archive = document.createElement("button");
       archive.type = "button";
       archive.className = sourceStatus === "archived" ? "" : "danger";
@@ -704,7 +680,7 @@
     const headings = {
       overview: ["Release overview", "See what is live, scheduled, drafted, and ready for your next move."],
       upload: ["Publish a new release", "Upload the final MP3 and square artwork from this device."],
-      releases: ["Manage your catalog", "Publish, schedule, edit, hide, or archive releases connected to GitHub."],
+      releases: ["Manage your catalog", "Privately test any song, then publish, schedule, edit, hide, or archive it."],
       security: ["Security and access", "Maintain the encrypted owner vault on this device."],
     };
     $("#dashboard-title").textContent = headings[name][0];
@@ -1432,11 +1408,6 @@
   $("#admin-preview-previous").addEventListener("click", () => skipAdminPreview(-1));
   $("#admin-preview-next").addEventListener("click", () => skipAdminPreview(1));
   $("#admin-preview-close").addEventListener("click", closeAdminPreview);
-  $("#preview-selected-audio").addEventListener("click", () => {
-    if (state.previewSourceKind === "local" && adminPreviewAudio.src) toggleAdminPreview();
-    else playSelectedPreview();
-  });
-
   $("#setup-form").addEventListener("submit", setup);
   $("#login-form").addEventListener("submit", login);
   $("#replace-token-form").addEventListener("submit", replaceToken);

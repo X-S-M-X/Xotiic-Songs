@@ -1,4 +1,4 @@
-const CACHE_NAME = "xotiic-upload-v16";
+const CACHE_NAME = "xotiic-upload-v16-admin-hotfix-1";
 const SHARED_DB = "xotiic-upload-share-inbox-v1";
 const SHARED_STORE = "files";
 const scoped = (file) => new URL(file, self.registration.scope).href;
@@ -9,6 +9,8 @@ const SHELL = [
   "./update-12.css?v=16",
   "./update-13-14.css?v=16",
   "./update-15-16.css?v=16",
+  "./admin-hotfix.css?v=16",
+  "./theme-sync.js?v=16",
   "./config.js?v=16",
   "./crypto.js?v=16",
   "./github.js?v=16",

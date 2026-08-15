@@ -4,6 +4,6 @@
   "private": true,
   "description": "Static PWA validation for the XotiicDuck Music responsive redesign and artist console.",
   "scripts": {
-    "test": "node --check theme.js && node --check app.js && node --check offline.js && node --check range.js && node --check sw.js && node --check admin/app.js && node --check admin/crypto.js && node --check admin/github.js && node --check admin/sw.js && node --test tests/*.test.cjs"
+    "test": "node --check theme.js && node --check app.js && node --check offline.js && node --check range.js && node --check sw.js && node --check admin/theme-sync.js && node --check admin/app.js && node --check admin/crypto.js && node --check admin/github.js && node --check admin/sw.js && node --test tests/*.test.cjs"
   }
 }
