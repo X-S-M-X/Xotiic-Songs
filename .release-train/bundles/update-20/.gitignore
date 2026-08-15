@@ -1,0 +1,13 @@
+node_modules/
+*.log
+.DS_Store
+.env
+.env.*
+xotiic-upload-vault-*.json
+xotiicduck-library-*.json
+android-twa/*.keystore
+android-twa/**/*.keystore
+android-twa/**/local.properties
+android-twa/**/*-release*.apk
+android-twa/**/*-release*.aab
+android-twa/**/.gradle/

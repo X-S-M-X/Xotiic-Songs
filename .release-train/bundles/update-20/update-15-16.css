@@ -1,0 +1,205 @@
+/* Updates 15 and 16: Creator Studio 2.0 and Offline/Android 2.0 */
+.download-manager {
+  display: grid;
+  gap: 14px;
+  margin: 0 0 22px;
+  padding: 18px;
+  border: 1px solid rgba(173, 255, 47, 0.16);
+  border-radius: 18px;
+  background: linear-gradient(145deg, rgba(173, 255, 47, 0.055), rgba(255, 255, 255, 0.02));
+}
+
+.download-manager-heading {
+  display: flex;
+  min-width: 0;
+  align-items: center;
+  justify-content: space-between;
+  gap: 14px;
+}
+
+.download-manager-heading h3 {
+  margin: 4px 0 0;
+  font-size: 1.15rem;
+}
+
+#download-manager-state {
+  flex: 0 0 auto;
+  color: var(--accent, #adff2f);
+  font-size: 0.72rem;
+  font-weight: 900;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+}
+
+.download-manager-queue {
+  display: grid;
+  gap: 8px;
+}
+
+.download-manager-empty {
+  margin: 0;
+  padding: 14px;
+  border: 1px dashed rgba(255, 255, 255, 0.12);
+  border-radius: 12px;
+  color: #8e978f;
+  line-height: 1.5;
+  text-align: center;
+}
+
+.download-job {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) minmax(100px, 24%) 36px;
+  min-width: 0;
+  align-items: center;
+  gap: 12px;
+  padding: 10px 11px;
+  border: 1px solid rgba(255, 255, 255, 0.08);
+  border-radius: 12px;
+  background: rgba(0, 0, 0, 0.18);
+}
+
+.download-job > div {
+  display: grid;
+  min-width: 0;
+  gap: 3px;
+}
+
+.download-job strong,
+.download-job small {
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.download-job small {
+  color: #858e86;
+}
+
+.download-job > span {
+  height: 6px;
+  overflow: hidden;
+  border-radius: 999px;
+  background: rgba(255, 255, 255, 0.1);
+}
+
+.download-job > span i {
+  display: block;
+  height: 100%;
+  border-radius: inherit;
+  background: var(--accent, #adff2f);
+}
+
+.download-job.error {
+  border-color: rgba(255, 116, 116, 0.28);
+}
+
+.download-job.error > span i {
+  background: #ff7474;
+}
+
+.download-job > button {
+  display: grid;
+  width: 36px;
+  height: 36px;
+  place-items: center;
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  border-radius: 10px;
+  color: #aab2ab;
+  font-size: 1.15rem;
+}
+
+.download-manager-controls {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+}
+
+.download-manager-controls button {
+  min-height: 42px;
+  padding: 0 14px;
+  border: 1px solid rgba(255, 255, 255, 0.11);
+  border-radius: 11px;
+  color: #dce3dc;
+  font-weight: 800;
+}
+
+.download-preferences {
+  border-top: 1px solid rgba(255, 255, 255, 0.08);
+  padding-top: 12px;
+}
+
+.download-preferences summary {
+  cursor: pointer;
+  color: #a7afa8;
+  font-size: 0.78rem;
+  font-weight: 850;
+}
+
+.download-preferences label {
+  display: grid;
+  grid-template-columns: 20px minmax(0, 1fr);
+  align-items: start;
+  gap: 10px;
+  margin-top: 12px;
+  color: #e3e8e3;
+}
+
+.download-preferences label > span {
+  display: grid;
+  gap: 3px;
+}
+
+.download-preferences small {
+  color: #858e86;
+  line-height: 1.45;
+}
+
+.collection-modal-actions button,
+.playlist-modal-actions button {
+  min-width: 0;
+}
+
+@media (max-width: 620px) {
+  .download-manager {
+    padding: 14px;
+  }
+
+  .download-manager-heading {
+    align-items: flex-start;
+    flex-direction: column;
+    gap: 6px;
+  }
+
+  .download-job {
+    grid-template-columns: minmax(0, 1fr) 36px;
+  }
+
+  .download-job > span {
+    grid-column: 1 / -1;
+    grid-row: 2;
+  }
+
+  .download-job > button {
+    grid-column: 2;
+    grid-row: 1;
+  }
+
+  .download-manager-controls {
+    display: grid;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+
+  .download-manager-controls button:last-child {
+    grid-column: 1 / -1;
+  }
+}
+
+@media (max-width: 380px) {
+  .download-manager-controls {
+    grid-template-columns: 1fr;
+  }
+
+  .download-manager-controls button:last-child {
+    grid-column: 1;
+  }
+}

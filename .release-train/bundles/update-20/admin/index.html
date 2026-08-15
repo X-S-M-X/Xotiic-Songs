@@ -1,0 +1,394 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover, interactive-widget=resizes-content" />
+    <meta http-equiv="Content-Security-Policy" content="default-src 'self'; base-uri 'self'; object-src 'none'; script-src 'self'; style-src 'self' 'unsafe-inline'; img-src 'self' blob: data:; media-src 'self' blob:; connect-src 'self' https://api.github.com; manifest-src 'self'; worker-src 'self'; form-action 'self'; upgrade-insecure-requests" />
+    <meta name="referrer" content="strict-origin-when-cross-origin" />
+    <meta name="theme-color" content="#0a0711" />
+    <meta name="description" content="Private release publishing for XotiicDuck Music." />
+    <meta name="application-name" content="Xotiic Upload" />
+    <meta name="apple-mobile-web-app-capable" content="yes" />
+    <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent" />
+    <meta name="apple-mobile-web-app-title" content="Xotiic Upload" />
+    <meta name="format-detection" content="telephone=no" />
+    <meta name="robots" content="noindex, nofollow, noarchive" />
+    <title>Xotiic Upload | Artist Console</title>
+    <link rel="manifest" href="./manifest.webmanifest?v=20" />
+    <link rel="icon" href="../favicon.svg?v=20" />
+    <link rel="apple-touch-icon" href="../apple-touch-icon.png?v=20" />
+    <link rel="stylesheet" href="./styles.css?v=20" />
+    <link rel="stylesheet" href="./update-12.css?v=20" />
+    <link rel="stylesheet" href="./update-13-14.css?v=20" />
+    <link rel="stylesheet" href="./update-15-16.css?v=20" />
+    <script src="./config.js?v=20" defer></script>
+    <script src="./crypto.js?v=20" defer></script>
+    <script src="./github.js?v=20" defer></script>
+    <script src="./app.js?v=20" defer></script>
+    <script src="./studio.js?v=20" defer></script>
+  </head>
+  <body>
+    <svg class="icon-sprite" aria-hidden="true" focusable="false">
+      <symbol id="admin-icon-download" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 3v12"></path><path d="m7 10 5 5 5-5"></path><path d="M4 20h16"></path></symbol>
+      <symbol id="admin-icon-check" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><path d="m5 12 4 4L19 6"></path></symbol>
+      <symbol id="admin-icon-alert" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round"><path d="M12 5v9"></path><circle cx="12" cy="18" r="1"></circle></symbol>
+      <symbol id="admin-icon-music" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M9 18V5l10-2v13"></path><circle cx="6" cy="18" r="3"></circle><circle cx="16" cy="16" r="3"></circle></symbol>
+      <symbol id="admin-icon-play" viewBox="0 0 24 24" fill="currentColor"><path d="M8 5v14l11-7Z"></path></symbol>
+      <symbol id="admin-icon-pause" viewBox="0 0 24 24" fill="currentColor"><path d="M7 5h4v14H7zM13 5h4v14h-4z"></path></symbol>
+      <symbol id="admin-icon-previous" viewBox="0 0 24 24" fill="currentColor"><path d="M6 5h3v14H6zM19 5v14L9 12z"></path></symbol>
+      <symbol id="admin-icon-next" viewBox="0 0 24 24" fill="currentColor"><path d="M15 5h3v14h-3zM5 5v14l10-7z"></path></symbol>
+      <symbol id="admin-icon-eye" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M2.5 12s3.5-6 9.5-6 9.5 6 9.5 6-3.5 6-9.5 6-9.5-6-9.5-6Z"></path><circle cx="12" cy="12" r="2.5"></circle></symbol>
+      <symbol id="admin-icon-eye-off" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="m3 3 18 18"></path><path d="M10.6 6.2A10.8 10.8 0 0 1 12 6c6 0 9.5 6 9.5 6a16 16 0 0 1-2.2 2.8"></path><path d="M6.2 6.2C3.8 8 2.5 12 2.5 12s3.5 6 9.5 6a9 9 0 0 0 3-.5"></path></symbol>
+      <symbol id="admin-icon-arrow-right" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14"></path><path d="m14 7 5 5-5 5"></path></symbol>
+      <symbol id="admin-icon-upload" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 21V9"></path><path d="m7 14 5-5 5 5"></path><path d="M4 4h16"></path></symbol>
+      <symbol id="admin-icon-refresh" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M20 7v5h-5"></path><path d="M18.5 16a8 8 0 1 1 .9-7"></path></symbol>
+      <symbol id="admin-icon-close" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="m6 6 12 12M18 6 6 18"></path></symbol>
+      <symbol id="admin-icon-shield" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 3 5 6v5c0 4.5 2.8 8 7 10 4.2-2 7-5.5 7-10V6l-7-3Z"></path><path d="m9 12 2 2 4-4"></path></symbol>
+      <symbol id="admin-icon-lock" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="5" y="10" width="14" height="11" rx="2"></rect><path d="M8 10V7a4 4 0 0 1 8 0v3"></path></symbol>
+      <symbol id="admin-icon-plus" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M12 5v14M5 12h14"></path></symbol>
+      <symbol id="admin-icon-edit" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M4 20h4l11-11-4-4L4 16v4Z"></path><path d="m13.5 6.5 4 4"></path></symbol>
+      <symbol id="admin-icon-home" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="m3 11 9-8 9 8"></path><path d="M5.5 10v10h13V10"></path><path d="M9.5 20v-6h5v6"></path></symbol>
+      <symbol id="admin-icon-clock" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="9"></circle><path d="M12 7v5l3 2"></path></symbol>
+    </svg>
+    <div class="ambient ambient-one"></div>
+    <div class="ambient ambient-two"></div>
+
+    <div class="admin-shell">
+      <header class="admin-topbar">
+        <a class="admin-brand" href="../" aria-label="Return to XotiicDuck Music">
+          <span class="brand-mark">XD</span>
+          <span><strong>XOTIIC UPLOAD</strong><small>ARTIST CONSOLE</small></span>
+        </a>
+        <div class="topbar-actions">
+          <span id="connection-pill" class="connection-pill"><i></i><span>LOCKED</span></span>
+          <button class="install-button" type="button" data-install aria-label="Install Xotiic Upload"><span data-install-icon class="icon-frame" aria-hidden="true"><svg class="ui-icon"><use href="#admin-icon-download"></use></svg></span><span data-install-label>Install</span></button>
+          <a class="player-link" href="../" aria-label="Open public music player"><span>Open player</span><span class="icon-frame" aria-hidden="true"><svg class="ui-icon"><use href="#admin-icon-music"></use></svg></span></a>
+        </div>
+      </header>
+
+      <main>
+        <section id="setup-view" class="auth-layout" hidden>
+          <div class="auth-intro">
+            <p class="eyebrow"><span></span> FIRST-TIME DEVICE SETUP</p>
+            <h1>TURN THIS DEVICE INTO YOUR <em>RELEASE CONSOLE.</em></h1>
+            <p>Choose the private login that unlocks publishing on this device. Your GitHub token is encrypted before it is stored.</p>
+            <div class="auth-points">
+              <article><span>01</span><div><strong>Owner checked</strong><p>The token must belong to x-s-m-x and have write access only to Xotiic-Songs.</p></div></article>
+              <article><span>02</span><div><strong>Encrypted locally</strong><p>Your password is used to encrypt the token with AES-256-GCM.</p></div></article>
+              <article><span>03</span><div><strong>Phone ready</strong><p>Install this console and publish directly from Files and Gallery.</p></div></article>
+            </div>
+          </div>
+
+          <form id="setup-form" class="auth-card">
+            <div class="auth-card-heading">
+              <span class="lock-badge"><svg class="ui-icon" aria-hidden="true"><use href="#admin-icon-lock"></use></svg></span>
+              <div><p class="section-label">OWNER VAULT</p><h2>Create your login</h2></div>
+            </div>
+            <div id="setup-error" class="form-error" role="alert" hidden></div>
+            <label class="field"><span>Admin username</span><input id="setup-username" name="username" autocomplete="username" minlength="3" maxlength="40" required placeholder="Choose your private username" /></label>
+            <label class="field"><span>Password</span><span class="password-field"><input id="setup-password" name="password" type="password" autocomplete="new-password" minlength="12" required placeholder="At least 12 characters" /><button class="icon-only-button" type="button" data-password-toggle="setup-password" aria-label="Show password"><svg class="ui-icon" aria-hidden="true"><use href="#admin-icon-eye"></use></svg></button></span></label>
+            <label class="field"><span>Confirm password</span><span class="password-field"><input id="setup-confirm" name="confirm" type="password" autocomplete="new-password" minlength="12" required placeholder="Enter it again" /><button class="icon-only-button" type="button" data-password-toggle="setup-confirm" aria-label="Show password"><svg class="ui-icon" aria-hidden="true"><use href="#admin-icon-eye"></use></svg></button></span></label>
+            <label class="field"><span>Fine-grained GitHub token</span><span class="password-field"><input id="setup-token" name="token" type="password" autocomplete="off" required spellcheck="false" placeholder="github_pat_..." /><button class="icon-only-button" type="button" data-password-toggle="setup-token" aria-label="Show token"><svg class="ui-icon" aria-hidden="true"><use href="#admin-icon-eye"></use></svg></button></span><small>Used only to publish to x-s-m-x/Xotiic-Songs.</small></label>
+            <details class="token-help">
+              <summary>How to create the correct token <span class="icon-frame"><svg class="ui-icon" aria-hidden="true"><use href="#admin-icon-plus"></use></svg></span></summary>
+              <ol>
+                <li>Open GitHub’s fine-grained token page.</li>
+                <li>Select only the <strong>Xotiic-Songs</strong> repository.</li>
+                <li>Set <strong>Repository permissions → Contents</strong> to <strong>Read and write</strong>.</li>
+                <li>Create the token and paste it above once.</li>
+              </ol>
+              <a id="token-help-link" href="https://github.com/settings/personal-access-tokens/new" target="_blank" rel="noreferrer">Open GitHub token settings ↗</a>
+            </details>
+            <label class="check-field"><input id="setup-confirm-owner" type="checkbox" required /><span>I understand this vault is stored on this device and can be reset without deleting published music.</span></label>
+            <button id="setup-submit" class="primary-action" type="submit"><span>Secure this device</span><span class="icon-frame"><svg class="ui-icon" aria-hidden="true"><use href="#admin-icon-arrow-right"></use></svg></span></button>
+            <p class="auth-footnote">Setup must be repeated once on each new phone or computer you authorize.</p>
+          </form>
+        </section>
+
+        <section id="login-view" class="login-layout" hidden>
+          <div class="login-card">
+            <span class="login-signal"><i></i><b>XD</b></span>
+            <p class="eyebrow centered"><span></span> OWNER ACCESS <span></span></p>
+            <h1>Welcome back.</h1>
+            <p>Unlock the private publishing vault stored on this device.</p>
+            <form id="login-form">
+              <div id="login-error" class="form-error" role="alert" hidden></div>
+              <label class="field"><span>Username</span><input id="login-username" autocomplete="username" required /></label>
+              <label class="field"><span>Password</span><span class="password-field"><input id="login-password" type="password" autocomplete="current-password" required /><button class="icon-only-button" type="button" data-password-toggle="login-password" aria-label="Show password"><svg class="ui-icon" aria-hidden="true"><use href="#admin-icon-eye"></use></svg></button></span></label>
+              <button id="login-submit" class="primary-action" type="submit"><span>Unlock console</span><span class="icon-frame"><svg class="ui-icon" aria-hidden="true"><use href="#admin-icon-arrow-right"></use></svg></span></button>
+            </form>
+            <div class="login-actions"><button id="reset-from-login" type="button">Reset this device</button><a href="../">Return to public player</a></div>
+          </div>
+        </section>
+
+        <section id="dashboard-view" class="dashboard" hidden>
+          <aside class="dashboard-nav">
+            <div class="owner-card">
+              <span class="owner-avatar">XD</span>
+              <div><strong id="owner-name">Artist</strong><small>OWNER SESSION</small></div>
+              <i></i>
+            </div>
+            <nav aria-label="Artist console navigation">
+              <p class="section-label">RELEASE TOOLS</p>
+              <button class="active" type="button" data-admin-panel="overview"><span class="icon-frame"><svg class="ui-icon" aria-hidden="true"><use href="#admin-icon-home"></use></svg></span><span>Overview</span></button>
+              <button type="button" data-admin-panel="upload"><span class="icon-frame"><svg class="ui-icon" aria-hidden="true"><use href="#admin-icon-upload"></use></svg></span><span>New release</span></button>
+              <button type="button" data-admin-panel="releases"><span class="icon-frame"><svg class="ui-icon" aria-hidden="true"><use href="#admin-icon-music"></use></svg></span><span>Manage music</span><b id="release-count-badge">0</b></button>
+              <p class="section-label account-label">ACCOUNT</p>
+              <button type="button" data-admin-panel="security"><span class="icon-frame"><svg class="ui-icon" aria-hidden="true"><use href="#admin-icon-shield"></use></svg></span><span>Security</span></button>
+            </nav>
+            <div class="repo-card"><span>CONNECTED REPOSITORY</span><strong>x-s-m-x/<br />Xotiic-Songs</strong><small><i></i> GitHub Pages source</small></div>
+            <button id="logout-button" class="logout-button" type="button"><span class="icon-frame"><svg class="ui-icon" aria-hidden="true"><use href="#admin-icon-lock"></use></svg></span><span>Lock console</span></button>
+          </aside>
+
+          <div class="dashboard-main">
+            <section class="dashboard-header">
+              <div><p class="eyebrow"><span></span> ARTIST CONTROL</p><h1 id="dashboard-title">Release overview</h1><p id="dashboard-subtitle">See what is live, scheduled, drafted, and ready for your next move.</p></div>
+              <div class="publish-health"><span><i></i> OWNER VERIFIED</span><strong id="catalog-health">Catalog ready</strong></div>
+            </section>
+
+            <section class="admin-panel" data-panel="overview">
+              <div class="overview-metrics" aria-label="Catalog status summary">
+                <article><span>LIVE NOW</span><strong id="overview-live">0</strong><small>public releases</small></article>
+                <article><span>SCHEDULED</span><strong id="overview-scheduled">0</strong><small>upcoming releases</small></article>
+                <article><span>DRAFTS</span><strong id="overview-drafts">0</strong><small>hidden works</small></article>
+                <article><span>ARCHIVED</span><strong id="overview-archived">0</strong><small>recoverable releases</small></article>
+              </div>
+              <div class="overview-grid">
+                <article class="panel-card overview-next-card">
+                  <div class="panel-heading"><div><p class="section-label">NEXT RELEASE</p><h2>Schedule</h2></div><button type="button" class="panel-link" data-admin-panel="releases">Manage all</button></div>
+                  <div id="overview-next-release" class="overview-next-release"><span class="overview-empty-icon"><svg class="ui-icon" aria-hidden="true"><use href="#admin-icon-clock"></use></svg></span><div><strong>No release is scheduled</strong><p>Choose Schedule when preparing the next song.</p></div></div>
+                </article>
+                <article class="panel-card overview-actions-card">
+                  <p class="section-label">QUICK ACTIONS</p><h2>What do you want to do?</h2>
+                  <div class="overview-actions"><button type="button" data-admin-panel="upload"><span><svg class="ui-icon" aria-hidden="true"><use href="#admin-icon-upload"></use></svg></span><strong>Prepare a release</strong><small>Publish now, schedule, or save a draft.</small></button><button type="button" data-admin-panel="releases"><span><svg class="ui-icon" aria-hidden="true"><use href="#admin-icon-music"></use></svg></span><strong>Manage catalog</strong><small>Edit metadata or restore an archived song.</small></button></div>
+                </article>
+                <article class="panel-card diagnostics-card">
+                  <div class="panel-heading"><div><p class="section-label">SYSTEM CHECK</p><h2>Publishing diagnostics</h2></div><span id="diagnostics-state" class="diagnostics-state">READY</span></div>
+                  <dl><div><dt>Catalog writer</dt><dd id="diagnostics-catalog">Version 2 ready</dd></div><div><dt>Network</dt><dd id="diagnostics-network">Checking</dd></div><div><dt>Device vault</dt><dd>Encrypted</dd></div><div><dt>Storage</dt><dd id="diagnostics-storage">Checking</dd></div></dl>
+                  <button id="copy-diagnostics" type="button" class="secondary-action">Copy diagnostics</button>
+                </article>
+                <article class="panel-card release-calendar-card">
+                  <div class="panel-heading"><div><p class="section-label">RELEASE CALENDAR</p><h2>Upcoming schedule</h2></div><span id="release-calendar-timezone" class="calendar-timezone">LOCAL TIME</span></div>
+                  <div id="release-calendar" class="release-calendar"><p>No scheduled releases yet.</p></div>
+                </article>
+              </div>
+            </section>
+
+            <section class="admin-panel" data-panel="upload" hidden>
+              <section id="creator-studio-tools" class="creator-studio-tools" aria-labelledby="creator-studio-title">
+                <div class="studio-heading"><div><p class="section-label">CREATOR STUDIO 2.0</p><h2 id="creator-studio-title">Prepare a release run</h2><p>Import several MP3s, read common ID3 tags, reuse album details, and keep separate metadata workspaces on this device.</p></div><span id="studio-batch-count">0 queued</span></div>
+                <div class="studio-grid">
+                  <article class="panel-card studio-batch-card">
+                    <div class="panel-heading"><div><p class="section-label">BATCH INTAKE</p><h3>MP3 queue</h3></div></div>
+                    <label id="batch-drop" class="batch-drop"><input id="bulk-audio-input" type="file" accept=".mp3,audio/mpeg" multiple /><span><svg class="ui-icon" aria-hidden="true"><use href="#admin-icon-upload"></use></svg></span><strong>Drop or choose several MP3s</strong><small>Load each into the normal review and publish flow.</small></label>
+                    <div id="bulk-audio-queue" class="bulk-audio-queue"><p class="studio-empty">No batch files selected.</p></div>
+                  </article>
+                  <article class="panel-card studio-album-card">
+                    <div class="panel-heading"><div><p class="section-label">ALBUM WIZARD</p><h3>Shared metadata</h3></div></div>
+                    <div class="studio-field-grid">
+                      <label class="field field-wide"><span>Collection title</span><input id="studio-collection" maxlength="100" placeholder="Album, EP or soundtrack" /></label>
+                      <label class="field"><span>Release type</span><select id="studio-release-type"><option>Album</option><option>EP</option><option>Soundtrack</option><option>Single</option></select></label>
+                      <label class="field"><span>Starting track</span><input id="studio-track-start" type="number" min="1" max="999" value="1" /></label>
+                      <label class="field"><span>Franchise</span><input id="studio-franchise" maxlength="80" /></label>
+                      <label class="field"><span>Genre</span><input id="studio-genre" maxlength="60" value="Anime J-Rock" /></label>
+                    </div>
+                    <button id="studio-apply-album" class="secondary-action" type="button">Apply to current release</button>
+                  </article>
+                  <article class="panel-card studio-workspace-card">
+                    <div class="panel-heading"><div><p class="section-label">WORKSPACES</p><h3>Metadata drafts</h3></div></div>
+                    <div class="workspace-create"><input id="workspace-name" maxlength="60" placeholder="Workspace name" /><button id="workspace-save" type="button">Save current</button><button id="workspace-new" type="button">Clear form</button></div>
+                    <div id="workspace-list" class="workspace-list"><p class="studio-empty">No saved workspaces.</p></div>
+                  </article>
+                  <article class="panel-card studio-preflight-card">
+                    <div class="panel-heading"><div><p class="section-label">PREFLIGHT</p><h3>Release checks</h3></div></div>
+                    <div id="release-preflight" class="release-preflight" role="status" aria-live="polite"></div>
+                  </article>
+                </div>
+              </section>
+              <form id="release-form" class="release-form">
+                <div id="release-draft-banner" class="release-draft-banner" role="status" hidden><span class="draft-signal"><svg class="ui-icon" aria-hidden="true"><use href="#admin-icon-check"></use></svg></span><div><strong>Release details restored</strong><p>Your local metadata draft is back. Select the MP3 and square cover again before reviewing.</p></div><button id="discard-release-draft" type="button">Discard draft</button></div>
+                <div class="form-column asset-column">
+                  <div class="panel-card">
+                    <div class="panel-heading"><div><p class="section-label">01 / RELEASE FILES</p><h2>Master and artwork</h2></div><span class="required-note">BOTH REQUIRED</span></div>
+                    <label id="audio-drop" class="file-drop audio-drop">
+                      <input id="audio-file" type="file" accept=".mp3,audio/mpeg" required />
+                      <span class="drop-icon"><svg class="ui-icon" aria-hidden="true"><use href="#admin-icon-music"></use></svg></span>
+                      <span class="drop-copy"><strong id="audio-file-name">Choose the final MP3</strong><small id="audio-file-meta">Tap to open Files · Maximum 40 MB</small></span>
+                      <span class="drop-action">Browse</span>
+                    </label>
+                    <button id="preview-selected-audio" class="selected-audio-preview" type="button" disabled><span class="icon-frame"><svg class="ui-icon" aria-hidden="true"><use href="#admin-icon-play"></use></svg></span><span>Test selected MP3</span></button>
+                    <label id="cover-drop" class="cover-drop">
+                      <input id="cover-file" type="file" accept="image/jpeg,image/png,image/webp" required />
+                      <span id="cover-preview" class="cover-preview"><b><svg class="ui-icon" aria-hidden="true"><use href="#admin-icon-plus"></use></svg></b><small>SQUARE<br />COVER</small></span>
+                      <span class="drop-copy"><strong id="cover-file-name">Choose cover artwork</strong><small id="cover-file-meta">JPG, PNG or WebP · Square image</small></span>
+                      <span class="drop-action">Gallery</span>
+                    </label>
+                  </div>
+
+                  <div class="panel-card publish-card">
+                    <div class="publish-summary"><span class="summary-art" id="summary-art">XD</span><div><p class="section-label">READY CHECK</p><strong id="summary-title">Waiting for release details</strong><small id="summary-meta">MP3 and cover required</small></div></div>
+                    <fieldset class="release-mode-selector">
+                      <legend>Release visibility</legend>
+                      <label><input type="radio" name="release-mode" value="published" checked /><span><strong>Publish now</strong><small>Use today automatically.</small></span></label>
+                      <label><input type="radio" name="release-mode" value="scheduled" /><span><strong>Schedule</strong><small>Go live at an exact time.</small></span></label>
+                      <label><input type="radio" name="release-mode" value="draft" /><span><strong>Draft</strong><small>Keep completely hidden.</small></span></label>
+                    </fieldset>
+                    <div id="schedule-fields" class="schedule-fields" hidden><label class="field"><span>Release date and time</span><input id="release-schedule" type="datetime-local" /><small id="release-timezone-copy">Uses this device's current timezone.</small></label></div>
+                    <input id="release-date" type="hidden" />
+                    <button id="review-release" class="primary-action" type="submit"><span>Review release</span><span class="icon-frame"><svg class="ui-icon" aria-hidden="true"><use href="#admin-icon-arrow-right"></use></svg></span></button>
+                    <p class="publish-note">The MP3, cover and catalog are committed together. Listeners never see a half-finished release.</p>
+                  </div>
+                </div>
+
+                <div class="form-column details-column">
+                  <div class="panel-card">
+                    <div class="panel-heading"><div><p class="section-label">02 / METADATA</p><h2>Release details</h2></div><span id="metadata-save-state" class="autosave-note">LOCAL DRAFT READY</span></div>
+                    <div class="field-grid">
+                      <label class="field field-wide"><span>Song title</span><input id="release-title" required maxlength="100" placeholder="e.g. Monarchs Collide" /></label>
+                      <label class="field"><span>Artist</span><input id="release-artist" required maxlength="80" value="XotiicDuck" /></label>
+                      <label class="field"><span>Release type</span><select id="release-album"><option>Single</option><option>EP</option><option>Album</option><option>Soundtrack</option></select></label>
+                      <label class="field field-wide"><span>Album or collection title <small>optional</small></span><input id="release-collection" maxlength="100" placeholder="Leave empty for a standalone single" /><small>Songs with the same title are grouped into one collection page.</small></label>
+                      <label class="field"><span>Track number <small>optional</small></span><input id="release-track-number" type="number" inputmode="numeric" min="1" max="999" placeholder="1" /></label>
+                      <label class="field"><span>Genre</span><input id="release-genre" required maxlength="60" value="Anime J-Rock" /></label>
+                      <label class="field"><span>Franchise <small>optional</small></span><input id="release-franchise" maxlength="80" placeholder="e.g. Tensura" /></label>
+                      <label class="field"><span>Mood <small>optional</small></span><input id="release-mood" maxlength="60" placeholder="e.g. Cinematic battle" /></label>
+                      <label class="field"><span>Character <small>optional</small></span><input id="release-character" maxlength="80" placeholder="e.g. Rimuru Tempest" /></label>
+                      <label class="field"><span>Energy <small>optional</small></span><select id="release-energy"><option value="">Not set</option><option>Low</option><option>Medium</option><option>High</option></select></label>
+                      <label class="field"><span>Vocal style <small>optional</small></span><input id="release-vocal-style" maxlength="60" placeholder="e.g. Anime rock duet" /></label>
+                      <label class="field"><span>Performance <small>optional</small></span><select id="release-performance"><option value="">Not set</option><option>Solo</option><option>Versus</option><option>Collaboration</option></select></label>
+                      <label class="field field-wide"><span>Discovery tags <small>optional</small></span><input id="release-tags" maxlength="240" placeholder="Rimuru, battle anthem, anime opening" /><small>Separate tags with commas. They improve search without changing the visible title.</small></label>
+                      <label class="field field-wide"><span>Similar release IDs <small>optional</small></span><input id="release-similar" maxlength="300" placeholder="rise, monarchs-collide" /><small>Comma-separated release IDs improve local More Like This collections.</small></label>
+                      <label class="field field-wide"><span>Credits <small>optional</small></span><input id="release-credits" maxlength="500" placeholder="Writing, production or featured vocal credits" /></label>
+                      <label class="check-field metadata-check"><input id="release-explicit" type="checkbox" /><span>Mark this release as explicit</span></label>
+                      <label class="field"><span>Duration</span><input id="release-duration" inputmode="numeric" readonly placeholder="Detected from MP3" /></label>
+                      <label class="field"><span>Release ID</span><input id="release-id" required pattern="[a-z0-9]+(?:-[a-z0-9]+)*" maxlength="80" placeholder="generated-from-title" /><small>Lowercase letters, numbers and hyphens.</small></label>
+                      <label class="field field-wide"><span>YouTube link <small>optional</small></span><input id="release-youtube" type="url" maxlength="500" inputmode="url" placeholder="https://www.youtube.com/watch?v=..." /><small>Only youtube.com and youtu.be links are accepted.</small></label>
+                      <label class="field field-wide"><span>Short description <small>optional</small></span><textarea id="release-description" maxlength="280" rows="4" placeholder="A short line about the track or matchup."></textarea><small><span id="description-count">0</span>/280</small></label>
+                      <label class="field field-wide"><span>Lyrics <small>optional · can be added later</small></span><textarea id="release-lyrics" maxlength="30000" rows="8" placeholder="Paste the final lyrics here whenever you want them available in Now Playing."></textarea><small><span id="lyrics-count">0</span>/30,000 · Leave empty to hide the Lyrics button.</small></label>
+                    </div>
+                  </div>
+                  <div class="safety-strip"><span><svg class="ui-icon" aria-hidden="true"><use href="#admin-icon-shield"></use></svg></span><div><strong>Owner-only publishing</strong><p>The console verifies your GitHub identity before every session. Your token is decrypted only while this page is unlocked.</p></div></div>
+                </div>
+              </form>
+            </section>
+
+            <section class="admin-panel" data-panel="releases" hidden>
+              <div class="manage-toolbar"><div><p class="section-label">CATALOG CONTROL</p><h2>Your releases</h2></div><button id="refresh-catalog" type="button"><span class="icon-frame"><svg class="ui-icon" aria-hidden="true"><use href="#admin-icon-refresh"></use></svg></span><span>Refresh</span></button></div>
+              <div class="release-filters" role="group" aria-label="Filter releases"><button class="active" type="button" data-release-filter="all">All</button><button type="button" data-release-filter="published">Live</button><button type="button" data-release-filter="scheduled">Scheduled</button><button type="button" data-release-filter="draft">Drafts</button><button type="button" data-release-filter="archived">Archived</button></div>
+              <div id="catalog-loading" class="loading-card"><span></span><div><strong>Reading the GitHub catalog</strong><p>Checking the latest main branch.</p></div></div>
+              <div id="release-list" class="release-list" hidden></div>
+              <div id="manage-empty" class="manage-empty" hidden><span><svg class="ui-icon" aria-hidden="true"><use href="#admin-icon-music"></use></svg></span><h3>No releases yet</h3><p>Your first published song will appear here.</p><button type="button" data-admin-panel="upload">Upload the first release</button></div>
+            </section>
+
+            <section class="admin-panel" data-panel="security" hidden>
+              <div class="security-grid">
+                <article class="panel-card security-overview"><p class="section-label">DEVICE VAULT</p><div class="security-icon"><svg class="ui-icon" aria-hidden="true"><use href="#admin-icon-shield"></use></svg></div><h2>Encrypted on this device</h2><p>The GitHub token is protected with your password and remains encrypted whenever the console is locked.</p><dl><div><dt>Encryption</dt><dd>AES-256-GCM</dd></div><div><dt>Key derivation</dt><dd>PBKDF2-SHA256</dd></div><div><dt>Session</dt><dd>30-minute idle lock</dd></div></dl></article>
+                <article class="panel-card">
+                  <div class="panel-heading"><div><p class="section-label">TOKEN MAINTENANCE</p><h2>Replace GitHub token</h2></div></div>
+                  <p class="card-copy">Use this when your fine-grained token expires. Existing releases stay online while the token is replaced.</p>
+                  <form id="replace-token-form">
+                    <label class="field"><span>Current console password</span><span class="password-field"><input id="replace-password" type="password" autocomplete="current-password" required /><button class="icon-only-button" type="button" data-password-toggle="replace-password" aria-label="Show password"><svg class="ui-icon" aria-hidden="true"><use href="#admin-icon-eye"></use></svg></button></span></label>
+                    <label class="field"><span>New fine-grained token</span><span class="password-field"><input id="replace-token" type="password" autocomplete="off" required spellcheck="false" /><button class="icon-only-button" type="button" data-password-toggle="replace-token" aria-label="Show token"><svg class="ui-icon" aria-hidden="true"><use href="#admin-icon-eye"></use></svg></button></span></label>
+                    <button class="secondary-action" type="submit">Verify and replace token</button>
+                  </form>
+                </article>
+                <article class="panel-card vault-backup-card">
+                  <div class="panel-heading"><div><p class="section-label">RECOVERY COPY</p><h2>Back up this device vault</h2></div></div>
+                  <p class="card-copy">Download the already-encrypted vault so you can restore owner access in another browser. The backup still requires your console username and password.</p>
+                  <div class="vault-backup-actions"><button id="export-vault" class="secondary-action" type="button">Download encrypted backup</button><button id="import-vault" type="button">Restore encrypted backup</button><input id="import-vault-file" type="file" accept="application/json,.json" hidden /></div>
+                </article>
+                <article class="panel-card danger-card"><p class="section-label">DEVICE RESET</p><h2>Remove owner access here</h2><p>This deletes the encrypted vault only from this browser. Published songs and the GitHub repository remain unchanged.</p><button id="reset-vault-button" type="button">Reset this device</button></article>
+              </div>
+            </section>
+          </div>
+
+          <section id="admin-preview-player" class="admin-preview-player" aria-label="Private catalog preview player" hidden>
+            <audio id="admin-preview-audio" preload="metadata" playsinline></audio>
+            <span id="admin-preview-art" class="admin-preview-art" aria-hidden="true">XD</span>
+            <div class="admin-preview-copy"><small id="admin-preview-status">PRIVATE PREVIEW</small><strong id="admin-preview-title">Choose a song to preview</strong><span id="admin-preview-meta">Drafts and scheduled releases can play here.</span></div>
+            <div class="admin-preview-controls">
+              <button id="admin-preview-previous" class="icon-only-button" type="button" aria-label="Previous preview song"><svg class="ui-icon" aria-hidden="true"><use href="#admin-icon-previous"></use></svg></button>
+              <button id="admin-preview-toggle" class="admin-preview-toggle icon-only-button" type="button" aria-label="Play preview"><svg class="ui-icon" aria-hidden="true"><use href="#admin-icon-play"></use></svg></button>
+              <button id="admin-preview-next" class="icon-only-button" type="button" aria-label="Next preview song"><svg class="ui-icon" aria-hidden="true"><use href="#admin-icon-next"></use></svg></button>
+            </div>
+            <div class="admin-preview-timeline"><span id="admin-preview-current">0:00</span><input id="admin-preview-progress" type="range" min="0" max="0" value="0" step="0.1" aria-label="Preview playback position" /><span id="admin-preview-duration">0:00</span></div>
+            <button id="admin-preview-close" class="admin-preview-close icon-only-button" type="button" aria-label="Close preview player"><svg class="ui-icon" aria-hidden="true"><use href="#admin-icon-close"></use></svg></button>
+          </section>
+        </section>
+      </main>
+    </div>
+
+    <div id="review-modal" class="modal-layer" hidden>
+      <button class="modal-backdrop" type="button" data-review-close aria-label="Close release review"></button>
+      <article class="review-modal" role="dialog" aria-modal="true" aria-labelledby="review-title">
+        <button class="modal-close icon-only-button" type="button" data-review-close aria-label="Close"><svg class="ui-icon" aria-hidden="true"><use href="#admin-icon-close"></use></svg></button>
+        <p class="section-label">FINAL RELEASE CHECK</p>
+        <h2 id="review-title">Ready to publish?</h2>
+        <div class="review-release"><span id="review-cover" class="review-cover">XD</span><div><strong id="review-song-title"></strong><span id="review-song-meta"></span><small id="review-file-meta"></small></div></div>
+        <div class="review-checks"><span>✓ MP3 master selected</span><span>✓ Square cover verified</span><span>✓ Release ID available</span></div>
+        <p id="review-visibility" class="review-visibility"></p>
+        <div class="modal-actions"><button type="button" class="ghost-action" data-review-close>Go back</button><button id="publish-release" type="button" class="primary-action"><span>Publish to GitHub</span><span class="icon-frame"><svg class="ui-icon" aria-hidden="true"><use href="#admin-icon-upload"></use></svg></span></button></div>
+      </article>
+    </div>
+
+    <div id="progress-modal" class="modal-layer" hidden>
+      <article class="progress-modal" role="dialog" aria-modal="true" aria-labelledby="progress-title">
+        <span class="upload-orbit"><i></i><b><svg class="ui-icon" aria-hidden="true"><use href="#admin-icon-upload"></use></svg></b></span>
+        <p class="section-label">SECURE GITHUB PUBLISH</p>
+        <h2 id="progress-title">Preparing release</h2>
+        <p id="progress-copy">Reading the current catalog...</p>
+        <div class="progress-track"><i id="progress-bar"></i></div>
+        <span id="progress-percent">0%</span>
+        <p class="progress-warning">Keep this app open until the commit finishes.</p>
+      </article>
+    </div>
+
+    <div id="edit-release-modal" class="modal-layer" hidden>
+      <button class="modal-backdrop" type="button" data-edit-close aria-label="Close release editor"></button>
+      <form id="edit-release-form" class="edit-release-modal" role="dialog" aria-modal="true" aria-labelledby="edit-release-title">
+        <button class="modal-close icon-only-button" type="button" data-edit-close aria-label="Close"><svg class="ui-icon" aria-hidden="true"><use href="#admin-icon-close"></use></svg></button>
+        <p class="section-label">EDIT EXISTING RELEASE</p><h2 id="edit-release-title">Update release</h2><p id="edit-release-id" class="edit-release-id"></p>
+        <div class="edit-field-grid">
+          <label class="field field-wide"><span>Song title</span><input id="edit-title" required maxlength="100" /></label>
+          <label class="field"><span>Artist</span><input id="edit-artist" required maxlength="80" /></label>
+          <label class="field"><span>Release type</span><select id="edit-album"><option>Single</option><option>EP</option><option>Album</option><option>Soundtrack</option></select></label>
+          <label class="field field-wide"><span>Album or collection title <small>optional</small></span><input id="edit-collection" maxlength="100" /></label>
+          <label class="field"><span>Track number <small>optional</small></span><input id="edit-track-number" type="number" inputmode="numeric" min="1" max="999" /></label>
+          <label class="field"><span>Genre</span><input id="edit-genre" required maxlength="60" /></label>
+          <label class="field"><span>Franchise <small>optional</small></span><input id="edit-franchise" maxlength="80" /></label>
+          <label class="field"><span>Mood <small>optional</small></span><input id="edit-mood" maxlength="60" /></label>
+          <label class="field"><span>Character <small>optional</small></span><input id="edit-character" maxlength="80" /></label>
+          <label class="field"><span>Energy <small>optional</small></span><select id="edit-energy"><option value="">Not set</option><option>Low</option><option>Medium</option><option>High</option></select></label>
+          <label class="field"><span>Vocal style <small>optional</small></span><input id="edit-vocal-style" maxlength="60" /></label>
+          <label class="field"><span>Performance <small>optional</small></span><select id="edit-performance"><option value="">Not set</option><option>Solo</option><option>Versus</option><option>Collaboration</option></select></label>
+          <label class="field field-wide"><span>Discovery tags <small>optional</small></span><input id="edit-tags" maxlength="240" /></label>
+          <label class="field field-wide"><span>Similar release IDs <small>optional</small></span><input id="edit-similar" maxlength="300" /></label>
+          <label class="field field-wide"><span>Credits <small>optional</small></span><input id="edit-credits" maxlength="500" /></label>
+          <label class="check-field metadata-check"><input id="edit-explicit" type="checkbox" /><span>Explicit release</span></label>
+          <label class="field"><span>Visibility</span><select id="edit-status"><option value="published">Published now</option><option value="scheduled">Scheduled</option><option value="draft">Hidden draft</option><option value="archived">Archived</option></select></label>
+          <label id="edit-schedule-field" class="field" hidden><span>Release date and time</span><input id="edit-schedule" type="datetime-local" /><small id="edit-timezone-copy">Uses this device's current timezone.</small></label>
+          <input id="edit-date" type="hidden" />
+          <label class="field field-wide"><span>YouTube link <small>optional</small></span><input id="edit-youtube" type="url" maxlength="500" inputmode="url" /></label>
+          <label class="field field-wide"><span>Short description <small>optional</small></span><textarea id="edit-description" maxlength="280" rows="3"></textarea></label>
+          <label class="field field-wide"><span>Lyrics <small>optional</small></span><textarea id="edit-lyrics" maxlength="30000" rows="7"></textarea></label>
+          <label class="field replacement-file-field"><span>Replacement MP3 <small>optional</small></span><input id="edit-audio-file" type="file" accept=".mp3,audio/mpeg" /><small id="edit-audio-copy">Keep current MP3</small></label>
+          <label class="field replacement-file-field"><span>Replacement square cover <small>optional</small></span><input id="edit-cover-file" type="file" accept="image/jpeg,image/png,image/webp" /><small id="edit-cover-copy">Keep current cover</small></label>
+        </div>
+        <div class="modal-actions"><button class="ghost-action" type="button" data-edit-close>Cancel</button><button id="save-release-edit" class="primary-action" type="submit"><span>Save release update</span><span class="icon-frame"><svg class="ui-icon" aria-hidden="true"><use href="#admin-icon-upload"></use></svg></span></button></div>
+      </form>
+    </div>
+
+    <div id="install-help-layer" class="modal-layer" hidden>
+      <button class="modal-backdrop" type="button" data-install-close aria-label="Close install guide"></button>
+      <article class="install-help-modal" role="dialog" aria-modal="true" aria-labelledby="install-help-title">
+        <button class="modal-close icon-only-button" type="button" data-install-close aria-label="Close"><svg class="ui-icon" aria-hidden="true"><use href="#admin-icon-close"></use></svg></button>
+        <p id="install-help-label" class="section-label">INSTALL ARTIST CONSOLE</p>
+        <h2 id="install-help-title">Add Xotiic Upload to this device</h2>
+        <div id="install-help-copy"></div>
+      </article>
+    </div>
+
+    <div id="admin-update-banner" class="admin-update-banner" role="status" aria-live="polite" hidden><span><strong>Console update ready</strong><small>Refresh before your next publish.</small></span><button id="admin-apply-update" type="button">Refresh</button><button id="admin-dismiss-update" class="icon-only-button" type="button" aria-label="Dismiss update"><svg class="ui-icon" aria-hidden="true"><use href="#admin-icon-close"></use></svg></button></div>
+    <div id="toast" class="toast" role="status" aria-live="polite" aria-atomic="true" hidden><span id="toast-icon"><svg class="ui-icon" aria-hidden="true"><use href="#admin-icon-check"></use></svg></span><span id="toast-copy"></span></div>
+  </body>
+</html>

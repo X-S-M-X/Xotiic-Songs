@@ -1,0 +1,119 @@
+name: XotiicDuck automatic release train
+
+on:
+  schedule:
+    - cron: "17 3,9,15,21 * * *"
+  workflow_dispatch:
+    inputs:
+      force_next:
+        description: "Release the next pair now, bypassing its date and 48-hour spacing"
+        required: false
+        default: false
+        type: boolean
+
+concurrency:
+  group: xotiicduck-release-train
+  cancel-in-progress: false
+
+jobs:
+  promote:
+    runs-on: ubuntu-latest
+    permissions:
+      contents: write
+    outputs:
+      promoted: ${{ steps.promote.outputs.promoted }}
+      release_label: ${{ steps.promote.outputs.release_label }}
+      release_version: ${{ steps.promote.outputs.release_version }}
+    steps:
+      - name: Check out the protected release train
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - name: Use Node.js 22
+        uses: actions/setup-node@v4
+        with:
+          node-version: 22
+
+      - name: Validate every bundled update pair
+        run: node .release-train/promote-release.mjs --check
+
+      - name: Promote at most one due pair
+        id: promote
+        env:
+          FORCE_NEXT: ${{ inputs.force_next }}
+        run: |
+          if [ "$FORCE_NEXT" = "true" ]; then
+            node .release-train/promote-release.mjs --force
+          else
+            node .release-train/promote-release.mjs
+          fi
+
+      - name: Run the promoted release tests
+        if: steps.promote.outputs.promoted == 'true'
+        run: npm test
+
+      - name: Protect the live catalog and uploaded media
+        if: steps.promote.outputs.promoted == 'true'
+        run: |
+          git add -A
+          if git diff --cached --name-only | grep -E '^(catalog\.js|music/|covers/)'; then
+            echo "A release attempted to change protected catalog or media files."
+            exit 1
+          fi
+
+      - name: Commit the promoted pair
+        if: steps.promote.outputs.promoted == 'true'
+        env:
+          RELEASE_LABEL: ${{ steps.promote.outputs.release_label }}
+        run: |
+          git config user.name "XotiicDuck Release Train"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git commit -m "Release XotiicDuck Music ${RELEASE_LABEL}"
+          git push origin HEAD:main
+
+  publish-pages:
+    if: needs.promote.outputs.promoted == 'true'
+    needs: promote
+    runs-on: ubuntu-latest
+    permissions:
+      contents: read
+      pages: write
+      id-token: write
+    environment:
+      name: github-pages
+      url: ${{ steps.deployment.outputs.page_url }}
+    steps:
+      - name: Check out the newly promoted main branch
+        uses: actions/checkout@v4
+        with:
+          ref: main
+
+      - name: Configure GitHub Pages
+        uses: actions/configure-pages@v5
+
+      - name: Assemble the public static site
+        run: |
+          mkdir _site
+          rsync -a ./ _site/ \
+            --exclude='.git/' \
+            --exclude='.github/' \
+            --exclude='.release-train/' \
+            --exclude='_site/' \
+            --exclude='tests/' \
+            --exclude='android-twa/' \
+            --exclude='node_modules/' \
+            --exclude='*.md' \
+            --exclude='package.json' \
+            --exclude='package-lock.json'
+          test -f _site/index.html
+          test -f _site/catalog.js
+
+      - name: Upload GitHub Pages artifact
+        uses: actions/upload-pages-artifact@v4
+        with:
+          path: _site
+
+      - name: Deploy GitHub Pages
+        id: deployment
+        uses: actions/deploy-pages@v4

@@ -1,0 +1,11 @@
+{
+  "applicationId": "music.xotiicduck.player",
+  "name": "XotiicDuck Music",
+  "launcherName": "XotiicDuck",
+  "webManifestUrl": "https://x-s-m-x.github.io/Xotiic-Songs/manifest.webmanifest",
+  "startUrl": "/Xotiic-Songs/",
+  "versionName": "20.0.0",
+  "versionCode": 20,
+  "status": "preparation-only",
+  "signingKeyIncluded": false
+}

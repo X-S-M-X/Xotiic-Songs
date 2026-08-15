@@ -1,0 +1,190 @@
+/* Update 13 + 14 admin metadata and alignment layer */
+:root {
+  --admin-u14-line: rgba(255, 255, 255, 0.1);
+}
+
+.release-form,
+.form-column,
+.panel-card,
+.field-grid,
+.edit-field-grid,
+.managed-release,
+.managed-release > div {
+  min-width: 0;
+}
+
+.field input,
+.field select,
+.field textarea {
+  width: 100%;
+  min-width: 0;
+}
+
+.field input[type="number"] {
+  appearance: textfield;
+}
+
+.metadata-check {
+  grid-column: 1 / -1;
+  display: flex;
+  min-height: 48px;
+  align-items: center;
+  gap: 11px;
+  margin: 0;
+  padding: 11px 13px;
+  border: 1px solid var(--admin-u14-line);
+  border-radius: 12px;
+  background: rgba(255, 255, 255, 0.025);
+  color: #d8d5df;
+  font-size: 0.82rem;
+  font-weight: 700;
+}
+
+.metadata-check input {
+  flex: 0 0 18px;
+  width: 18px;
+  height: 18px;
+  accent-color: #b1ff3c;
+}
+
+.release-mode-selector {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  align-items: stretch;
+}
+
+.release-mode-selector label {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr);
+  place-items: center;
+  text-align: center;
+}
+
+.release-mode-selector label > span {
+  display: grid;
+  width: 100%;
+  align-content: center;
+  place-items: center;
+  min-width: 0;
+}
+
+.release-mode-selector label strong,
+.release-mode-selector label small {
+  width: 100%;
+  margin-inline: auto;
+  text-align: center;
+}
+
+.managed-release {
+  grid-template-columns: 68px minmax(180px, 1fr) minmax(330px, auto);
+  align-items: center;
+}
+
+.managed-release-actions {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: flex-end;
+  gap: 7px;
+}
+
+.managed-release-actions > * {
+  min-height: 36px;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.edit-release-modal {
+  width: min(920px, calc(100vw - 28px));
+  max-height: min(90dvh, 920px);
+  overflow: auto;
+}
+
+.edit-field-grid {
+  align-items: start;
+}
+
+.file-drop,
+.cover-drop {
+  min-width: 0;
+}
+
+.drop-copy {
+  min-width: 0;
+}
+
+.drop-copy strong,
+.drop-copy small {
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+@media (max-width: 1040px) {
+  .managed-release {
+    grid-template-columns: 64px minmax(0, 1fr);
+  }
+
+  .managed-release-actions {
+    grid-column: 1 / -1;
+    justify-content: flex-start;
+    padding-top: 10px;
+    border-top: 1px solid rgba(255, 255, 255, 0.07);
+  }
+}
+
+@media (max-width: 720px) {
+  .field-grid,
+  .edit-field-grid {
+    grid-template-columns: 1fr;
+  }
+
+  .field-wide,
+  .metadata-check {
+    grid-column: 1;
+  }
+
+  .release-mode-selector {
+    grid-template-columns: 1fr;
+  }
+
+  .release-mode-selector label {
+    min-height: 64px;
+  }
+
+  .managed-release {
+    grid-template-columns: 58px minmax(0, 1fr);
+    gap: 11px;
+  }
+
+  .managed-release-actions {
+    display: grid;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    width: 100%;
+  }
+
+  .managed-release-actions .status-chip {
+    grid-column: 1 / -1;
+    justify-self: start;
+  }
+
+  .managed-release-actions button {
+    width: 100%;
+  }
+
+  .edit-release-modal {
+    width: calc(100vw - 14px);
+    max-height: calc(100dvh - 14px);
+    padding-inline: 15px;
+  }
+}
+
+@media (max-width: 420px) {
+  .managed-release-actions {
+    grid-template-columns: 1fr;
+  }
+
+  .managed-release-actions .status-chip {
+    grid-column: 1;
+  }
+}

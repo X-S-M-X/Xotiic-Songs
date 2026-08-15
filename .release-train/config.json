@@ -1,0 +1,27 @@
+{
+  "version": 1,
+  "minimumHoursBetweenPromotions": 48,
+  "releases": [
+    {
+      "id": "update-16",
+      "label": "Updates 15 and 16",
+      "version": "16.0.0",
+      "dueAt": "2026-08-18T09:17:00.000Z",
+      "bundle": ".release-train/bundles/update-16"
+    },
+    {
+      "id": "update-18",
+      "label": "Updates 17 and 18",
+      "version": "18.0.0",
+      "dueAt": "2026-08-21T09:17:00.000Z",
+      "bundle": ".release-train/bundles/update-18"
+    },
+    {
+      "id": "update-20",
+      "label": "Updates 19 and 20",
+      "version": "20.0.0",
+      "dueAt": "2026-08-24T09:17:00.000Z",
+      "bundle": ".release-train/bundles/update-20"
+    }
+  ]
+}
