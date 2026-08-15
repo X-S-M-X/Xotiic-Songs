@@ -243,6 +243,36 @@ summary:focus-visible {
   max-width: 100%;
 }
 
+.selected-audio-preview {
+  width: 100%;
+  min-height: var(--admin-tap);
+  margin: -2px 0 11px;
+  border: 1px solid rgba(var(--acid-rgb), 0.2);
+  border-radius: 11px;
+  background: rgba(var(--acid-rgb), 0.055);
+  color: var(--acid-soft);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  font-size: 9px;
+  font-weight: 850;
+  cursor: pointer;
+}
+
+.selected-audio-preview:disabled {
+  opacity: 0.43;
+  cursor: not-allowed;
+}
+
+.selected-audio-preview.is-previewing,
+.managed-release-actions button.is-previewing {
+  border-color: rgba(var(--acid-rgb), 0.5);
+  background: rgba(var(--acid-rgb), 0.12);
+  color: var(--acid);
+  box-shadow: inset 0 0 0 1px rgba(var(--acid-rgb), 0.06);
+}
+
 .primary-action {
   min-height: 50px;
   border: 1px solid rgba(var(--acid-rgb), 0.72);
@@ -460,8 +490,32 @@ summary:focus-visible {
 }
 
 .release-mode-selector label {
+  display: grid;
+  place-items: center;
   border-color: rgba(229, 221, 255, 0.11);
   background: rgba(255, 255, 255, 0.02);
+  text-align: center;
+}
+
+.release-mode-selector legend {
+  width: 100%;
+  padding-inline: 0;
+  text-align: center;
+}
+
+.release-mode-selector label > span {
+  display: grid;
+  width: 100%;
+  min-width: 0;
+  place-items: center;
+  align-content: center;
+}
+
+.release-mode-selector label strong,
+.release-mode-selector label small {
+  width: 100%;
+  margin-inline: auto;
+  text-align: center;
 }
 
 .release-mode-selector label.is-selected {
@@ -544,6 +598,165 @@ summary:focus-visible {
 .managed-release-actions {
   flex-wrap: wrap;
   justify-content: flex-end;
+}
+
+.admin-preview-player {
+  position: fixed;
+  z-index: 86;
+  left: calc(246px + clamp(18px, 2.5vw, 38px));
+  right: clamp(18px, 2.5vw, 38px);
+  bottom: 16px;
+  min-height: 82px;
+  display: grid;
+  grid-template-columns: 58px minmax(150px, 1fr) auto minmax(240px, 0.75fr) 44px;
+  align-items: center;
+  gap: 14px;
+  padding: 11px 12px;
+  border: 1px solid rgba(var(--acid-rgb), 0.3);
+  border-radius: 18px 18px 18px 6px;
+  background:
+    radial-gradient(circle at 100% 0, rgba(var(--violet-rgb), 0.18), transparent 28%),
+    linear-gradient(135deg, rgba(20, 15, 29, 0.98), rgba(8, 7, 12, 0.98));
+  box-shadow: 0 24px 80px rgba(0, 0, 0, 0.58), 5px 5px 0 rgba(var(--violet-rgb), 0.14);
+  backdrop-filter: blur(24px);
+}
+
+.admin-preview-player[hidden],
+.admin-preview-player audio {
+  display: none !important;
+}
+
+.admin-preview-art {
+  width: 58px;
+  height: 58px;
+  border: 1px solid rgba(var(--acid-rgb), 0.25);
+  border-radius: 13px 13px 13px 4px;
+  background: linear-gradient(135deg, rgba(var(--acid-rgb), 0.13), rgba(var(--violet-rgb), 0.12));
+  background-position: center;
+  background-size: cover;
+  color: var(--acid);
+  display: grid;
+  place-items: center;
+  font-size: 10px;
+  font-weight: 950;
+}
+
+.admin-preview-copy {
+  min-width: 0;
+  display: grid;
+  gap: 3px;
+}
+
+.admin-preview-copy small {
+  color: var(--acid);
+  font-size: 7px;
+  font-weight: 900;
+  letter-spacing: 0.12em;
+}
+
+.admin-preview-copy strong,
+.admin-preview-copy span {
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.admin-preview-copy strong {
+  color: #faf7ff;
+  font-size: 12px;
+}
+
+.admin-preview-copy span {
+  color: var(--muted);
+  font-size: 8px;
+}
+
+.admin-preview-controls {
+  display: flex;
+  align-items: center;
+  gap: 5px;
+}
+
+.admin-preview-controls button,
+.admin-preview-close {
+  width: var(--admin-tap);
+  height: var(--admin-tap);
+  border: 1px solid rgba(229, 221, 255, 0.12);
+  border-radius: 12px;
+  background: rgba(255, 255, 255, 0.025);
+  color: #c8c1d0;
+  cursor: pointer;
+}
+
+.admin-preview-controls button:disabled {
+  opacity: 0.3;
+  cursor: not-allowed;
+}
+
+.admin-preview-controls .admin-preview-toggle {
+  border-color: rgba(var(--acid-rgb), 0.65);
+  background: linear-gradient(135deg, var(--acid), var(--cyan));
+  color: #090b08;
+  box-shadow: 3px 3px 0 rgba(var(--violet-rgb), 0.24);
+}
+
+.admin-preview-timeline {
+  min-width: 0;
+  display: grid;
+  grid-template-columns: 36px minmax(80px, 1fr) 36px;
+  align-items: center;
+  gap: 8px;
+}
+
+.admin-preview-timeline span {
+  color: #8f8798;
+  font-size: 8px;
+  font-variant-numeric: tabular-nums;
+  text-align: center;
+}
+
+.admin-preview-timeline input[type="range"] {
+  --preview-fill: 0%;
+  appearance: none;
+  width: 100%;
+  height: 4px;
+  border-radius: 999px;
+  background: linear-gradient(to right, var(--acid) 0, var(--acid) var(--preview-fill), rgba(255, 255, 255, 0.15) var(--preview-fill), rgba(255, 255, 255, 0.15) 100%);
+  cursor: pointer;
+}
+
+.admin-preview-timeline input[type="range"]::-webkit-slider-thumb {
+  appearance: none;
+  width: 0;
+  height: 0;
+  opacity: 0;
+}
+
+.admin-preview-timeline input[type="range"]::-moz-range-thumb {
+  width: 0;
+  height: 0;
+  border: 0;
+  opacity: 0;
+}
+
+.admin-preview-timeline input[type="range"]:active::-webkit-slider-thumb,
+.admin-preview-timeline input[type="range"]:focus-visible::-webkit-slider-thumb,
+.admin-preview-timeline input[type="range"]:active::-moz-range-thumb,
+.admin-preview-timeline input[type="range"]:focus-visible::-moz-range-thumb {
+  width: 11px;
+  height: 11px;
+  border-radius: 50%;
+  background: var(--acid);
+  opacity: 1;
+}
+
+body.admin-preview-active .dashboard-main {
+  padding-bottom: 176px;
+}
+
+body.admin-preview-active .toast,
+body.admin-preview-active .admin-update-banner {
+  bottom: 112px;
 }
 
 .managed-release-actions button,
@@ -664,6 +877,11 @@ summary:focus-visible {
   .overview-metrics {
     grid-template-columns: repeat(2, minmax(0, 1fr));
   }
+
+  .admin-preview-player {
+    left: 18px;
+    right: 18px;
+  }
 }
 
 @media (max-width: 900px) {
@@ -709,7 +927,7 @@ summary:focus-visible {
   .managed-release-actions {
     grid-column: 1 / -1;
     display: grid;
-    grid-template-columns: auto repeat(3, minmax(0, 1fr));
+    grid-template-columns: auto repeat(4, minmax(0, 1fr));
   }
 }
 
@@ -923,7 +1141,7 @@ summary:focus-visible {
   }
 
   .managed-release-actions {
-    grid-template-columns: auto repeat(3, minmax(0, 1fr));
+    grid-template-columns: auto repeat(4, minmax(0, 1fr));
   }
 
   .managed-release-actions button {
@@ -960,6 +1178,57 @@ summary:focus-visible {
   .admin-update-banner {
     bottom: calc(78px + env(safe-area-inset-bottom));
   }
+
+  .admin-preview-player {
+    left: max(8px, env(safe-area-inset-left));
+    right: max(8px, env(safe-area-inset-right));
+    bottom: calc(76px + env(safe-area-inset-bottom));
+    min-height: 112px;
+    grid-template-columns: 50px minmax(0, 1fr) auto;
+    grid-template-areas:
+      "art copy close"
+      "controls timeline timeline";
+    gap: 9px 10px;
+    padding: 10px;
+    border-radius: 17px 17px 17px 5px;
+  }
+
+  .admin-preview-art {
+    grid-area: art;
+    width: 50px;
+    height: 50px;
+  }
+
+  .admin-preview-copy {
+    grid-area: copy;
+  }
+
+  .admin-preview-controls {
+    grid-area: controls;
+  }
+
+  .admin-preview-controls button,
+  .admin-preview-close {
+    width: 38px;
+    height: 38px;
+  }
+
+  .admin-preview-timeline {
+    grid-area: timeline;
+  }
+
+  .admin-preview-close {
+    grid-area: close;
+  }
+
+  body.admin-preview-active .dashboard-main {
+    padding-bottom: calc(220px + env(safe-area-inset-bottom));
+  }
+
+  body.admin-preview-active .toast,
+  body.admin-preview-active .admin-update-banner {
+    bottom: calc(202px + env(safe-area-inset-bottom));
+  }
 }
 
 @media (max-width: 430px) {
@@ -995,7 +1264,7 @@ summary:focus-visible {
   }
 
   .managed-release-actions {
-    grid-template-columns: repeat(3, minmax(0, 1fr));
+    grid-template-columns: repeat(2, minmax(0, 1fr));
   }
 
   .managed-release-actions .status-chip {
@@ -1006,6 +1275,11 @@ summary:focus-visible {
   .managed-release-actions button {
     padding-inline: 6px;
     font-size: 8px;
+  }
+
+  .admin-preview-timeline {
+    grid-template-columns: 32px minmax(60px, 1fr) 32px;
+    gap: 5px;
   }
 
   .review-release {
@@ -1062,6 +1336,19 @@ summary:focus-visible {
   .toast,
   .admin-update-banner {
     bottom: calc(12px + env(safe-area-inset-bottom));
+  }
+
+  .admin-preview-player {
+    bottom: calc(10px + env(safe-area-inset-bottom));
+  }
+
+  body.admin-preview-active .dashboard-main {
+    padding-bottom: 160px;
+  }
+
+  body.admin-preview-active .toast,
+  body.admin-preview-active .admin-update-banner {
+    bottom: calc(134px + env(safe-area-inset-bottom));
   }
 }
 

@@ -51,16 +51,17 @@ Background controls use the browser Media Session API where supported, so instal
 
 ## What Update 12 adds
 
-- **Anime Pulse**, a responsive visual redesign built around the artist's own cover artwork, plus a **Classic** appearance option in Settings.
+- **Classic Xotiic** remains the default black-and-green appearance. **Anime Pulse** is an optional visual redesign in Settings.
 - Pulse, Sakura, and Aqua accents, with system, full, or reduced motion preferences.
 - A rebuilt alignment layer for phones from 320 pixels wide, tablets, desktop, portrait, landscape, notches, and home indicators.
 - Mobile and tablet mini-player gestures: swipe left for next, swipe right for previous, or tap to open Now Playing.
 - Compact Library tabs for Playlists, Liked, and Offline, with counts and keyboard support.
 - Clear offline states using **Saved**, **Save offline**, and **Remove** labels instead of unexplained icons.
 - A redesigned artist console with aligned file controls, visible device timezone details, and recoverable metadata drafts while preparing a release.
-- Private Recently Played and Your Top Tracks This Month sections stored only on the listener's device. Update 12 has no global listening backend.
+- A private full-song admin preview player for live, scheduled, draft, archived, and newly selected MP3 files.
+- The multi-song play tracker is paused, so partially played tracks do not fill the Home screen. Only the active player's timeline is shown. There is no global listening backend.
 
-See `UPDATE-12-INSTRUCTIONS.md` for the protected Windows update process that keeps the live catalog, songs, and covers intact.
+See `UPDATE-12.1-INSTRUCTIONS.md` for the protected Windows update process that keeps the live catalog, songs, and covers intact.
 
 ## Update 9.2 playback-state polish
 

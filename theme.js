@@ -2,7 +2,7 @@
   "use strict";
 
   const STORAGE_KEY = "xotiicduck-appearance-v1";
-  const defaults = Object.freeze({ theme: "anime", accent: "pulse", motion: "system" });
+  const defaults = Object.freeze({ theme: "classic", accent: "pulse", motion: "system" });
   const validThemes = new Set(["anime", "classic"]);
   const validAccents = new Set(["pulse", "sakura", "aqua"]);
   const validMotion = new Set(["system", "full", "reduced"]);

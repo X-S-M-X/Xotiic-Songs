@@ -45,15 +45,18 @@ test("anime appearance, compact library, and mobile swipe controls are wired", (
   const layout = read("layout.css");
   const anime = read("anime-theme.css");
   const theme = read("theme.js");
-  assert.match(theme, /theme: "anime"/);
+  assert.match(theme, /theme: "classic"/);
   assert.match(theme, /\["anime", "classic"\]/);
   assert.match(html, /role="tablist" aria-label="Library collections"/);
   assert.match(app, /const setLibraryTab =/);
   assert.match(app, /startMiniPlayerGesture/);
   assert.match(app, /skip\(dx < 0 \? 1 : -1\)/);
+  assert.match(app, /const LISTENING_INSIGHTS_ENABLED = false/);
   assert.match(layout, /touch-action: pan-y/);
   assert.match(anime, /html\[data-theme="anime"\]/);
   assert.match(anime, /--current-cover-image/);
+  assert.match(html, /Classic Xotiic<\/strong><small>Default dark-green interface/);
+  assert.match(layout, /Keep the expanded Now Playing seek line clean/);
 });
 
 test("admin supports metadata edits, encrypted backup, and atomic updates", () => {
@@ -72,10 +75,19 @@ test("admin supports metadata edits, encrypted backup, and atomic updates", () =
   assert.match(app, /effectiveStatus/);
   assert.match(app, /releaseArchive/);
   assert.match(html, /id="release-draft-banner"/);
+  for (const id of ["admin-preview-player", "admin-preview-audio", "admin-preview-progress", "preview-selected-audio"]) assert.match(html, new RegExp(`id=["']${id}["']`));
   assert.match(app, /RELEASE_DRAFT_KEY/);
   assert.match(app, /restoreReleaseDraft/);
+  assert.match(app, /const playCatalogPreview =/);
+  assert.match(app, /const playSelectedPreview =/);
+  assert.match(app, /dataset\.releasePreview/);
   assert.doesNotMatch(app.match(/const saveReleaseDraft = \(\) => \{[\s\S]*?\n  \};/)?.[0] || "", /audioFile|coverFile|token/);
   assert.match(updateStyles, /\.replacement-file-field input\[type="file"\]/);
+  assert.match(updateStyles, /\.release-mode-selector label \{[\s\S]*?place-items: center;/);
+  assert.match(updateStyles, /\.release-mode-selector label > span \{[\s\S]*?place-items: center;/);
+  assert.match(updateStyles, /\.release-mode-selector label strong,[\s\S]*?text-align: center;/);
+  assert.match(updateStyles, /\.admin-preview-player \{/);
+  assert.match(html, /update-12\.css\?v=12\.1/);
   const ids = [...html.matchAll(/\sid="([^"]+)"/g)].map((match) => match[1]);
   assert.equal(new Set(ids).size, ids.length, "admin HTML IDs must be unique");
 });

@@ -43,6 +43,10 @@
     releaseFilter: "all",
     draftTimer: null,
     suppressDraftSave: false,
+    previewReleaseId: "",
+    previewSourceKind: "",
+    previewObjectUrl: "",
+    previewTrack: null,
   };
 
   const views = {
@@ -116,6 +120,197 @@
     }
     return "No release date";
   };
+
+  const previewAudio = () => $("#admin-preview-audio");
+  const previewQueue = () => state.releases
+    .map((release, index) => ({ release, timestamp: releaseTimestamp(release, index) }))
+    .filter(({ release }) => Boolean(safeAssetUrl(release.audio)))
+    .sort((left, right) => right.timestamp - left.timestamp)
+    .map(({ release }) => release);
+  const previewStatus = (release) => {
+    const status = effectiveStatus(release);
+    if (release.status === "scheduled" && status === "published") return "AUTO-LIVE PREVIEW";
+    return `${status.toUpperCase()} PREVIEW`;
+  };
+
+  const updatePreviewPositionState = () => {
+    const audio = previewAudio();
+    if (!navigator.mediaSession?.setPositionState || !Number.isFinite(audio.duration) || audio.duration <= 0) return;
+    try {
+      navigator.mediaSession.setPositionState({
+        duration: audio.duration,
+        playbackRate: audio.playbackRate || 1,
+        position: Math.min(audio.currentTime, audio.duration),
+      });
+    } catch { /* Position metadata is optional. */ }
+  };
+
+  const syncPreviewUi = () => {
+    const audio = previewAudio();
+    const playing = Boolean(audio.src && !audio.paused && !audio.ended);
+    const duration = Number.isFinite(audio.duration) ? audio.duration : Number(state.previewTrack?.duration) || 0;
+    const current = Number.isFinite(audio.currentTime) ? audio.currentTime : 0;
+    const progress = $("#admin-preview-progress");
+    progress.max = String(Math.max(0, duration));
+    if (!progress.matches(":active")) progress.value = String(Math.min(current, duration || current));
+    progress.style.setProperty("--preview-fill", `${duration > 0 ? Math.min(100, (current / duration) * 100) : 0}%`);
+    $("#admin-preview-current").textContent = formatDuration(current);
+    $("#admin-preview-duration").textContent = formatDuration(duration);
+    setIcon($("#admin-preview-toggle"), playing ? "pause" : "play");
+    $("#admin-preview-toggle").setAttribute("aria-label", playing ? "Pause preview" : "Play preview");
+
+    const queueAvailable = state.previewSourceKind === "catalog" && previewQueue().length > 1;
+    $("#admin-preview-previous").disabled = !queueAvailable;
+    $("#admin-preview-next").disabled = !queueAvailable;
+
+    $$('[data-release-preview]').forEach((button) => {
+      const active = state.previewSourceKind === "catalog" && state.previewReleaseId === button.dataset.releasePreview;
+      button.classList.toggle("is-previewing", active);
+      button.textContent = active ? playing ? "Pause" : "Resume" : "Preview";
+    });
+
+    const selectedButton = $("#preview-selected-audio");
+    if (selectedButton) {
+      const active = state.previewSourceKind === "local";
+      selectedButton.disabled = !state.audioFile;
+      selectedButton.classList.toggle("is-previewing", active);
+      setIcon(selectedButton, active && playing ? "pause" : "play");
+      const label = selectedButton.querySelector("span:last-child");
+      if (label) label.textContent = active ? playing ? "Pause selected MP3" : "Resume selected MP3" : "Test selected MP3";
+    }
+
+    if (navigator.mediaSession) {
+      try { navigator.mediaSession.playbackState = playing ? "playing" : audio.src ? "paused" : "none"; } catch { /* Optional browser integration. */ }
+    }
+    updatePreviewPositionState();
+  };
+
+  const releasePreviewObjectUrl = () => {
+    if (!state.previewObjectUrl) return;
+    URL.revokeObjectURL(state.previewObjectUrl);
+    state.previewObjectUrl = "";
+  };
+
+  const closeAdminPreview = () => {
+    const audio = previewAudio();
+    audio.pause();
+    audio.removeAttribute("src");
+    audio.load();
+    releasePreviewObjectUrl();
+    state.previewReleaseId = "";
+    state.previewSourceKind = "";
+    state.previewTrack = null;
+    $("#admin-preview-player").hidden = true;
+    document.body.classList.remove("admin-preview-active");
+    if (navigator.mediaSession) {
+      try {
+        navigator.mediaSession.metadata = null;
+        navigator.mediaSession.playbackState = "none";
+      } catch { /* Optional browser integration. */ }
+    }
+    syncPreviewUi();
+  };
+
+  const configurePreviewMediaSession = (track) => {
+    if (!("mediaSession" in navigator) || !("MediaMetadata" in window)) return;
+    const artwork = track.coverUrl && !track.coverUrl.startsWith("blob:")
+      ? [{ src: new URL(track.coverUrl, location.href).href, sizes: "512x512" }]
+      : [];
+    try {
+      navigator.mediaSession.metadata = new MediaMetadata({ title: track.title, artist: track.artist, album: "Xotiic Upload private preview", artwork });
+      navigator.mediaSession.setActionHandler("play", () => previewAudio().play().catch(() => undefined));
+      navigator.mediaSession.setActionHandler("pause", () => previewAudio().pause());
+      navigator.mediaSession.setActionHandler("previoustrack", () => skipAdminPreview(-1));
+      navigator.mediaSession.setActionHandler("nexttrack", () => skipAdminPreview(1));
+      navigator.mediaSession.setActionHandler("seekto", (details) => {
+        if (!Number.isFinite(details.seekTime)) return;
+        previewAudio().currentTime = Math.max(0, Math.min(details.seekTime, previewAudio().duration || details.seekTime));
+      });
+    } catch { /* Browser lock-screen controls are optional. */ }
+  };
+
+  const openAdminPreview = async ({ src, title, artist, coverUrl = "", status, duration = 0, releaseId = "", sourceKind, objectUrl = "" }) => {
+    const audio = previewAudio();
+    audio.pause();
+    releasePreviewObjectUrl();
+    state.previewObjectUrl = objectUrl;
+    state.previewReleaseId = releaseId;
+    state.previewSourceKind = sourceKind;
+    state.previewTrack = { title, artist, coverUrl, status, duration };
+
+    $("#admin-preview-title").textContent = title;
+    $("#admin-preview-meta").textContent = `${artist} · Full-song playback`;
+    $("#admin-preview-status").textContent = status;
+    const art = $("#admin-preview-art");
+    art.style.backgroundImage = coverUrl ? `url(${JSON.stringify(coverUrl)})` : "";
+    art.textContent = coverUrl ? "" : "XD";
+    $("#admin-preview-player").hidden = false;
+    document.body.classList.add("admin-preview-active");
+
+    audio.src = src;
+    audio.load();
+    configurePreviewMediaSession(state.previewTrack);
+    syncPreviewUi();
+    try {
+      await audio.play();
+    } catch {
+      showToast("The preview is ready. Tap Play to start it.");
+    }
+    syncPreviewUi();
+  };
+
+  const playCatalogPreview = (id) => {
+    const release = state.releases.find((entry) => entry.id === id);
+    const src = safeAssetUrl(release?.audio);
+    if (!release || !src) {
+      showToast("That release does not have a playable MP3 path.", "error");
+      return;
+    }
+    openAdminPreview({
+      src,
+      title: text(release.title || "Untitled release"),
+      artist: text(release.artist || "XotiicDuck"),
+      coverUrl: safeAssetUrl(release.cover),
+      status: previewStatus(release),
+      duration: Number(release.duration) || 0,
+      releaseId: release.id,
+      sourceKind: "catalog",
+    });
+  };
+
+  const playSelectedPreview = () => {
+    if (!state.audioFile) {
+      showToast("Choose an MP3 before testing it.", "error");
+      return;
+    }
+    const objectUrl = URL.createObjectURL(state.audioFile);
+    openAdminPreview({
+      src: objectUrl,
+      title: $("#release-title").value.trim() || state.audioFile.name.replace(/\.mp3$/i, ""),
+      artist: $("#release-artist").value.trim() || "XotiicDuck",
+      coverUrl: state.coverObjectUrl,
+      status: "LOCAL MP3 CHECK",
+      duration: state.audioDuration,
+      sourceKind: "local",
+      objectUrl,
+    });
+  };
+
+  const toggleAdminPreview = () => {
+    const audio = previewAudio();
+    if (!audio.src) return;
+    if (audio.paused) audio.play().catch(() => showToast("This MP3 could not start in the browser.", "error"));
+    else audio.pause();
+  };
+
+  function skipAdminPreview(direction) {
+    if (state.previewSourceKind !== "catalog") return;
+    const queue = previewQueue();
+    if (queue.length < 2) return;
+    const index = Math.max(0, queue.findIndex((release) => release.id === state.previewReleaseId));
+    const next = queue[(index + direction + queue.length) % queue.length];
+    if (next) playCatalogPreview(next.id);
+  }
 
   const setView = (name) => {
     Object.entries(views).forEach(([key, element]) => { element.hidden = key !== name; });
@@ -300,6 +495,7 @@
   };
 
   const lockConsole = (message = "") => {
+    closeAdminPreview();
     state.token = "";
     state.publisher = null;
     state.pendingRelease = null;
@@ -472,16 +668,22 @@
       edit.type = "button";
       edit.dataset.releaseEdit = text(release.id);
       edit.textContent = "Edit";
+      const preview = document.createElement("button");
+      preview.type = "button";
+      preview.dataset.releasePreview = text(release.id);
+      preview.textContent = "Preview";
+      preview.title = `Play the complete ${sourceStatus} MP3 in the private console`;
       const archive = document.createElement("button");
       archive.type = "button";
       archive.className = sourceStatus === "archived" ? "" : "danger";
       if (sourceStatus === "archived") archive.dataset.releaseRestore = text(release.id);
       else archive.dataset.releaseArchive = text(release.id);
       archive.textContent = sourceStatus === "archived" ? "Restore draft" : "Archive";
-      actions.append(status, edit, toggle, archive);
+      actions.append(status, preview, edit, toggle, archive);
       row.append(cover, copy, actions);
       list.append(row);
     });
+    syncPreviewUi();
   };
 
   const selectAdminPanel = (name) => {
@@ -676,6 +878,7 @@
   };
 
   const resetReleaseForm = ({ clearDraft = false } = {}) => {
+    if (state.previewSourceKind === "local") closeAdminPreview();
     state.suppressDraftSave = true;
     $("#release-form").reset();
     $("#release-artist").value = "XotiicDuck";
@@ -710,6 +913,7 @@
     if (clearDraft) clearReleaseDraft({ quiet: true });
     updateReleaseMode();
     updateReleaseSummary();
+    syncPreviewUi();
   };
 
   const coverExtension = (file) => {
@@ -1130,6 +1334,45 @@
     }
   };
 
+  const adminPreviewAudio = previewAudio();
+  adminPreviewAudio.addEventListener("loadedmetadata", syncPreviewUi);
+  adminPreviewAudio.addEventListener("durationchange", syncPreviewUi);
+  adminPreviewAudio.addEventListener("timeupdate", syncPreviewUi);
+  adminPreviewAudio.addEventListener("play", () => {
+    if (state.previewTrack) $("#admin-preview-status").textContent = state.previewTrack.status;
+    syncPreviewUi();
+  });
+  adminPreviewAudio.addEventListener("pause", syncPreviewUi);
+  adminPreviewAudio.addEventListener("waiting", () => {
+    if (adminPreviewAudio.src) $("#admin-preview-status").textContent = "BUFFERING PREVIEW";
+  });
+  adminPreviewAudio.addEventListener("playing", () => {
+    if (state.previewTrack) $("#admin-preview-status").textContent = state.previewTrack.status;
+    syncPreviewUi();
+  });
+  adminPreviewAudio.addEventListener("ended", () => {
+    if (state.previewSourceKind === "catalog" && previewQueue().length > 1) skipAdminPreview(1);
+    else syncPreviewUi();
+  });
+  adminPreviewAudio.addEventListener("error", () => {
+    if (!adminPreviewAudio.getAttribute("src")) return;
+    $("#admin-preview-status").textContent = "PREVIEW ERROR";
+    showToast("The full MP3 could not be loaded. Check the file path and connection.", "error");
+    syncPreviewUi();
+  });
+  $("#admin-preview-progress").addEventListener("input", (event) => {
+    const nextTime = Number(event.target.value);
+    if (Number.isFinite(nextTime)) adminPreviewAudio.currentTime = nextTime;
+  });
+  $("#admin-preview-toggle").addEventListener("click", toggleAdminPreview);
+  $("#admin-preview-previous").addEventListener("click", () => skipAdminPreview(-1));
+  $("#admin-preview-next").addEventListener("click", () => skipAdminPreview(1));
+  $("#admin-preview-close").addEventListener("click", closeAdminPreview);
+  $("#preview-selected-audio").addEventListener("click", () => {
+    if (state.previewSourceKind === "local" && adminPreviewAudio.src) toggleAdminPreview();
+    else playSelectedPreview();
+  });
+
   $("#setup-form").addEventListener("submit", setup);
   $("#login-form").addEventListener("submit", login);
   $("#replace-token-form").addEventListener("submit", replaceToken);
@@ -1150,8 +1393,10 @@
 
   $("#audio-file").addEventListener("change", async (event) => {
     const file = event.target.files?.[0];
+    if (state.previewSourceKind === "local") closeAdminPreview();
     state.audioFile = null;
     state.audioDuration = 0;
+    syncPreviewUi();
     if (!file) return updateReleaseSummary();
     const validType = file.type === "audio/mpeg" || file.name.toLowerCase().endsWith(".mp3");
     if (!validType) {
@@ -1179,9 +1424,11 @@
       }
       updateReleaseSummary();
       scheduleReleaseDraftSave();
+      syncPreviewUi();
     } catch (error) {
       event.target.value = "";
       showToast(error.message, "error");
+      syncPreviewUi();
     }
   });
 
@@ -1308,6 +1555,11 @@
       state.releaseFilter = target.dataset.releaseFilter;
       renderReleases();
     }
+    if (target.dataset.releasePreview) {
+      event.preventDefault();
+      if (state.previewSourceKind === "catalog" && state.previewReleaseId === target.dataset.releasePreview && adminPreviewAudio.src) toggleAdminPreview();
+      else playCatalogPreview(target.dataset.releasePreview);
+    }
     if (target.hasAttribute("data-review-close")) closeReview();
     if (target.hasAttribute("data-edit-close")) closeReleaseEditor();
     if (target.hasAttribute("data-install-close")) closeInstallHelp();
@@ -1373,6 +1625,7 @@
     showToast("Installed. Open Xotiic Upload from your Home screen or apps.");
   });
   window.addEventListener("pageshow", updateInstallButton);
+  window.addEventListener("beforeunload", releasePreviewObjectUrl);
   window.addEventListener("online", () => { if (state.token) setConnection(true); refreshDiagnostics().catch(() => undefined); });
   window.addEventListener("offline", () => { if (state.token) setConnection(false, "OFFLINE"); refreshDiagnostics().catch(() => undefined); });
   for (const eventName of ["pointerdown", "keydown", "touchstart"]) {

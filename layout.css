@@ -1392,3 +1392,49 @@ html[data-motion="reduced"] *::after {
     transition-duration: 0.01ms !important;
   }
 }
+
+/* Keep the expanded Now Playing seek line clean until it is being adjusted. */
+.now-playing-progress input[type="range"]::-webkit-slider-thumb {
+  width: 0;
+  height: 0;
+  opacity: 0;
+  box-shadow: none;
+}
+
+.now-playing-progress input[type="range"]::-moz-range-thumb {
+  width: 0;
+  height: 0;
+  border: 0;
+  opacity: 0;
+  box-shadow: none;
+}
+
+.now-playing-progress input[type="range"]:active::-webkit-slider-thumb,
+.now-playing-progress input[type="range"]:focus-visible::-webkit-slider-thumb {
+  width: 12px;
+  height: 12px;
+  opacity: 1;
+  box-shadow: 0 0 0 4px rgba(184, 255, 61, 0.08);
+}
+
+.now-playing-progress input[type="range"]:active::-moz-range-thumb,
+.now-playing-progress input[type="range"]:focus-visible::-moz-range-thumb {
+  width: 12px;
+  height: 12px;
+  opacity: 1;
+  box-shadow: 0 0 0 4px rgba(184, 255, 61, 0.08);
+}
+
+@media (hover: hover) {
+  .now-playing-progress input[type="range"]:hover::-webkit-slider-thumb {
+    width: 12px;
+    height: 12px;
+    opacity: 1;
+  }
+
+  .now-playing-progress input[type="range"]:hover::-moz-range-thumb {
+    width: 12px;
+    height: 12px;
+    opacity: 1;
+  }
+}

@@ -18,11 +18,11 @@
     <link rel="icon" href="../favicon.svg?v=12" />
     <link rel="apple-touch-icon" href="../apple-touch-icon.png?v=12" />
     <link rel="stylesheet" href="./styles.css?v=12" />
-    <link rel="stylesheet" href="./update-12.css?v=12" />
+    <link rel="stylesheet" href="./update-12.css?v=12.1" />
     <script src="./config.js?v=12" defer></script>
     <script src="./crypto.js?v=12" defer></script>
     <script src="./github.js?v=12" defer></script>
-    <script src="./app.js?v=12" defer></script>
+    <script src="./app.js?v=12.1" defer></script>
   </head>
   <body>
     <svg class="icon-sprite" aria-hidden="true" focusable="false">
@@ -30,6 +30,10 @@
       <symbol id="admin-icon-check" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><path d="m5 12 4 4L19 6"></path></symbol>
       <symbol id="admin-icon-alert" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round"><path d="M12 5v9"></path><circle cx="12" cy="18" r="1"></circle></symbol>
       <symbol id="admin-icon-music" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M9 18V5l10-2v13"></path><circle cx="6" cy="18" r="3"></circle><circle cx="16" cy="16" r="3"></circle></symbol>
+      <symbol id="admin-icon-play" viewBox="0 0 24 24" fill="currentColor"><path d="M8 5v14l11-7Z"></path></symbol>
+      <symbol id="admin-icon-pause" viewBox="0 0 24 24" fill="currentColor"><path d="M7 5h4v14H7zM13 5h4v14h-4z"></path></symbol>
+      <symbol id="admin-icon-previous" viewBox="0 0 24 24" fill="currentColor"><path d="M6 5h3v14H6zM19 5v14L9 12z"></path></symbol>
+      <symbol id="admin-icon-next" viewBox="0 0 24 24" fill="currentColor"><path d="M15 5h3v14h-3zM5 5v14l10-7z"></path></symbol>
       <symbol id="admin-icon-eye" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M2.5 12s3.5-6 9.5-6 9.5 6 9.5 6-3.5 6-9.5 6-9.5-6-9.5-6Z"></path><circle cx="12" cy="12" r="2.5"></circle></symbol>
       <symbol id="admin-icon-eye-off" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="m3 3 18 18"></path><path d="M10.6 6.2A10.8 10.8 0 0 1 12 6c6 0 9.5 6 9.5 6a16 16 0 0 1-2.2 2.8"></path><path d="M6.2 6.2C3.8 8 2.5 12 2.5 12s3.5 6 9.5 6a9 9 0 0 0 3-.5"></path></symbol>
       <symbol id="admin-icon-arrow-right" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14"></path><path d="m14 7 5 5-5 5"></path></symbol>
@@ -175,6 +179,7 @@
                       <span class="drop-copy"><strong id="audio-file-name">Choose the final MP3</strong><small id="audio-file-meta">Tap to open Files · Maximum 40 MB</small></span>
                       <span class="drop-action">Browse</span>
                     </label>
+                    <button id="preview-selected-audio" class="selected-audio-preview" type="button" disabled><span class="icon-frame"><svg class="ui-icon" aria-hidden="true"><use href="#admin-icon-play"></use></svg></span><span>Test selected MP3</span></button>
                     <label id="cover-drop" class="cover-drop">
                       <input id="cover-file" type="file" accept="image/jpeg,image/png,image/webp" required />
                       <span id="cover-preview" class="cover-preview"><b><svg class="ui-icon" aria-hidden="true"><use href="#admin-icon-plus"></use></svg></b><small>SQUARE<br />COVER</small></span>
@@ -247,6 +252,19 @@
               </div>
             </section>
           </div>
+
+          <section id="admin-preview-player" class="admin-preview-player" aria-label="Private catalog preview player" hidden>
+            <audio id="admin-preview-audio" preload="metadata" playsinline></audio>
+            <span id="admin-preview-art" class="admin-preview-art" aria-hidden="true">XD</span>
+            <div class="admin-preview-copy"><small id="admin-preview-status">PRIVATE PREVIEW</small><strong id="admin-preview-title">Choose a song to preview</strong><span id="admin-preview-meta">Drafts and scheduled releases can play here.</span></div>
+            <div class="admin-preview-controls">
+              <button id="admin-preview-previous" class="icon-only-button" type="button" aria-label="Previous preview song"><svg class="ui-icon" aria-hidden="true"><use href="#admin-icon-previous"></use></svg></button>
+              <button id="admin-preview-toggle" class="admin-preview-toggle icon-only-button" type="button" aria-label="Play preview"><svg class="ui-icon" aria-hidden="true"><use href="#admin-icon-play"></use></svg></button>
+              <button id="admin-preview-next" class="icon-only-button" type="button" aria-label="Next preview song"><svg class="ui-icon" aria-hidden="true"><use href="#admin-icon-next"></use></svg></button>
+            </div>
+            <div class="admin-preview-timeline"><span id="admin-preview-current">0:00</span><input id="admin-preview-progress" type="range" min="0" max="0" value="0" step="0.1" aria-label="Preview playback position" /><span id="admin-preview-duration">0:00</span></div>
+            <button id="admin-preview-close" class="admin-preview-close icon-only-button" type="button" aria-label="Close preview player"><svg class="ui-icon" aria-hidden="true"><use href="#admin-icon-close"></use></svg></button>
+          </section>
         </section>
       </main>
     </div>

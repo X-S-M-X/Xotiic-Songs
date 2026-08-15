@@ -30,11 +30,11 @@ Push the complete package and wait for GitHub Pages to finish before creating th
 
 Music published through Xotiic Upload is committed directly to `main`. GitHub Pages will redeploy automatically. Source changes made in VS Code can still be committed and pushed normally.
 
-Before copying Update 12, save and pull the newest catalog and songs that Xotiic Upload may already have published. Then copy only the app files, leaving `.git`, `catalog.js`, `music/`, and `covers/` untouched:
+Before copying Update 12.1, save and pull the newest catalog and songs that Xotiic Upload may already have published. Then copy only the app files, leaving `.git`, `catalog.js`, `music/`, and `covers/` untouched:
 
 ```powershell
 $repo = "C:\Users\Xotii\Downloads\XotiicDuck-Music-Portable"
-$update = "C:\Users\Xotii\Downloads\XotiicDuck-Music-Portable-Update-12"
+$update = "C:\Users\Xotii\Downloads\XotiicDuck-Music-Portable-Update-12.1"
 
 Set-Location $repo
 git status --short
@@ -47,13 +47,13 @@ Get-ChildItem -LiteralPath $update -Force |
 Set-Location $repo
 npm test
 git add -A
-git commit -m "Launch Update 12 anime redesign"
+git commit -m "Apply Update 12.1 player and admin fixes"
 git push origin main
 ```
 
-If `git status --short` shows local work before the pull, commit and push it first. Git cannot rebase while files have uncommitted changes. The paths above match the established project folder and the Update 12 extracted folder. Do not replace the live `catalog.js`, `music/`, or `covers/`. After GitHub Pages finishes, reopen the website and accept the **Player update ready** prompt.
+If `git status --short` shows local work before the pull, commit and push it first. Git cannot rebase while files have uncommitted changes. The paths above match the established project folder and the Update 12.1 extracted folder. Do not replace the live `catalog.js`, `music/`, or `covers/`. After GitHub Pages finishes, reopen the website and accept the **Player update ready** prompt.
 
-Update 12 keeps listening history and monthly top tracks private to each browser. It does not connect to Cloudflare or another global analytics backend.
+Update 12.1 hides the multi-song listening tracker and does not connect to Cloudflare or another global analytics backend. The active song still keeps its normal seek position on the device.
 
 Update 9 adds `offline.js`, `range.js`, automated tests, and a GitHub Actions validation workflow. The `music/` and `covers/` folders remain user data and are intentionally not included in application replacement copies.
 

@@ -93,6 +93,7 @@
   const SESSION_KEY = "xotiicduck-session-v1";
   const LISTENING_KEY = "xotiicduck-listening-v1";
   const LIBRARY_TAB_KEY = "xotiicduck-library-tab-v1";
+  const LISTENING_INSIGHTS_ENABLED = false;
   const BACKUP_VERSION = 1;
   const offlineApi = globalThis.XotiicOffline;
   const appearanceApi = globalThis.XotiicAppearance;
@@ -324,6 +325,13 @@
   };
 
   const renderListeningSections = () => {
+    if (!LISTENING_INSIGHTS_ENABLED) {
+      $("#recently-played-section").hidden = true;
+      $("#monthly-chart-section").hidden = true;
+      $("#recently-played").replaceChildren();
+      $("#monthly-chart").replaceChildren();
+      return;
+    }
     const recent = recentlyPlayedTracks();
     const recentSection = $("#recently-played-section");
     recentSection.hidden = recent.length === 0;
@@ -340,6 +348,7 @@
   };
 
   const markRecentlyPlayed = (track) => {
+    if (!LISTENING_INSIGHTS_ENABLED) return;
     if (!track) return;
     listening.recent = [{ id: track.id, playedAt: Date.now() }, ...listening.recent.filter((entry) => entry.id !== track.id)].slice(0, 20);
     saveListening();
@@ -366,6 +375,7 @@
   };
 
   const updateListeningProgress = () => {
+    if (!LISTENING_INSIGHTS_ENABLED) return;
     if (!currentTrack) return;
     if (listenProgress.trackId !== currentTrack.id) resetListenProgress();
     const position = Number(audio.currentTime) || 0;
@@ -1423,7 +1433,7 @@
     privacy: {
       eyebrow: "PRIVACY",
       title: "A small player should collect very little.",
-      copy: `<section><h3>Saved on this device</h3><p>Favorites, playlists, playback position, Recently Played, and Your Top Tracks stay in this browser. They are not connected to a listener account.</p></section><section><h3>No global listening tracker</h3><p>This release does not send song plays to a chart service, advertising network, or analytics backend.</p></section><section><h3>Separate artist access</h3><p>The owner publishing console stores its GitHub connection in an encrypted device vault. Public listeners cannot publish releases without the verified repository owner’s GitHub access.</p></section><section><h3>External links</h3><p>YouTube links open an external service governed by its own privacy terms. This player does not embed a YouTube video.</p></section>`,
+      copy: `<section><h3>Saved on this device</h3><p>Favorites, playlists, the active song position, and offline choices stay in this browser. They are not connected to a listener account.</p></section><section><h3>No listening tracker</h3><p>This release does not display multi-song listening progress or send song plays to a chart service, advertising network, or analytics backend.</p></section><section><h3>Separate artist access</h3><p>The owner publishing console stores its GitHub connection in an encrypted device vault. Public listeners cannot publish releases without the verified repository owner’s GitHub access.</p></section><section><h3>External links</h3><p>YouTube links open an external service governed by its own privacy terms. This player does not embed a YouTube video.</p></section>`,
     },
     terms: {
       eyebrow: "TERMS",
@@ -1602,7 +1612,7 @@
     if (!appearanceApi) return;
     const settings = appearanceApi.apply(appearanceApi.defaults, { persist: true, announce: true });
     syncAppearanceControls(settings);
-    showToast("Anime Pulse defaults restored.");
+    showToast("Classic Xotiic defaults restored.");
   });
   $("#library-switcher").addEventListener("keydown", (event) => {
     const tabs = $$('[data-library-tab]');
