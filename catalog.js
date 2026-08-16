@@ -528,5 +528,19 @@ window.XOTIICDUCK_RELEASES = [
     "status": "draft",
     "createdAt": "2026-08-15T09:09:58.742Z",
     "updatedAt": "2026-08-15T09:09:58.742Z"
+  },
+  {
+    "id": "seven-gates-of-illusion",
+    "title": "Seven Gates of Illusion",
+    "artist": "XotiicDuck",
+    "album": "Single",
+    "genre": "Anime J-Rock",
+    "releaseDate": "2026-08-16",
+    "duration": 401,
+    "audio": "music/seven-gates-of-illusion.mp3",
+    "cover": "covers/seven-gates-of-illusion.webp",
+    "status": "draft",
+    "createdAt": "2026-08-16T01:02:41.083Z",
+    "updatedAt": "2026-08-16T01:02:41.083Z"
   }
 ];
