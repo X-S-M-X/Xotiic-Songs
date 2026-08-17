@@ -549,5 +549,19 @@ window.XOTIICDUCK_RELEASES = [
     "status": "draft",
     "createdAt": "2026-08-16T01:02:41.083Z",
     "updatedAt": "2026-08-16T01:02:41.083Z"
+  },
+  {
+    "id": "last-light-of-mankind",
+    "title": "Last Light Of Mankind",
+    "artist": "XotiicDuck",
+    "album": "Single",
+    "genre": "Anime J-Rock",
+    "releaseDate": "2026-08-17",
+    "duration": 477,
+    "audio": "music/last-light-of-mankind.mp3",
+    "cover": "covers/last-light-of-mankind.webp",
+    "status": "draft",
+    "createdAt": "2026-08-17T00:31:11.543Z",
+    "updatedAt": "2026-08-17T00:31:11.543Z"
   }
 ];
