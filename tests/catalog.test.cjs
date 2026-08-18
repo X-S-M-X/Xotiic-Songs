@@ -5,9 +5,23 @@ const path = require("node:path");
 const { parseCatalog, formatCatalog, GitHubError } = require("../admin/github.js");
 
 test("catalog format round-trips release metadata", () => {
-  const releases = [{ id: "test-song", title: "Test Song", youtubeUrl: "https://youtu.be/example", status: "scheduled", releaseAt: "2026-08-20T08:00:00.000Z" }];
+  const releases = [{
+    id: "test-song",
+    title: "Test Song",
+    releaseType: "Album",
+    collection: "Test Collection",
+    trackNumber: 2,
+    franchise: "Test Saga",
+    mood: "Final battle",
+    tags: ["anime", "anthem"],
+    credits: "Written and produced by XotiicDuck",
+    explicit: true,
+    youtubeUrl: "https://youtu.be/example",
+    status: "scheduled",
+    releaseAt: "2026-08-20T08:00:00.000Z",
+  }];
   const formatted = formatCatalog(releases);
-  assert.match(formatted, /XOTIICDUCK_CATALOG_VERSION = 2/);
+  assert.match(formatted, /XOTIICDUCK_CATALOG_VERSION = 3/);
   assert.deepEqual(parseCatalog(formatted), releases);
 });
 

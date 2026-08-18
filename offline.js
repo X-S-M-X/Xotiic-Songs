@@ -5,6 +5,17 @@
   const INDEX_KEY = "xotiicduck-offline-tracks-v1";
 
   const absoluteUrl = (value) => new URL(value, location.href).href;
+  const deleteAssetVariants = async (cache, value, keep = "") => {
+    const target = new URL(value, location.href);
+    const keepUrl = keep ? new URL(keep, location.href).href : "";
+    const keys = await cache.keys();
+    await Promise.all(keys.map((request) => {
+      const candidate = new URL(request.url);
+      return candidate.origin === target.origin && candidate.pathname === target.pathname && request.url !== keepUrl
+        ? cache.delete(request)
+        : Promise.resolve(false);
+    }));
+  };
 
   const readIndex = () => {
     try {
@@ -23,8 +34,8 @@
     callback?.({ phase, ratio: Math.max(0, Math.min(1, ratio)), loaded, total });
   };
 
-  const fetchWholeResponse = async (url, callback, start, span, phase) => {
-    const response = await fetch(url, { cache: "no-store" });
+  const fetchWholeResponse = async (url, callback, start, span, phase, signal) => {
+    const response = await fetch(url, { cache: "no-store", signal });
     if (!response.ok) throw new Error(`Download failed with status ${response.status}.`);
     const expected = Number(response.headers.get("content-length")) || 0;
     let blob;
@@ -82,7 +93,7 @@
     return valid;
   };
 
-  const save = async (track, callback) => {
+  const save = async (track, callback, { signal } = {}) => {
     if (!supported()) throw new Error("Offline storage is unavailable in this browser.");
     if (!track?.id || !track.audio || !track.cover) throw new Error("This release is missing its offline files.");
     await requestPersistence();
@@ -91,10 +102,14 @@
     const coverUrl = absoluteUrl(track.cover);
     try {
       progress(callback, "audio", 0);
-      const audioResponse = await fetchWholeResponse(audioUrl, callback, 0, 0.9, "audio");
+      const audioResponse = await fetchWholeResponse(audioUrl, callback, 0, 0.9, "audio", signal);
       await cache.put(audioUrl, audioResponse);
-      const coverResponse = await fetchWholeResponse(coverUrl, callback, 0.9, 0.1, "cover");
+      const coverResponse = await fetchWholeResponse(coverUrl, callback, 0.9, 0.1, "cover", signal);
       await cache.put(coverUrl, coverResponse);
+      await Promise.all([
+        deleteAssetVariants(cache, audioUrl, audioUrl),
+        deleteAssetVariants(cache, coverUrl, coverUrl),
+      ]);
       writeIndex([...readIndex(), track.id]);
       progress(callback, "complete", 1);
       return estimate();
@@ -109,8 +124,8 @@
     if (!supported() || !track) return;
     const cache = await caches.open(CACHE_NAME);
     await Promise.all([
-      cache.delete(absoluteUrl(track.audio)),
-      cache.delete(absoluteUrl(track.cover)),
+      deleteAssetVariants(cache, absoluteUrl(track.audio)),
+      deleteAssetVariants(cache, absoluteUrl(track.cover)),
     ]);
     writeIndex(readIndex().filter((id) => id !== track.id));
   };

@@ -1,10 +1,9 @@
 # XotiicDuck Music | GitHub release package
 
-This folder contains two connected installable web apps and one signed Android wrapper:
+This folder contains two connected installable web apps:
 
 - The public XotiicDuck Music player at the repository root.
 - The private Xotiic Upload artist console at `admin/`.
-- The Android Trusted Web Activity build and safe publishing tools at `android-twa/`.
 
 There are no demo songs or fake covers. Every visible entry comes from the live owner-managed catalog and requires a complete MP3 and square cover.
 
@@ -43,7 +42,6 @@ The Library is split into **Playlists**, **Liked**, and **Offline** tabs so smal
 Lyrics are optional. The Lyrics control appears only when a published catalog entry contains lyric text, so releases without lyrics keep a clean player.
 
 - **Android/Chrome or Edge:** the Install button opens the browser prompt when available; otherwise follow its menu instructions.
-- **Signed Android APK:** choose **Android APK** on the Home page to download the independently verified installer from the official GitHub release.
 - **Samsung Internet:** use **☰ → Add page to → Home screen**, or **Install app** when shown.
 - **iPhone/iPad:** open in Safari, choose **Share → Add to Home Screen**, enable **Open as Web App**, and tap **Add**.
 
@@ -51,25 +49,29 @@ Installation support belongs to the browser. On browsers without installable-web
 
 Background controls use the browser Media Session API where supported, so installed copies can continue audio when the app is in the background and provide lock-screen controls. Force-closing the browser/PWA or an operating-system battery rule can still stop playback.
 
-## What Update 12.2.1 adds
+## What Updates 13 and 14 add
 
-- Installation cards and download choices now appear only during normal browser visits.
-- The signed Android APK and installed PWA hide the Web App and Android APK prompts automatically.
-- Supported Android Chrome visits also detect the already installed signed APK and suppress duplicate installation promotion.
-- Standalone, fullscreen, minimal UI, iOS standalone, and the verified Android TWA launch context are supported.
-- A refreshed service-worker shell delivers the change to existing installations without rebuilding or re-signing the APK.
+Update 13 is Music Library 2.0:
 
-## What Update 12.2 adds
+- Discover search across titles, artists, collections, genres, franchises, moods, tags, credits, descriptions, and lyrics.
+- Release-type and genre filters, plus latest, oldest, title, and duration sorting.
+- Album and collection pages with ordered tracks and collection play or shuffle.
+- Queue-to-playlist saving and richer release metadata in Now Playing.
+- Artist-console fields for collection title, track number, franchise, mood, tags, credits, and explicit marking.
+- Latest releases are ordered by public release timing and then by catalog order when dates match.
 
-- A responsive Android download centre in the Home hero, install banner, and footer.
-- Separate labels for the browser-installed web app and the signed Android APK.
-- The official APK version, size, signing status, SHA-256 checksum, and safe installation steps.
-- A stable GitHub Release download address, so future APK releases can replace the installer without changing the website button.
-- `PUBLISH-ANDROID-RELEASE.ps1`, which verifies the APK, checks the expected hash, creates a stable filename, and publishes the APK plus checksum through authenticated GitHub CLI.
-- Android builder fixes for PageSpeed rate limits and automatic Bubblewrap JDK detection during signature verification.
-- A shorter verification display, with repetitive legacy v1 metadata warnings retained in a full report instead of flooding the terminal.
+Update 14 is Playback Engine 2.0:
 
-## What Update 12 adds
+- A sleep timer for 15, 30, 45, or 60 minutes, plus stop after the current song.
+- Better Media Session support for play, pause, stop, seek, previous, and next controls where the browser supports them.
+- Keyboard seeking on desktop: Left or Right seeks 10 seconds, Shift plus Left or Right changes track, S toggles shuffle, and R changes repeat.
+- Versioned MP3 and cover URLs so edited media replaces stale browser copies without breaking offline downloads.
+- Player health details for app version, install mode, connection, storage, and saved-song count.
+- A new responsive alignment layer for Discover, collections, queues, Now Playing actions, settings, and the artist-console editor.
+
+No equalizer, crossfade, loudness normalization, or other sound-processing control was added. The active-song timeline remains the only playback progress tracker.
+
+## What Update 12 added
 
 - **Classic Xotiic** remains the default black-and-green appearance. **Anime Pulse** is an optional visual redesign in Settings.
 - Pulse, Sakura, and Aqua accents, with system, full, or reduced motion preferences.
@@ -81,7 +83,7 @@ Background controls use the browser Media Session API where supported, so instal
 - A private full-song admin test player for live, scheduled, draft, and archived catalog MP3 files.
 - The multi-song play tracker is paused, so partially played tracks do not fill the Home screen. Only the active player's timeline is shown. There is no global listening backend.
 
-See `UPDATE-12.2-INSTRUCTIONS.md` for the protected Windows update and Android publishing process that keeps the live catalog, songs, covers, signing key, and local Android build output intact.
+See `UPDATE-13-14-INSTRUCTIONS.md` for the protected Windows update process that keeps the live catalog, songs, and covers intact.
 
 ## Update 9.2 playback-state polish
 

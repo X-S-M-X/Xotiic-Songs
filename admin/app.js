@@ -56,6 +56,7 @@
   };
 
   const text = (value) => String(value ?? "");
+  const parseTags = (value) => [...new Set(text(value).split(",").map((entry) => entry.trim()).filter(Boolean))].slice(0, 16);
   const formatBytes = (bytes) => {
     if (!Number.isFinite(bytes) || bytes <= 0) return "0 MB";
     const units = ["B", "KB", "MB", "GB"];
@@ -79,6 +80,12 @@
     const clean = text(path).trim().replaceAll("\\", "/").replace(/^\/+/, "");
     if (!/^(music|covers)\/[a-zA-Z0-9._/-]+$/.test(clean) || clean.includes("..")) return "";
     return `../${clean.split("/").map(encodeURIComponent).join("/")}`;
+  };
+  const releaseAssetUrl = (release, path) => {
+    const safe = safeAssetUrl(path);
+    if (!safe) return "";
+    const revision = Date.parse(text(release?.updatedAt || release?.publishedAt || release?.releaseAt));
+    return Number.isFinite(revision) ? `${safe}?v=${revision}` : safe;
   };
   const safeYouTubeUrl = (value) => {
     if (!text(value).trim()) return "";
@@ -253,7 +260,7 @@
 
   const playCatalogPreview = (id) => {
     const release = state.releases.find((entry) => entry.id === id);
-    const src = safeAssetUrl(release?.audio);
+    const src = releaseAssetUrl(release, release?.audio);
     if (!release || !src) {
       showToast("That release does not have a playable MP3 path.", "error");
       return;
@@ -262,7 +269,7 @@
       src,
       title: text(release.title || "Untitled release"),
       artist: text(release.artist || "XotiicDuck"),
-      coverUrl: safeAssetUrl(release.cover),
+      coverUrl: releaseAssetUrl(release, release.cover),
       status: previewStatus(release),
       duration: Number(release.duration) || 0,
       releaseId: release.id,
@@ -550,7 +557,7 @@
     const target = $("#overview-next-release");
     target.replaceChildren();
     if (next) {
-      const coverUrl = safeAssetUrl(next.cover);
+      const coverUrl = releaseAssetUrl(next, next.cover);
       const cover = coverUrl ? document.createElement("img") : document.createElement("span");
       if (coverUrl) { cover.src = coverUrl; cover.alt = ""; }
       else { cover.className = "overview-empty-icon"; cover.textContent = "XD"; }
@@ -574,6 +581,9 @@
       target.append(icon, copy);
     }
     refreshDiagnostics().catch(() => undefined);
+    document.dispatchEvent(new CustomEvent("xotiic:adminstate", {
+      detail: { releaseCount: state.releases.length },
+    }));
   };
 
   const renderReleases = () => {
@@ -605,7 +615,7 @@
     filtered.forEach((release) => {
       const row = document.createElement("article");
       row.className = "managed-release";
-      const coverUrl = safeAssetUrl(release.cover);
+      const coverUrl = releaseAssetUrl(release, release.cover);
       const cover = coverUrl ? document.createElement("img") : document.createElement("span");
       if (coverUrl) {
         cover.src = coverUrl;
@@ -621,7 +631,9 @@
       const title = document.createElement("h3");
       title.textContent = text(release.title || "Untitled release");
       const metadata = document.createElement("p");
-      metadata.textContent = `${text(release.artist || "XotiicDuck")} · ${text(release.album || "Single")} · ${formatDuration(Number(release.duration))}`;
+      const releaseType = text(release.releaseType || release.album || "Single");
+      const collection = text(release.collection).trim();
+      metadata.textContent = `${text(release.artist || "XotiicDuck")} · ${collection || releaseType} · ${formatDuration(Number(release.duration))}`;
       const id = document.createElement("small");
       id.textContent = `${formatReleaseMoment(release)} · ${text(release.id)}`;
 
@@ -790,12 +802,19 @@
     if (state.suppressDraftSave) return;
     const mode = selectedReleaseMode();
     const draft = {
-      version: 1,
+      version: 2,
       updatedAt: Date.now(),
       title: draftValue("#release-title", 100),
       artist: draftValue("#release-artist", 80),
       album: $("#release-album").value,
+      collection: draftValue("#release-collection", 100),
+      trackNumber: Math.max(0, Math.floor(Number($("#release-track-number").value) || 0)),
       genre: draftValue("#release-genre", 60),
+      franchise: draftValue("#release-franchise", 80),
+      mood: draftValue("#release-mood", 60),
+      tags: draftValue("#release-tags", 240),
+      credits: draftValue("#release-credits", 500),
+      explicit: $("#release-explicit").checked,
       id: draftValue("#release-id", 80),
       youtube: draftValue("#release-youtube", 500),
       description: $("#release-description").value.slice(0, 280),
@@ -803,7 +822,7 @@
       mode,
       schedule: mode === "scheduled" ? $("#release-schedule").value : "",
     };
-    const meaningful = draft.title || draft.id || draft.youtube || draft.description || draft.lyrics
+    const meaningful = draft.title || draft.id || draft.youtube || draft.description || draft.lyrics || draft.collection || draft.trackNumber || draft.franchise || draft.mood || draft.tags || draft.credits || draft.explicit
       || draft.artist !== "XotiicDuck" || draft.genre !== "Anime J-Rock" || draft.album !== "Single" || draft.mode !== "published";
     if (!meaningful) {
       clearReleaseDraft({ quiet: true });
@@ -827,14 +846,21 @@
   const restoreReleaseDraft = () => {
     let draft;
     try { draft = JSON.parse(localStorage.getItem(RELEASE_DRAFT_KEY) || "null"); } catch { draft = null; }
-    if (!draft || draft.version !== 1 || !Number.isFinite(draft.updatedAt)) return false;
+    if (!draft || ![1, 2].includes(draft.version) || !Number.isFinite(draft.updatedAt)) return false;
     const albums = ["Single", "EP", "Album", "Soundtrack"];
     const modes = ["published", "scheduled", "draft"];
     state.suppressDraftSave = true;
     $("#release-title").value = text(draft.title).slice(0, 100);
     $("#release-artist").value = text(draft.artist).slice(0, 80) || "XotiicDuck";
     $("#release-album").value = albums.includes(draft.album) ? draft.album : "Single";
+    $("#release-collection").value = text(draft.collection).slice(0, 100);
+    $("#release-track-number").value = Number(draft.trackNumber) > 0 ? String(Math.min(999, Math.floor(Number(draft.trackNumber)))) : "";
     $("#release-genre").value = text(draft.genre).slice(0, 60) || "Anime J-Rock";
+    $("#release-franchise").value = text(draft.franchise).slice(0, 80);
+    $("#release-mood").value = text(draft.mood).slice(0, 60);
+    $("#release-tags").value = text(draft.tags).slice(0, 240);
+    $("#release-credits").value = text(draft.credits).slice(0, 500);
+    $("#release-explicit").checked = draft.explicit === true;
     $("#release-id").value = slugify(text(draft.id));
     $("#release-youtube").value = text(draft.youtube).slice(0, 500);
     $("#release-description").value = text(draft.description).slice(0, 280);
@@ -912,11 +938,19 @@
     const mode = selectedReleaseMode();
     const now = new Date().toISOString();
     const scheduleValue = $("#release-schedule").value;
+    const releaseType = $("#release-album").value;
+    const collection = $("#release-collection").value.trim();
+    const trackNumber = Math.max(0, Math.floor(Number($("#release-track-number").value) || 0));
+    const franchise = $("#release-franchise").value.trim();
+    const mood = $("#release-mood").value.trim();
+    const tags = parseTags($("#release-tags").value);
+    const credits = $("#release-credits").value.trim();
     const release = {
       id,
       title: $("#release-title").value.trim(),
       artist: $("#release-artist").value.trim(),
-      album: $("#release-album").value,
+      album: releaseType,
+      releaseType,
       genre: $("#release-genre").value.trim(),
       releaseDate: mode === "scheduled" ? scheduleValue.slice(0, 10) : localDate(),
       duration: state.audioDuration,
@@ -931,6 +965,13 @@
     if (description) release.description = description;
     if (lyrics) release.lyrics = lyrics;
     if (youtubeUrl) release.youtubeUrl = youtubeUrl;
+    if (collection) release.collection = collection;
+    if (trackNumber) release.trackNumber = trackNumber;
+    if (franchise) release.franchise = franchise;
+    if (mood) release.mood = mood;
+    if (tags.length) release.tags = tags;
+    if (credits) release.credits = credits;
+    if ($("#release-explicit").checked) release.explicit = true;
     return release;
   };
 
@@ -972,7 +1013,7 @@
     if (!validateReleaseForm()) return;
     state.pendingRelease = buildPendingRelease();
     $("#review-song-title").textContent = state.pendingRelease.title;
-    $("#review-song-meta").textContent = `${state.pendingRelease.artist} · ${state.pendingRelease.album} · ${formatDuration(state.pendingRelease.duration)}`;
+    $("#review-song-meta").textContent = `${state.pendingRelease.artist} · ${state.pendingRelease.collection || state.pendingRelease.releaseType || state.pendingRelease.album} · ${formatDuration(state.pendingRelease.duration)}`;
     $("#review-file-meta").textContent = `${state.audioFile.name} · ${formatBytes(state.audioFile.size)}`;
     $("#review-visibility").textContent = state.pendingRelease.status === "published"
       ? "This release will become public after GitHub Pages finishes its deployment."
@@ -1052,9 +1093,17 @@
     $("#edit-title").value = text(release.title);
     $("#edit-artist").value = text(release.artist || "XotiicDuck");
     const album = $("#edit-album");
-    if (![...album.options].some((option) => option.value === text(release.album))) album.add(new Option(text(release.album || "Single"), text(release.album || "Single")));
-    album.value = text(release.album || "Single");
+    const releaseType = text(release.releaseType || release.album || "Single");
+    if (![...album.options].some((option) => option.value === releaseType)) album.add(new Option(releaseType, releaseType));
+    album.value = releaseType;
+    $("#edit-collection").value = text(release.collection);
+    $("#edit-track-number").value = Number(release.trackNumber) > 0 ? String(Math.min(999, Math.floor(Number(release.trackNumber)))) : "";
     $("#edit-genre").value = text(release.genre || "Music");
+    $("#edit-franchise").value = text(release.franchise);
+    $("#edit-mood").value = text(release.mood);
+    $("#edit-tags").value = Array.isArray(release.tags) ? release.tags.join(", ") : text(release.tags);
+    $("#edit-credits").value = text(release.credits);
+    $("#edit-explicit").checked = release.explicit === true;
     const editorStatus = effectiveStatus(release);
     $("#edit-status").value = editorStatus;
     $("#edit-schedule").value = release.status === "scheduled" && isoToLocalDateTime(release.releaseAt) ? isoToLocalDateTime(release.releaseAt) : defaultScheduleValue();
@@ -1094,11 +1143,19 @@
     }
 
     const previousEffectiveStatus = effectiveStatus(previous);
+    const releaseType = $("#edit-album").value;
+    const collection = $("#edit-collection").value.trim();
+    const trackNumber = Math.max(0, Math.floor(Number($("#edit-track-number").value) || 0));
+    const franchise = $("#edit-franchise").value.trim();
+    const mood = $("#edit-mood").value.trim();
+    const tags = parseTags($("#edit-tags").value);
+    const credits = $("#edit-credits").value.trim();
     const next = {
       ...previous,
       title: $("#edit-title").value.trim(),
       artist: $("#edit-artist").value.trim(),
-      album: $("#edit-album").value,
+      album: releaseType,
+      releaseType,
       genre: $("#edit-genre").value.trim(),
       releaseDate: nextStatus === "scheduled"
         ? scheduleValue.slice(0, 10)
@@ -1133,6 +1190,13 @@
     const lyrics = $("#edit-lyrics").value.trim();
     if (description) next.description = description; else delete next.description;
     if (lyrics) next.lyrics = lyrics; else delete next.lyrics;
+    if (collection) next.collection = collection; else delete next.collection;
+    if (trackNumber) next.trackNumber = trackNumber; else delete next.trackNumber;
+    if (franchise) next.franchise = franchise; else delete next.franchise;
+    if (mood) next.mood = mood; else delete next.mood;
+    if (tags.length) next.tags = tags; else delete next.tags;
+    if (credits) next.credits = credits; else delete next.credits;
+    if ($("#edit-explicit").checked) next.explicit = true; else delete next.explicit;
     delete next.youtube;
     if (youtubeUrl) next.youtubeUrl = youtubeUrl; else delete next.youtubeUrl;
 
@@ -1646,6 +1710,21 @@
       })
       .catch(() => undefined);
   }
+
+  globalThis.XotiicAdmin = Object.freeze({
+    version: "16.0.0",
+    getReleases: () => JSON.parse(JSON.stringify(state.releases)),
+    getReleaseFiles: () => ({
+      audioFile: state.audioFile,
+      coverFile: state.coverFile,
+      audioDuration: state.audioDuration,
+      coverWidth: state.coverWidth,
+      coverHeight: state.coverHeight,
+    }),
+    resetReleaseForm: () => resetReleaseForm({ clearDraft: true }),
+    selectPanel: (name) => selectAdminPanel(name),
+    showToast: (message, type = "success") => showToast(message, type),
+  });
 
   $("#release-date").value = localDate();
   $("#audio-file-meta").textContent = `Tap to open Files · Maximum ${formatBytes(config.maxAudioBytes)}`;

@@ -14,18 +14,21 @@
     <meta name="format-detection" content="telephone=no" />
     <meta name="robots" content="noindex, nofollow, noarchive" />
     <title>Xotiic Upload | Artist Console</title>
-    <link rel="manifest" href="./manifest.webmanifest?v=12" />
-    <link rel="icon" href="../favicon.svg?v=12" />
-    <link rel="apple-touch-icon" href="../apple-touch-icon.png?v=12" />
-    <script src="./theme-sync.js?v=12"></script>
-    <link rel="stylesheet" href="./styles.css?v=12" />
-    <link rel="stylesheet" href="./update-12.css?v=12.1" />
-    <link rel="stylesheet" href="./admin-hotfix.css?v=12" />
-    <link rel="stylesheet" href="./admin-player-v2.css?v=12.2" />
-    <script src="./config.js?v=12" defer></script>
-    <script src="./crypto.js?v=12" defer></script>
-    <script src="./github.js?v=12" defer></script>
-    <script src="./app.js?v=12.2" defer></script>
+    <link rel="manifest" href="./manifest.webmanifest?v=16" />
+    <link rel="icon" href="../favicon.svg?v=16" />
+    <link rel="apple-touch-icon" href="../apple-touch-icon.png?v=16" />
+    <script src="./theme-sync.js?v=16"></script>
+    <link rel="stylesheet" href="./styles.css?v=16" />
+    <link rel="stylesheet" href="./update-12.css?v=16" />
+    <link rel="stylesheet" href="./update-13-14.css?v=16" />
+    <link rel="stylesheet" href="./update-15-16.css?v=16" />
+    <link rel="stylesheet" href="./admin-hotfix.css?v=16" />
+    <link rel="stylesheet" href="./admin-player-v2.css?v=16.2" />
+    <script src="./config.js?v=16" defer></script>
+    <script src="./crypto.js?v=16" defer></script>
+    <script src="./github.js?v=16" defer></script>
+    <script src="./app.js?v=16.2" defer></script>
+    <script src="./studio.js?v=16" defer></script>
   </head>
   <body>
     <svg class="icon-sprite" aria-hidden="true" focusable="false">
@@ -167,10 +170,44 @@
                   <dl><div><dt>Catalog writer</dt><dd id="diagnostics-catalog">Version 2 ready</dd></div><div><dt>Network</dt><dd id="diagnostics-network">Checking</dd></div><div><dt>Device vault</dt><dd>Encrypted</dd></div><div><dt>Storage</dt><dd id="diagnostics-storage">Checking</dd></div></dl>
                   <button id="copy-diagnostics" type="button" class="secondary-action">Copy diagnostics</button>
                 </article>
+                <article class="panel-card release-calendar-card">
+                  <div class="panel-heading"><div><p class="section-label">RELEASE CALENDAR</p><h2>Upcoming schedule</h2></div><span id="release-calendar-timezone" class="calendar-timezone">LOCAL TIME</span></div>
+                  <div id="release-calendar" class="release-calendar"><p>No scheduled releases yet.</p></div>
+                </article>
               </div>
             </section>
 
             <section class="admin-panel" data-panel="upload" hidden>
+              <details id="creator-studio-tools" class="creator-studio-tools">
+                <summary class="studio-heading"><div><p class="section-label">ADVANCED RELEASE TOOLS</p><h2 id="creator-studio-title">Batch and workspace tools</h2><p>Open this only when you need multi-MP3 intake, shared album details, saved metadata workspaces, or preflight checks.</p></div><span id="studio-batch-count">0 queued</span></summary>
+                <div class="studio-grid">
+                  <article class="panel-card studio-batch-card">
+                    <div class="panel-heading"><div><p class="section-label">BATCH INTAKE</p><h3>MP3 queue</h3></div></div>
+                    <label id="batch-drop" class="batch-drop"><input id="bulk-audio-input" type="file" accept=".mp3,audio/mpeg" multiple /><span><svg class="ui-icon" aria-hidden="true"><use href="#admin-icon-upload"></use></svg></span><strong>Drop or choose several MP3s</strong><small>Load each into the normal review and publish flow.</small></label>
+                    <div id="bulk-audio-queue" class="bulk-audio-queue"><p class="studio-empty">No batch files selected.</p></div>
+                  </article>
+                  <article class="panel-card studio-album-card">
+                    <div class="panel-heading"><div><p class="section-label">ALBUM WIZARD</p><h3>Shared metadata</h3></div></div>
+                    <div class="studio-field-grid">
+                      <label class="field field-wide"><span>Collection title</span><input id="studio-collection" maxlength="100" placeholder="Album, EP or soundtrack" /></label>
+                      <label class="field"><span>Release type</span><select id="studio-release-type"><option>Album</option><option>EP</option><option>Soundtrack</option><option>Single</option></select></label>
+                      <label class="field"><span>Starting track</span><input id="studio-track-start" type="number" min="1" max="999" value="1" /></label>
+                      <label class="field"><span>Franchise</span><input id="studio-franchise" maxlength="80" /></label>
+                      <label class="field"><span>Genre</span><input id="studio-genre" maxlength="60" value="Anime J-Rock" /></label>
+                    </div>
+                    <button id="studio-apply-album" class="secondary-action" type="button">Apply to current release</button>
+                  </article>
+                  <article class="panel-card studio-workspace-card">
+                    <div class="panel-heading"><div><p class="section-label">WORKSPACES</p><h3>Metadata drafts</h3></div></div>
+                    <div class="workspace-create"><input id="workspace-name" maxlength="60" placeholder="Workspace name" /><button id="workspace-save" type="button">Save current</button><button id="workspace-new" type="button">Clear form</button></div>
+                    <div id="workspace-list" class="workspace-list"><p class="studio-empty">No saved workspaces.</p></div>
+                  </article>
+                  <article class="panel-card studio-preflight-card">
+                    <div class="panel-heading"><div><p class="section-label">PREFLIGHT</p><h3>Release checks</h3></div></div>
+                    <div id="release-preflight" class="release-preflight" role="status" aria-live="polite"></div>
+                  </article>
+                </div>
+              </details>
               <form id="release-form" class="release-form">
                 <div id="release-draft-banner" class="release-draft-banner" role="status" hidden><span class="draft-signal"><svg class="ui-icon" aria-hidden="true"><use href="#admin-icon-check"></use></svg></span><div><strong>Release details restored</strong><p>Your local metadata draft is back. Select the MP3 and square cover again before reviewing.</p></div><button id="discard-release-draft" type="button">Discard draft</button></div>
                 <div class="form-column asset-column">
@@ -212,7 +249,14 @@
                       <label class="field field-wide"><span>Song title</span><input id="release-title" required maxlength="100" placeholder="e.g. Monarchs Collide" /></label>
                       <label class="field"><span>Artist</span><input id="release-artist" required maxlength="80" value="XotiicDuck" /></label>
                       <label class="field"><span>Release type</span><select id="release-album"><option>Single</option><option>EP</option><option>Album</option><option>Soundtrack</option></select></label>
+                      <label class="field field-wide"><span>Album or collection title <small>optional</small></span><input id="release-collection" maxlength="100" placeholder="Leave empty for a standalone single" /><small>Songs with the same title are grouped into one collection page.</small></label>
+                      <label class="field"><span>Track number <small>optional</small></span><input id="release-track-number" type="number" inputmode="numeric" min="1" max="999" placeholder="1" /></label>
                       <label class="field"><span>Genre</span><input id="release-genre" required maxlength="60" value="Anime J-Rock" /></label>
+                      <label class="field"><span>Franchise <small>optional</small></span><input id="release-franchise" maxlength="80" placeholder="e.g. Tensura" /></label>
+                      <label class="field"><span>Mood <small>optional</small></span><input id="release-mood" maxlength="60" placeholder="e.g. Cinematic battle" /></label>
+                      <label class="field field-wide"><span>Discovery tags <small>optional</small></span><input id="release-tags" maxlength="240" placeholder="Rimuru, battle anthem, anime opening" /><small>Separate tags with commas. They improve search without changing the visible title.</small></label>
+                      <label class="field field-wide"><span>Credits <small>optional</small></span><input id="release-credits" maxlength="500" placeholder="Writing, production or featured vocal credits" /></label>
+                      <label class="check-field metadata-check"><input id="release-explicit" type="checkbox" /><span>Mark this release as explicit</span></label>
                       <label class="field"><span>Duration</span><input id="release-duration" inputmode="numeric" readonly placeholder="Detected from MP3" /></label>
                       <label class="field"><span>Release ID</span><input id="release-id" required pattern="[a-z0-9]+(?:-[a-z0-9]+)*" maxlength="80" placeholder="generated-from-title" /><small>Lowercase letters, numbers and hyphens.</small></label>
                       <label class="field field-wide"><span>YouTube link <small>optional</small></span><input id="release-youtube" type="url" maxlength="500" inputmode="url" placeholder="https://www.youtube.com/watch?v=..." /><small>Only youtube.com and youtu.be links are accepted.</small></label>
@@ -306,7 +350,14 @@
           <label class="field field-wide"><span>Song title</span><input id="edit-title" required maxlength="100" /></label>
           <label class="field"><span>Artist</span><input id="edit-artist" required maxlength="80" /></label>
           <label class="field"><span>Release type</span><select id="edit-album"><option>Single</option><option>EP</option><option>Album</option><option>Soundtrack</option></select></label>
+          <label class="field field-wide"><span>Album or collection title <small>optional</small></span><input id="edit-collection" maxlength="100" /></label>
+          <label class="field"><span>Track number <small>optional</small></span><input id="edit-track-number" type="number" inputmode="numeric" min="1" max="999" /></label>
           <label class="field"><span>Genre</span><input id="edit-genre" required maxlength="60" /></label>
+          <label class="field"><span>Franchise <small>optional</small></span><input id="edit-franchise" maxlength="80" /></label>
+          <label class="field"><span>Mood <small>optional</small></span><input id="edit-mood" maxlength="60" /></label>
+          <label class="field field-wide"><span>Discovery tags <small>optional</small></span><input id="edit-tags" maxlength="240" /></label>
+          <label class="field field-wide"><span>Credits <small>optional</small></span><input id="edit-credits" maxlength="500" /></label>
+          <label class="check-field metadata-check"><input id="edit-explicit" type="checkbox" /><span>Explicit release</span></label>
           <label class="field"><span>Visibility</span><select id="edit-status"><option value="published">Published now</option><option value="scheduled">Scheduled</option><option value="draft">Hidden draft</option><option value="archived">Archived</option></select></label>
           <label id="edit-schedule-field" class="field" hidden><span>Release date and time</span><input id="edit-schedule" type="datetime-local" /><small id="edit-timezone-copy">Uses this device's current timezone.</small></label>
           <input id="edit-date" type="hidden" />

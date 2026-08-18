@@ -1,28 +1,31 @@
-importScripts("./range.js?v=12");
+importScripts("./range.js?v=16");
 
-const CACHE_NAME = "xotiicduck-portable-v12-2-1-installed-context";
+const CACHE_NAME = "xotiicduck-portable-v16-player-hotfix-1";
 const MEDIA_CACHE = "xotiic-media-v1";
 const scoped = (file) => new URL(file, self.registration.scope).href;
 const CATALOG_URL = scoped("./catalog.js");
 const SHELL = [
   "./",
   "./index.html",
-  "./theme.js?v=12.1",
-  "./styles.css?v=12.2.1",
+  "./theme.js?v=16",
+  "./styles.css?v=16",
   "./player-hotfix.css?v=1",
-  "./layout.css?v=12.2",
-  "./anime-theme.css?v=12",
+  "./layout.css?v=16",
+  "./anime-theme.css?v=16",
+  "./update-13-14.css?v=16",
+  "./update-15-16.css?v=16",
   "./catalog.js",
-  "./range.js?v=12",
-  "./offline.js?v=12",
-  "./app.js?v=12.2.1",
-  "./manifest.webmanifest?v=12.2.1",
-  "./favicon.svg?v=12",
-  "./apple-touch-icon.png?v=12",
-  "./icon-192.png?v=12",
-  "./icon-512.png?v=12",
-  "./icon-maskable-192.png?v=12",
-  "./icon-maskable-512.png?v=12",
+  "./range.js?v=16",
+  "./offline.js?v=16",
+  "./app.js?v=16",
+  "./download-manager.js?v=16",
+  "./manifest.webmanifest?v=16",
+  "./favicon.svg?v=16",
+  "./apple-touch-icon.png?v=16",
+  "./icon-192.png?v=16",
+  "./icon-512.png?v=16",
+  "./icon-maskable-192.png?v=16",
+  "./icon-maskable-512.png?v=16",
 ].map(scoped);
 
 self.addEventListener("install", (event) => {

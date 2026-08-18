@@ -22,7 +22,7 @@ test("service worker serves explicitly saved media with range support", () => {
   const worker = read("sw.js");
   assert.match(worker, /xotiic-media-v1/);
   assert.match(worker, /createPartialResponse/);
-  assert.match(worker, /anime-theme\.css\?v=12/);
+  assert.match(worker, /anime-theme\.css\?v=16/);
   assert.match(worker, /SKIP_WAITING/);
   assert.doesNotMatch(worker, /addEventListener\("install"[\s\S]{0,220}skipWaiting/);
 });
@@ -59,51 +59,6 @@ test("anime appearance, compact library, and mobile swipe controls are wired", (
   assert.match(layout, /Keep the expanded Now Playing seek line clean/);
 });
 
-test("official Android download is separate, verified, and release-backed", () => {
-  const html = read("index.html");
-  const app = read("app.js");
-  const styles = read("styles.css");
-  const builder = read("android-twa/BUILD-ANDROID.ps1");
-  const verifier = read("android-twa/VERIFY-APK.ps1");
-  const publisher = read("android-twa/PUBLISH-ANDROID-RELEASE.ps1");
-  assert.ok((html.match(/data-info="android"/g) || []).length >= 3);
-  assert.match(html, /Install web app/);
-  assert.match(app, /releases\/latest\/download\/XotiicDuck-Music-Android\.apk/);
-  assert.match(app, /513cb8895ad6b8c94db08227d95b3e2a5bb0f41ecc62716527c83a89402bb32f/);
-  assert.match(app, /Keep <strong>Google Play Protect<\/strong> enabled/);
-  assert.match(styles, /\.android-release-card/);
-  assert.match(styles, /\.android-checksum/);
-  assert.match(builder, /"build", "--skipPwaValidation"/);
-  assert.match(verifier, /config\.jdkPath/);
-  assert.match(verifier, /Android signature verification passed/);
-  assert.match(publisher, /XotiicDuck-Music-Android\.apk/);
-  assert.match(publisher, /gh release create/);
-  assert.doesNotMatch(html + app, /\.keystore/);
-});
-
-test("installed APK and PWA contexts hide redundant installation surfaces", () => {
-  const html = read("index.html");
-  const app = read("app.js");
-  const styles = read("styles.css");
-  const worker = read("sw.js");
-  const manifest = JSON.parse(read("manifest.webmanifest"));
-  assert.ok((html.match(/data-install-surface/g) || []).length >= 2);
-  for (const mode of ["standalone", "fullscreen", "minimal-ui", "window-controls-overlay"]) {
-    assert.match(app, new RegExp(`APP_DISPLAY_MODES[\\s\\S]*?${mode}`));
-    assert.match(styles, new RegExp(`display-mode: ${mode}`));
-  }
-  assert.match(app, /android-app:\/\/music\.xotiicduck\.player/);
-  assert.match(app, /sessionStorage\.setItem\(APP_CONTEXT_KEY, "android"\)/);
-  assert.match(app, /app\.classList\.toggle\("app-installed", installed\)/);
-  assert.match(app, /navigator\.getInstalledRelatedApps\(\)/);
-  assert.match(app, /relatedApp\.id === "music\.xotiicduck\.player"/);
-  assert.match(styles, /\.app-shell\.app-installed \[data-install-surface\]/);
-  assert.match(styles, /\.app-shell\.app-installed \[data-info="android"\]/);
-  assert.match(worker, /xotiicduck-portable-v12-2-1-installed-context/);
-  assert.ok(manifest.related_applications.some((appEntry) => appEntry.platform === "play" && appEntry.id === "music.xotiicduck.player"));
-  assert.ok(manifest.related_applications.some((appEntry) => appEntry.platform === "webapp"));
-});
-
 test("admin supports metadata edits, encrypted backup, and atomic updates", () => {
   const html = read("admin/index.html");
   const app = read("admin/app.js");
@@ -132,7 +87,7 @@ test("admin supports metadata edits, encrypted backup, and atomic updates", () =
   assert.match(updateStyles, /\.release-mode-selector label > span \{[\s\S]*?place-items: center;/);
   assert.match(updateStyles, /\.release-mode-selector label strong,[\s\S]*?text-align: center;/);
   assert.match(updateStyles, /\.admin-preview-player \{/);
-  assert.match(html, /update-12\.css\?v=12\.1/);
+  assert.match(html, /update-12\.css\?v=16/);
   const ids = [...html.matchAll(/\sid="([^"]+)"/g)].map((match) => match[1]);
   assert.equal(new Set(ids).size, ids.length, "admin HTML IDs must be unique");
 });
@@ -145,7 +100,7 @@ test("async admin forms retain their form reference after awaited work", () => {
 });
 
 test("web app manifests are valid and use current versioned icons", () => {
-  for (const [file, version] of [["manifest.webmanifest", "v=12"], ["admin/manifest.webmanifest", "v=12"]]) {
+  for (const [file, version] of [["manifest.webmanifest", "v=16"], ["admin/manifest.webmanifest", "v=16"]]) {
     const manifest = JSON.parse(read(file));
     assert.ok(Array.isArray(manifest.icons) && manifest.icons.length >= 4);
     assert.ok(manifest.icons.every((icon) => icon.src.includes(version)));
@@ -173,4 +128,75 @@ test("global analytics remains out of the active player", () => {
   assert.doesNotMatch(html, /analytics\.js|workers\.dev|global-chart-section/);
   assert.doesNotMatch(app, /analyticsEndpoint|submitGlobalListen|loadGlobalChart/);
   assert.doesNotMatch(worker, /analytics\.js/);
+});
+
+test("Updates 13 and 14 expose library discovery and playback utilities", () => {
+  const html = read("index.html");
+  const app = read("app.js");
+  const styles = read("update-13-14.css");
+  const worker = read("sw.js");
+  for (const id of [
+    "discover-search", "discover-type", "discover-sort", "collection-layer",
+    "queue-save", "now-playing-sleep", "sleep-layer", "health-refresh",
+    "track-metadata", "track-credits",
+  ]) assert.match(html, new RegExp(`id=["']${id}["']`));
+  assert.match(app, /const APP_VERSION = "16\.0\.0"/);
+  assert.match(app, /const releaseCollections = \(\) =>/);
+  assert.match(app, /const openQueuePlaylistEditor = \(\) =>/);
+  assert.match(app, /const startSleepTimer = \(minutes\) =>/);
+  assert.match(app, /\["stop", \(\) => \{ audio\.pause\(\); seekTo\(0\); \}\]/);
+  assert.match(app, /navigator\.mediaSession\.setActionHandler\(action, handler\)/);
+  assert.match(styles, /\.discover-toolbar/);
+  assert.match(styles, /\.collection-grid/);
+  assert.match(styles, /\.sleep-modal/);
+  assert.match(worker, /update-13-14\.css\?v=16/);
+});
+
+test("artist console supports Update 13 catalog metadata", () => {
+  const html = read("admin/index.html");
+  const app = read("admin/app.js");
+  const github = read("admin/github.js");
+  const worker = read("admin/sw.js");
+  const styles = read("admin/update-13-14.css");
+  for (const prefix of ["release", "edit"]) {
+    for (const suffix of ["collection", "track-number", "franchise", "mood", "tags", "credits", "explicit"]) {
+      assert.match(html, new RegExp(`id=["']${prefix}-${suffix}["']`));
+    }
+  }
+  assert.match(app, /releaseType/);
+  assert.match(app, /parseTags/);
+  assert.match(github, /const CATALOG_VERSION = 3/);
+  assert.match(worker, /xotiic-upload-v16/);
+  assert.match(worker, /update-13-14\.css\?v=16/);
+  assert.match(styles, /\.release-mode-selector label \{[\s\S]*?place-items: center;[\s\S]*?text-align: center;/);
+  assert.match(styles, /\.release-mode-selector label strong,[\s\S]*?text-align: center;/);
+});
+
+test("Update 14 deliberately omits sound-processing controls", () => {
+  const combined = [read("index.html"), read("app.js"), read("update-13-14.css")].join("\n");
+  assert.doesNotMatch(combined, /equalizer|crossfade|loudness normalization|audio worklet|createMediaElementSource/i);
+});
+
+test("Updates 15 and 16 add Creator Studio and resilient offline downloads", () => {
+  const html = read("index.html");
+  const manager = read("download-manager.js");
+  const offline = read("offline.js");
+  const adminHtml = read("admin/index.html");
+  const studio = read("admin/studio.js");
+  const adminManifest = JSON.parse(read("admin/manifest.webmanifest"));
+  const adminWorker = read("admin/sw.js");
+  for (const id of ["download-manager", "download-manager-pause", "download-data-saver", "download-wifi-only", "collection-detail-offline", "playlist-detail-offline"]) {
+    assert.match(html, new RegExp(`id=["']${id}["']`));
+  }
+  assert.match(manager, /AbortController/);
+  assert.match(manager, /navigator\.connection/);
+  assert.match(offline, /\{ signal \} = \{\}/);
+  for (const id of ["creator-studio-tools", "bulk-audio-input", "studio-apply-album", "workspace-list", "release-preflight", "release-calendar"]) {
+    assert.match(adminHtml, new RegExp(`id=["']${id}["']`));
+  }
+  assert.match(studio, /const readId3 = async/);
+  assert.match(studio, /const captureWorkspace =/);
+  assert.ok(adminManifest.share_target);
+  assert.ok(Array.isArray(adminManifest.file_handlers));
+  assert.match(adminWorker, /storeSharedFiles/);
 });

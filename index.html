@@ -13,16 +13,19 @@
     <meta name="apple-mobile-web-app-title" content="XotiicDuck" />
     <meta name="format-detection" content="telephone=no" />
     <title>XotiicDuck Music | Anime Worlds. Original Sound.</title>
-    <link rel="manifest" href="./manifest.webmanifest?v=12.2.1" />
-    <link rel="icon" href="./favicon.svg?v=12" />
-    <link rel="apple-touch-icon" href="./apple-touch-icon.png?v=12" />
-    <script src="./theme.js?v=12.1"></script>
-    <link rel="stylesheet" href="./styles.css?v=12.2.1" />
-    <link rel="stylesheet" href="./layout.css?v=12.2" />
-    <link rel="stylesheet" href="./anime-theme.css?v=12" />
-    <script src="./catalog.js?v=12" defer></script>
-    <script src="./offline.js?v=12" defer></script>
-    <script src="./app.js?v=12.2.1" defer></script>
+    <link rel="manifest" href="./manifest.webmanifest?v=16" />
+    <link rel="icon" href="./favicon.svg?v=16" />
+    <link rel="apple-touch-icon" href="./apple-touch-icon.png?v=16" />
+    <script src="./theme.js?v=16"></script>
+    <link rel="stylesheet" href="./styles.css?v=16" />
+    <link rel="stylesheet" href="./layout.css?v=16" />
+    <link rel="stylesheet" href="./anime-theme.css?v=16" />
+    <link rel="stylesheet" href="./update-13-14.css?v=16" />
+    <link rel="stylesheet" href="./update-15-16.css?v=16" />
+    <script src="./catalog.js?v=16" defer></script>
+    <script src="./offline.js?v=16" defer></script>
+    <script src="./app.js?v=16" defer></script>
+    <script src="./download-manager.js?v=16" defer></script>
       <link rel="stylesheet" href="./player-hotfix.css?v=1" />
   </head>
   <body>
@@ -81,10 +84,10 @@
           <button data-settings-open><span class="mini-tile appearance"><svg class="ui-icon" aria-hidden="true"><use href="#icon-settings"></use></svg></span><span>Appearance</span></button>
         </div>
         <div class="sidebar-spacer"></div>
-        <div class="install-card" data-install-surface>
+        <div class="install-card">
           <span class="install-icon"><svg class="ui-icon" aria-hidden="true"><use href="#icon-download"></use></svg></span>
-          <div><strong>Take it with you</strong><p>Install the web app on this device.</p></div>
-          <button data-install aria-label="Install the XotiicDuck Music web app"><span data-install-icon class="icon-frame" aria-hidden="true"><svg class="ui-icon"><use href="#icon-download"></use></svg></span></button>
+          <div><strong>Take it with you</strong><p>Install the player on this device.</p></div>
+          <button data-install aria-label="Install XotiicDuck Music"><span data-install-icon class="icon-frame" aria-hidden="true"><svg class="ui-icon"><use href="#icon-download"></use></svg></span></button>
         </div>
         <a class="channel-link" href="https://www.youtube.com/@XotiicDuck" target="_blank" rel="noreferrer"><span class="icon-frame" aria-hidden="true"><svg class="ui-icon"><use href="#icon-play"></use></svg></span><span>@XotiicDuck on YouTube</span></a>
       </aside>
@@ -95,7 +98,7 @@
           <button class="search-trigger" data-search-open><span class="icon-frame"><svg class="ui-icon" aria-hidden="true"><use href="#icon-search"></use></svg></span><span>Search the official catalog...</span><kbd>/</kbd></button>
           <div class="top-actions">
             <button class="round-button settings-button" data-settings-open aria-label="Open appearance settings" title="Appearance settings"><svg class="ui-icon" aria-hidden="true"><use href="#icon-settings"></use></svg></button>
-            <button class="profile-button" data-install aria-label="Install the XotiicDuck Music web app"><span data-install-icon class="icon-frame" aria-hidden="true"><svg class="ui-icon"><use href="#icon-download"></use></svg></span><span data-install-label>Web app</span></button>
+            <button class="profile-button" data-install aria-label="Install XotiicDuck Music"><span data-install-icon class="icon-frame" aria-hidden="true"><svg class="ui-icon"><use href="#icon-download"></use></svg></span><span data-install-label>Install app</span></button>
           </div>
         </header>
 
@@ -108,12 +111,11 @@
                 <p class="hero-description">High-impact tracks inspired by the stories, rivalries, and final battles that refuse to leave your head.</p>
                 <div class="hero-actions">
                   <a id="hero-primary" class="primary-button" href="https://www.youtube.com/@XotiicDuck" target="_blank" rel="noreferrer"><svg class="ui-icon" aria-hidden="true"><use href="#icon-play"></use></svg><span>Open YouTube</span></a>
-                  <button class="secondary-button" data-install><span data-install-icon class="icon-frame" aria-hidden="true"><svg class="ui-icon"><use href="#icon-download"></use></svg></span><span data-install-label>Install web app</span></button>
-                  <button class="secondary-button apk-option-button" data-info="android"><span class="icon-frame" aria-hidden="true"><svg class="ui-icon"><use href="#icon-download"></use></svg></span><span>Android APK</span></button>
+                  <button class="secondary-button" data-install><span data-install-icon class="icon-frame" aria-hidden="true"><svg class="ui-icon"><use href="#icon-download"></use></svg></span><span data-install-label>Install player</span></button>
                 </div>
                 <div class="hero-stats">
                   <div><strong id="live-count">00</strong><span>LIVE TRACKS</span></div>
-                  <div><strong>2 WAYS</strong><span>WEB APP + APK</span></div>
+                  <div><strong>PWA</strong><span>INSTALLABLE</span></div>
                   <div><strong>XD</strong><span>DIRECT FROM ARTIST</span></div>
                 </div>
               </div>
@@ -149,18 +151,28 @@
               <div id="monthly-chart"></div>
             </section>
 
-            <section class="signal-banner" data-install-surface>
+            <section class="signal-banner">
               <div class="signal-icon"><svg class="ui-icon" aria-hidden="true"><use href="#icon-music"></use></svg></div>
-              <div><p class="section-kicker">BUILT FOR LISTENERS</p><h2>No ads. No algorithms. Just the music.</h2><p>Install the lightweight web app or download the signed Android APK directly from the official GitHub release.</p></div>
-              <button data-info="android"><span>Get Android APK</span><span class="icon-frame" aria-hidden="true"><svg class="ui-icon"><use href="#icon-download"></use></svg></span></button>
+              <div><p class="section-kicker">BUILT FOR LISTENERS</p><h2>No ads. No algorithms. Just the music.</h2><p>Install the web app, keep your library close, and hear every XotiicDuck release from one focused home.</p></div>
+              <button data-install><span data-install-label>Install app</span><span data-install-icon class="icon-frame" aria-hidden="true"><svg class="ui-icon"><use href="#icon-download"></use></svg></span></button>
             </section>
           </section>
 
-          <section class="view-panel page-section" data-panel="discover" hidden>
-            <div class="page-title"><p class="section-kicker">THE FULL ARCHIVE</p><h1>Discover</h1><p>Every released world, battle, and anthem in one place.</p></div>
-            <div id="genre-row" class="genre-row"></div>
-            <div id="discover-catalog"></div>
-          </section>
+            <section class="view-panel page-section" data-panel="discover" hidden>
+              <div class="page-title"><p class="section-kicker">THE FULL ARCHIVE</p><h1>Discover</h1><p>Every released world, battle, and anthem in one place.</p></div>
+              <div class="discover-toolbar" aria-label="Discover controls">
+                <label class="discover-search" for="discover-search"><span class="icon-frame"><svg class="ui-icon" aria-hidden="true"><use href="#icon-search"></use></svg></span><input id="discover-search" type="search" autocomplete="off" placeholder="Search titles, collections, characters or lyrics" /></label>
+                <label><span>Release type</span><select id="discover-type"><option value="all">All releases</option><option value="Single">Singles</option><option value="EP">EPs</option><option value="Album">Albums</option><option value="Soundtrack">Soundtracks</option></select></label>
+                <label><span>Sort by</span><select id="discover-sort"><option value="latest">Latest first</option><option value="oldest">Oldest first</option><option value="title">Title A to Z</option><option value="duration">Longest first</option></select></label>
+                <span id="discover-count" class="discover-count" role="status" aria-live="polite">0 releases</span>
+              </div>
+              <section id="collection-section" class="collection-section" hidden>
+                <div class="section-heading"><div><p class="section-kicker">ALBUMS AND COLLECTIONS</p><h2>Release collections</h2></div></div>
+                <div id="collection-grid" class="collection-grid"></div>
+              </section>
+              <div id="genre-row" class="genre-row"></div>
+              <div id="discover-catalog"></div>
+            </section>
 
           <section class="view-panel page-section" data-panel="library" hidden>
             <div class="page-title library-title"><div><p class="section-kicker">SAVED ON THIS DEVICE</p><h1>Your library</h1><p>Favorites, playlists, and offline songs stay on this device.</p></div><div class="library-title-actions"><button class="library-create" data-playlist-create><span class="icon-frame"><svg class="ui-icon" aria-hidden="true"><use href="#icon-plus"></use></svg></span>Create playlist</button><button id="library-export" type="button"><span class="icon-frame"><svg class="ui-icon" aria-hidden="true"><use href="#icon-download"></use></svg></span>Back up</button><button id="library-import" type="button"><span class="icon-frame"><svg class="ui-icon" aria-hidden="true"><use href="#icon-upload"></use></svg></span>Restore</button><input id="library-import-file" type="file" accept="application/json,.json" hidden /></div></div>
@@ -171,13 +183,13 @@
             </div>
             <section id="library-panel-playlists" class="library-section library-tab-panel" role="tabpanel" aria-labelledby="library-tab-playlists" data-library-panel="playlists"><div class="library-section-heading"><p class="section-kicker">YOUR PLAYLISTS</p><h2>Playlists</h2></div><div id="playlist-library"></div></section>
             <section id="library-panel-liked" class="library-section library-tab-panel liked-library-section" role="tabpanel" aria-labelledby="library-tab-liked" data-library-panel="liked" hidden><div class="library-section-heading"><p class="section-kicker">QUICK COLLECTION</p><h2>Liked songs</h2></div><div id="library-catalog"></div></section>
-            <section id="library-panel-offline" class="library-section library-tab-panel offline-library-section" role="tabpanel" aria-labelledby="library-tab-offline" data-library-panel="offline" hidden><div class="library-section-heading offline-heading"><div><p class="section-kicker">AVAILABLE WITHOUT INTERNET</p><h2>Offline songs</h2></div><span id="offline-storage-copy">Checking storage…</span></div><div id="offline-catalog"></div></section>
+            <section id="library-panel-offline" class="library-section library-tab-panel offline-library-section" role="tabpanel" aria-labelledby="library-tab-offline" data-library-panel="offline" hidden><div class="library-section-heading offline-heading"><div><p class="section-kicker">AVAILABLE WITHOUT INTERNET</p><h2>Offline songs</h2></div><span id="offline-storage-copy">Checking storage…</span></div><section id="download-manager" class="download-manager" aria-labelledby="download-manager-title"><div class="download-manager-heading"><div><p class="section-kicker">OFFLINE DOWNLOAD MANAGER</p><h3 id="download-manager-title">Albums and playlists</h3></div><span id="download-manager-state">Ready</span></div><div id="download-manager-queue" class="download-manager-queue"></div><div class="download-manager-controls"><button id="download-manager-pause" type="button">Pause</button><button id="download-manager-retry" type="button">Retry failed</button><button id="download-manager-clear" type="button">Clear finished</button></div><details class="download-preferences"><summary>Download preferences</summary><label><input id="download-data-saver" type="checkbox" /> <span><strong>Respect Data Saver</strong><small>Ask before a multi-song download on a metered connection.</small></span></label><label><input id="download-wifi-only" type="checkbox" /> <span><strong>Wi-Fi only</strong><small>Block queued downloads when the browser reports another connection type.</small></span></label></details></section><div id="offline-catalog"></div></section>
           </section>
 
           <footer class="site-footer">
             <div><strong>XOTIICDUCK MUSIC</strong><span>Independent music. Direct from the artist.</span></div>
-            <nav><button data-info="about">About</button><button data-info="install">Web app</button><button data-info="android">Android APK</button><button data-info="privacy">Privacy</button><button data-info="terms">Terms</button><a href="./admin/" rel="nofollow">Artist access</a></nav>
-            <span>© <span id="year"></span> XotiicDuck</span>
+            <nav><button data-info="about">About</button><button data-info="install">Install</button><button data-info="privacy">Privacy</button><button data-info="terms">Terms</button><a href="./admin/" rel="nofollow">Artist access</a></nav>
+            <span>© <span id="year"></span> XotiicDuck · Player v16</span>
           </footer>
         </div>
       </main>
@@ -234,9 +246,10 @@
                 <button id="now-playing-queue" type="button"><span class="icon-frame"><svg class="ui-icon" aria-hidden="true"><use href="#icon-queue"></use></svg></span><small>Queue</small></button>
                 <button id="now-playing-offline" type="button"><span class="icon-frame"><svg class="ui-icon" aria-hidden="true"><use href="#icon-download"></use></svg></span><small id="now-playing-offline-label">Save offline</small></button>
                 <button id="now-playing-share" type="button"><span class="icon-frame"><svg class="ui-icon" aria-hidden="true"><use href="#icon-share"></use></svg></span><small>Share</small></button>
+                <button id="now-playing-sleep" type="button" aria-haspopup="dialog"><span class="icon-frame"><svg class="ui-icon" aria-hidden="true"><use href="#icon-clock"></use></svg></span><small id="now-playing-sleep-label">Sleep timer</small></button>
                 <button id="now-playing-lyrics-toggle" type="button" aria-expanded="false" hidden><span class="icon-frame"><svg class="ui-icon" aria-hidden="true"><use href="#icon-lyrics"></use></svg></span><small>Lyrics</small></button>
               </div>
-              <section id="track-about" class="track-about" hidden><div><p class="section-kicker">ABOUT THIS RELEASE</p><span id="track-release-date"></span></div><p id="track-description"></p><a id="track-youtube" href="#" target="_blank" rel="noreferrer" hidden><svg class="ui-icon" aria-hidden="true"><use href="#icon-play"></use></svg><span>Watch on YouTube</span></a></section>
+              <section id="track-about" class="track-about" hidden><div><p class="section-kicker">ABOUT THIS RELEASE</p><span id="track-release-date"></span></div><div id="track-metadata" class="track-metadata" hidden></div><p id="track-description"></p><p id="track-credits" class="track-credits" hidden></p><a id="track-youtube" href="#" target="_blank" rel="noreferrer" hidden><svg class="ui-icon" aria-hidden="true"><use href="#icon-play"></use></svg><span>Watch on YouTube</span></a></section>
               <section id="lyrics-panel" class="lyrics-panel" hidden><div><p class="section-kicker">LYRICS</p><span>Available for this release</span></div><div id="lyrics-copy" class="lyrics-copy"></div></section>
             </div>
           </div>
@@ -250,14 +263,23 @@
 
       <div id="queue-layer" class="modal-layer" role="dialog" aria-modal="true" aria-label="Playback queue" hidden>
         <button class="modal-backdrop" data-modal-close aria-label="Close queue"></button>
-        <div class="queue-modal"><div class="queue-modal-heading"><div><p class="section-kicker">PLAYBACK ORDER · <span id="queue-context">All tracks</span></p><h2>Queue</h2></div><div class="queue-heading-actions"><button id="queue-clear" type="button">Clear upcoming</button><button class="icon-only-button" data-modal-close aria-label="Close"><svg class="ui-icon" aria-hidden="true"><use href="#icon-close"></use></svg></button></div></div><div id="queue-list" class="queue-modal-list"></div></div>
+        <div class="queue-modal"><div class="queue-modal-heading"><div><p class="section-kicker">PLAYBACK ORDER · <span id="queue-context">All tracks</span></p><h2>Queue</h2></div><div class="queue-heading-actions"><button id="queue-save" type="button">Save as playlist</button><button id="queue-clear" type="button">Clear upcoming</button><button class="icon-only-button" data-modal-close aria-label="Close"><svg class="ui-icon" aria-hidden="true"><use href="#icon-close"></use></svg></button></div></div><div id="queue-list" class="queue-modal-list"></div></div>
+      </div>
+
+      <div id="collection-layer" class="modal-layer" role="dialog" aria-modal="true" aria-label="Release collection" hidden>
+        <button class="modal-backdrop" data-modal-close aria-label="Close collection"></button>
+        <article class="collection-modal">
+          <header class="collection-modal-header"><div id="collection-detail-cover" class="collection-detail-cover"></div><div><p class="section-kicker">RELEASE COLLECTION</p><h2 id="collection-detail-title"></h2><span id="collection-detail-meta"></span></div><button class="icon-only-button" data-modal-close aria-label="Close collection"><svg class="ui-icon" aria-hidden="true"><use href="#icon-close"></use></svg></button></header>
+          <div class="collection-modal-actions"><button id="collection-detail-play" class="playlist-primary"><svg class="ui-icon" aria-hidden="true"><use href="#icon-play"></use></svg><span>Play collection</span></button><button id="collection-detail-shuffle"><svg class="ui-icon" aria-hidden="true"><use href="#icon-shuffle"></use></svg><span>Shuffle</span></button><button id="collection-detail-offline" type="button"><svg class="ui-icon" aria-hidden="true"><use href="#icon-download"></use></svg><span>Save offline</span></button></div>
+          <div id="collection-detail-list" class="collection-detail-list"></div>
+        </article>
       </div>
 
       <div id="playlist-layer" class="modal-layer" role="dialog" aria-modal="true" aria-label="Playlist" hidden>
         <button class="modal-backdrop" data-modal-close aria-label="Close playlist"></button>
         <article class="playlist-modal">
           <header class="playlist-modal-header"><div id="playlist-detail-cover" class="playlist-detail-cover"></div><div><p class="section-kicker">PLAYLIST</p><h2 id="playlist-detail-title"></h2><span id="playlist-detail-count"></span></div><button class="icon-only-button" data-modal-close aria-label="Close playlist"><svg class="ui-icon" aria-hidden="true"><use href="#icon-close"></use></svg></button></header>
-          <div class="playlist-modal-actions"><button id="playlist-detail-play" class="playlist-primary"><span data-playlist-play-icon><svg class="ui-icon" aria-hidden="true"><use href="#icon-play"></use></svg></span><span data-playlist-play-label>Play</span></button><button id="playlist-detail-shuffle"><svg class="ui-icon" aria-hidden="true"><use href="#icon-shuffle"></use></svg><span>Shuffle</span></button><button id="playlist-detail-rename">Rename</button><button id="playlist-detail-delete" class="playlist-danger">Delete</button></div>
+          <div class="playlist-modal-actions"><button id="playlist-detail-play" class="playlist-primary"><span data-playlist-play-icon><svg class="ui-icon" aria-hidden="true"><use href="#icon-play"></use></svg></span><span data-playlist-play-label>Play</span></button><button id="playlist-detail-shuffle"><svg class="ui-icon" aria-hidden="true"><use href="#icon-shuffle"></use></svg><span>Shuffle</span></button><button id="playlist-detail-offline" type="button"><svg class="ui-icon" aria-hidden="true"><use href="#icon-download"></use></svg><span>Save offline</span></button><button id="playlist-detail-rename">Rename</button><button id="playlist-detail-delete" class="playlist-danger">Delete</button></div>
           <div id="playlist-detail-list" class="playlist-detail-list"></div>
         </article>
       </div>
@@ -302,8 +324,14 @@
             <label><input type="radio" name="appearance-accent" value="aqua" /><span class="accent-swatch aqua"></span><span><strong>Aqua</strong><small>Cyan and blue</small></span></label>
           </fieldset>
           <label class="motion-setting" for="appearance-motion"><span><svg class="ui-icon" aria-hidden="true"><use href="#icon-motion"></use></svg></span><span><strong>Interface motion</strong><small>System follows your device accessibility setting.</small></span><select id="appearance-motion"><option value="system">Use device setting</option><option value="full">Full anime energy</option><option value="reduced">Reduced motion</option></select></label>
+          <section class="app-health-card" aria-labelledby="app-health-title"><div><p class="section-kicker">APP HEALTH</p><h3 id="app-health-title">Player diagnostics</h3></div><dl><div><dt>Version</dt><dd id="health-version">14.0.0</dd></div><div><dt>Install mode</dt><dd id="health-install">Checking</dd></div><div><dt>Connection</dt><dd id="health-network">Checking</dd></div><div><dt>Offline storage</dt><dd id="health-storage">Checking</dd></div><div><dt>Saved songs</dt><dd id="health-downloads">0</dd></div></dl><button id="health-refresh" type="button">Run check</button></section>
           <footer class="settings-footer"><span>Saved only on this device.</span><button id="appearance-reset" type="button">Restore defaults</button></footer>
         </article>
+      </div>
+
+      <div id="sleep-layer" class="modal-layer" role="dialog" aria-modal="true" aria-labelledby="sleep-title" hidden>
+        <button class="modal-backdrop" data-modal-close aria-label="Close sleep timer"></button>
+        <article class="sleep-modal"><button class="modal-close icon-only-button" data-modal-close aria-label="Close"><svg class="ui-icon" aria-hidden="true"><use href="#icon-close"></use></svg></button><p class="section-kicker">PLAYBACK TIMER</p><h2 id="sleep-title">Sleep timer</h2><p id="sleep-status">Stop playback automatically without changing the sound.</p><div class="sleep-options"><button type="button" data-sleep-minutes="15">15 minutes</button><button type="button" data-sleep-minutes="30">30 minutes</button><button type="button" data-sleep-minutes="45">45 minutes</button><button type="button" data-sleep-minutes="60">1 hour</button><button type="button" data-sleep-after-track>After this song</button><button type="button" data-sleep-cancel class="sleep-cancel">Turn timer off</button></div></article>
       </div>
 
       <div id="network-banner" class="network-banner" role="status" aria-live="polite" hidden><span class="status-dot"></span><span>You are offline. Saved songs remain playable.</span></div>

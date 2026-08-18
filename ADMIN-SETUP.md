@@ -31,6 +31,8 @@ Scheduling controls when the song appears in the player. Because the GitHub repo
 
 The release form shows the active device timezone. While preparing a release, its text fields and chosen timing mode are saved locally as a recoverable metadata draft. The browser does not allow the console to restore selected MP3 or cover files, so those must be selected again after a page reload. Tokens and passwords are never included in release drafts.
 
+Updates 13 and 14 add optional collection and discovery metadata. Songs that share the exact same collection title and artist are grouped into a collection page in the public player. Track numbers control their order. Empty optional fields are omitted from the catalog, and older catalog entries remain compatible.
+
 ## Add another phone or computer
 
 Open the admin address on that device and repeat first-time setup using a valid fine-grained token. Alternatively, download the already-encrypted file from **Security → Back up this device vault**, restore it on the new device, then enter its existing username and password. Device vaults remain separate after restoration.

@@ -34,7 +34,7 @@
     reader.readAsDataURL(file);
   });
 
-  const CATALOG_VERSION = 2;
+  const CATALOG_VERSION = 3;
 
   const parseCatalog = (source) => {
     const match = String(source || "").match(/window\.XOTIICDUCK_RELEASES\s*=\s*(\[[\s\S]*\])\s*;?\s*$/);

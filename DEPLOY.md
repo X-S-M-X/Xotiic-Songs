@@ -30,34 +30,32 @@ Push the complete package and wait for GitHub Pages to finish before creating th
 
 Music published through Xotiic Upload is committed directly to `main`. GitHub Pages will redeploy automatically. Source changes made in VS Code can still be committed and pushed normally.
 
-Update 12.2 adds the official Android APK download centre. Apply it using `UPDATE-12.2-INSTRUCTIONS.md`, then publish the already signed APK with `android-twa\PUBLISH-ANDROID-RELEASE.ps1`. The APK and checksum are stored as GitHub Release assets, not committed into the website source or service-worker cache.
-
-Update 12.2.1 hides browser installation and APK download promotions whenever the player is already running as the installed PWA or verified Android TWA. Supported Android Chrome visits can also recognize that the related signed APK is already installed. This is a website-only update. The existing signed APK and GitHub Release remain valid and must not be rebuilt or replaced.
-
-Before copying Update 12.1, save and pull the newest catalog and songs that Xotiic Upload may already have published. Then copy only the app files, leaving `.git`, `catalog.js`, `music/`, and `covers/` untouched:
+Before copying Updates 13 and 14, save and pull the newest catalog and songs that Xotiic Upload may already have published. Then copy only the app files, leaving `.git`, `catalog.js`, `music/`, and `covers/` untouched:
 
 ```powershell
 $repo = "C:\Users\Xotii\Downloads\XotiicDuck-Music-Portable"
-$update = "C:\Users\Xotii\Downloads\XotiicDuck-Music-Portable-Update-12.1"
+$update = "C:\Users\Xotii\Downloads\XotiicDuck-Music-Portable-Update-14"
 
 Set-Location $repo
 git status --short
 git pull --rebase origin main
 
 Get-ChildItem -LiteralPath $update -Force |
-  Where-Object { $_.Name -notin @(".git", "catalog.js", "music", "covers", "analytics.js", "analytics-worker", "GLOBAL-CHART-SETUP.md") } |
+  Where-Object { $_.Name -notin @(".git", "catalog.js", "music", "covers") } |
   Copy-Item -Destination $repo -Recurse -Force
 
 Set-Location $repo
 npm test
 git add -A
-git commit -m "Apply Update 12.1 player and admin fixes"
+git commit -m "Ship XotiicDuck Music Updates 13 and 14"
 git push origin main
 ```
 
-If `git status --short` shows local work before the pull, commit and push it first. Git cannot rebase while files have uncommitted changes. The paths above match the established project folder and the Update 12.1 extracted folder. Do not replace the live `catalog.js`, `music/`, or `covers/`. After GitHub Pages finishes, reopen the website and accept the **Player update ready** prompt.
+If `git status --short` shows local work before the pull, commit and push it first. Git cannot rebase while files have uncommitted changes. The paths above match the established project folder and the Update 14 extracted folder. Do not replace the live `catalog.js`, `music/`, or `covers/`. After GitHub Pages finishes, reopen the website and accept the **Player update ready** prompt.
 
-Update 12.1 hides the multi-song listening tracker and does not connect to Cloudflare or another global analytics backend. The active song still keeps its normal seek position on the device.
+Updates 13 and 14 keep the multi-song listening tracker hidden and do not connect to Cloudflare or another global analytics backend. The active song still keeps its normal seek position on the device.
+
+GitHub Actions can run future code-release workflows on a UTC schedule, but later bundles must be completed and tested before such a workflow is enabled. Do not schedule placeholder builds. Scheduled GitHub jobs can also start later than the exact minute during busy periods.
 
 Update 9 adds `offline.js`, `range.js`, automated tests, and a GitHub Actions validation workflow. The `music/` and `covers/` folders remain user data and are intentionally not included in application replacement copies.
 
