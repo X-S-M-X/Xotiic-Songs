@@ -563,5 +563,19 @@ window.XOTIICDUCK_RELEASES = [
     "status": "draft",
     "createdAt": "2026-08-17T00:31:11.543Z",
     "updatedAt": "2026-08-17T00:31:11.543Z"
+  },
+  {
+    "id": "thrones-above-heaven",
+    "title": "Thrones Above Heaven",
+    "artist": "XotiicDuck",
+    "album": "Single",
+    "genre": "Anime J-Rock",
+    "releaseDate": "2026-08-18",
+    "duration": 455,
+    "audio": "music/thrones-above-heaven.mp3",
+    "cover": "covers/thrones-above-heaven.webp",
+    "status": "draft",
+    "createdAt": "2026-08-18T04:19:34.547Z",
+    "updatedAt": "2026-08-18T04:19:34.547Z"
   }
 ];
