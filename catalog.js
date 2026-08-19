@@ -1,5 +1,5 @@
 // Managed by Xotiic Upload. Only complete releases are shown publicly.
-window.XOTIICDUCK_CATALOG_VERSION = 2;
+window.XOTIICDUCK_CATALOG_VERSION = 3;
 window.XOTIICDUCK_RELEASES = [
   {
     "id": "void-crown-treasury",
@@ -577,5 +577,20 @@ window.XOTIICDUCK_RELEASES = [
     "status": "draft",
     "createdAt": "2026-08-18T04:19:34.547Z",
     "updatedAt": "2026-08-18T04:19:34.547Z"
+  },
+  {
+    "id": "beyond-the-rules",
+    "title": "Beyond The Rules",
+    "artist": "XotiicDuck",
+    "album": "Single",
+    "releaseType": "Single",
+    "genre": "Anime J-Rock",
+    "releaseDate": "2026-08-19",
+    "duration": 389,
+    "audio": "music/beyond-the-rules.mp3",
+    "cover": "covers/beyond-the-rules.webp",
+    "status": "draft",
+    "createdAt": "2026-08-19T11:27:03.890Z",
+    "updatedAt": "2026-08-19T11:27:03.890Z"
   }
 ];
