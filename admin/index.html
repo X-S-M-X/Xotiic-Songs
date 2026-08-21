@@ -14,21 +14,21 @@
     <meta name="format-detection" content="telephone=no" />
     <meta name="robots" content="noindex, nofollow, noarchive" />
     <title>Xotiic Upload | Artist Console</title>
-    <link rel="manifest" href="./manifest.webmanifest?v=16" />
-    <link rel="icon" href="../favicon.svg?v=16" />
-    <link rel="apple-touch-icon" href="../apple-touch-icon.png?v=16" />
-    <script src="./theme-sync.js?v=16"></script>
-    <link rel="stylesheet" href="./styles.css?v=16" />
-    <link rel="stylesheet" href="./update-12.css?v=16" />
-    <link rel="stylesheet" href="./update-13-14.css?v=16" />
-    <link rel="stylesheet" href="./update-15-16.css?v=16" />
-    <link rel="stylesheet" href="./admin-hotfix.css?v=16" />
-    <link rel="stylesheet" href="./admin-player-v2.css?v=16.2" />
-    <script src="./config.js?v=16" defer></script>
-    <script src="./crypto.js?v=16" defer></script>
-    <script src="./github.js?v=16" defer></script>
-    <script src="./app.js?v=16.2" defer></script>
-    <script src="./studio.js?v=16" defer></script>
+    <link rel="manifest" href="./manifest.webmanifest?v=18" />
+    <link rel="icon" href="../favicon.svg?v=18" />
+    <link rel="apple-touch-icon" href="../apple-touch-icon.png?v=18" />
+    <script src="./theme-sync.js?v=18"></script>
+    <link rel="stylesheet" href="./styles.css?v=18" />
+    <link rel="stylesheet" href="./update-12.css?v=18" />
+    <link rel="stylesheet" href="./update-13-14.css?v=18" />
+    <link rel="stylesheet" href="./update-15-16.css?v=18" />
+    <link rel="stylesheet" href="./admin-hotfix.css?v=18" />
+    <link rel="stylesheet" href="./admin-player-v2.css?v=18.2" />
+    <script src="./config.js?v=18" defer></script>
+    <script src="./crypto.js?v=18" defer></script>
+    <script src="./github.js?v=18" defer></script>
+    <script src="./app.js?v=18.2" defer></script>
+    <script src="./studio.js?v=18" defer></script>
   </head>
   <body>
     <svg class="icon-sprite" aria-hidden="true" focusable="false">
@@ -254,7 +254,12 @@
                       <label class="field"><span>Genre</span><input id="release-genre" required maxlength="60" value="Anime J-Rock" /></label>
                       <label class="field"><span>Franchise <small>optional</small></span><input id="release-franchise" maxlength="80" placeholder="e.g. Tensura" /></label>
                       <label class="field"><span>Mood <small>optional</small></span><input id="release-mood" maxlength="60" placeholder="e.g. Cinematic battle" /></label>
+                      <label class="field"><span>Character <small>optional</small></span><input id="release-character" maxlength="80" placeholder="e.g. Rimuru Tempest" /></label>
+                      <label class="field"><span>Energy <small>optional</small></span><select id="release-energy"><option value="">Not set</option><option>Low</option><option>Medium</option><option>High</option></select></label>
+                      <label class="field"><span>Vocal style <small>optional</small></span><input id="release-vocal-style" maxlength="60" placeholder="e.g. Anime rock duet" /></label>
+                      <label class="field"><span>Performance <small>optional</small></span><select id="release-performance"><option value="">Not set</option><option>Solo</option><option>Versus</option><option>Collaboration</option></select></label>
                       <label class="field field-wide"><span>Discovery tags <small>optional</small></span><input id="release-tags" maxlength="240" placeholder="Rimuru, battle anthem, anime opening" /><small>Separate tags with commas. They improve search without changing the visible title.</small></label>
+                      <label class="field field-wide"><span>Similar release IDs <small>optional</small></span><input id="release-similar" maxlength="300" placeholder="rise, monarchs-collide" /><small>Comma-separated release IDs improve local More Like This collections.</small></label>
                       <label class="field field-wide"><span>Credits <small>optional</small></span><input id="release-credits" maxlength="500" placeholder="Writing, production or featured vocal credits" /></label>
                       <label class="check-field metadata-check"><input id="release-explicit" type="checkbox" /><span>Mark this release as explicit</span></label>
                       <label class="field"><span>Duration</span><input id="release-duration" inputmode="numeric" readonly placeholder="Detected from MP3" /></label>
@@ -355,7 +360,12 @@
           <label class="field"><span>Genre</span><input id="edit-genre" required maxlength="60" /></label>
           <label class="field"><span>Franchise <small>optional</small></span><input id="edit-franchise" maxlength="80" /></label>
           <label class="field"><span>Mood <small>optional</small></span><input id="edit-mood" maxlength="60" /></label>
+          <label class="field"><span>Character <small>optional</small></span><input id="edit-character" maxlength="80" /></label>
+          <label class="field"><span>Energy <small>optional</small></span><select id="edit-energy"><option value="">Not set</option><option>Low</option><option>Medium</option><option>High</option></select></label>
+          <label class="field"><span>Vocal style <small>optional</small></span><input id="edit-vocal-style" maxlength="60" /></label>
+          <label class="field"><span>Performance <small>optional</small></span><select id="edit-performance"><option value="">Not set</option><option>Solo</option><option>Versus</option><option>Collaboration</option></select></label>
           <label class="field field-wide"><span>Discovery tags <small>optional</small></span><input id="edit-tags" maxlength="240" /></label>
+          <label class="field field-wide"><span>Similar release IDs <small>optional</small></span><input id="edit-similar" maxlength="300" /></label>
           <label class="field field-wide"><span>Credits <small>optional</small></span><input id="edit-credits" maxlength="500" /></label>
           <label class="check-field metadata-check"><input id="edit-explicit" type="checkbox" /><span>Explicit release</span></label>
           <label class="field"><span>Visibility</span><select id="edit-status"><option value="published">Published now</option><option value="scheduled">Scheduled</option><option value="draft">Hidden draft</option><option value="archived">Archived</option></select></label>

@@ -13,19 +13,22 @@
     <meta name="apple-mobile-web-app-title" content="XotiicDuck" />
     <meta name="format-detection" content="telephone=no" />
     <title>XotiicDuck Music | Anime Worlds. Original Sound.</title>
-    <link rel="manifest" href="./manifest.webmanifest?v=16" />
-    <link rel="icon" href="./favicon.svg?v=16" />
-    <link rel="apple-touch-icon" href="./apple-touch-icon.png?v=16" />
-    <script src="./theme.js?v=16"></script>
-    <link rel="stylesheet" href="./styles.css?v=16" />
-    <link rel="stylesheet" href="./layout.css?v=16" />
-    <link rel="stylesheet" href="./anime-theme.css?v=16" />
-    <link rel="stylesheet" href="./update-13-14.css?v=16" />
-    <link rel="stylesheet" href="./update-15-16.css?v=16" />
-    <script src="./catalog.js?v=16" defer></script>
-    <script src="./offline.js?v=16" defer></script>
-    <script src="./app.js?v=16" defer></script>
-    <script src="./download-manager.js?v=16" defer></script>
+    <link rel="manifest" href="./manifest.webmanifest?v=18" />
+    <link rel="icon" href="./favicon.svg?v=18" />
+    <link rel="apple-touch-icon" href="./apple-touch-icon.png?v=18" />
+    <script src="./theme.js?v=18"></script>
+    <link rel="stylesheet" href="./styles.css?v=18" />
+    <link rel="stylesheet" href="./layout.css?v=18" />
+    <link rel="stylesheet" href="./anime-theme.css?v=18" />
+    <link rel="stylesheet" href="./update-13-14.css?v=18" />
+    <link rel="stylesheet" href="./update-15-16.css?v=18" />
+    <link rel="stylesheet" href="./update-17-18.css?v=18" />
+    <script src="./catalog.js?v=18" defer></script>
+    <script src="./offline.js?v=18" defer></script>
+    <script src="./app.js?v=18" defer></script>
+    <script src="./download-manager.js?v=18" defer></script>
+    <script src="./discovery.js?v=18" defer></script>
+    <script src="./storage-tools.js?v=18" defer></script>
       <link rel="stylesheet" href="./player-hotfix.css?v=1" />
   </head>
   <body>
@@ -177,10 +180,12 @@
           <section class="view-panel page-section" data-panel="library" hidden>
             <div class="page-title library-title"><div><p class="section-kicker">SAVED ON THIS DEVICE</p><h1>Your library</h1><p>Favorites, playlists, and offline songs stay on this device.</p></div><div class="library-title-actions"><button class="library-create" data-playlist-create><span class="icon-frame"><svg class="ui-icon" aria-hidden="true"><use href="#icon-plus"></use></svg></span>Create playlist</button><button id="library-export" type="button"><span class="icon-frame"><svg class="ui-icon" aria-hidden="true"><use href="#icon-download"></use></svg></span>Back up</button><button id="library-import" type="button"><span class="icon-frame"><svg class="ui-icon" aria-hidden="true"><use href="#icon-upload"></use></svg></span>Restore</button><input id="library-import-file" type="file" accept="application/json,.json" hidden /></div></div>
             <div id="library-switcher" class="library-switcher" role="tablist" aria-label="Library collections">
+              <button id="library-tab-for-you" type="button" role="tab" aria-selected="false" aria-controls="library-panel-for-you" data-library-tab="for-you" tabindex="-1"><span class="icon-frame"><svg class="ui-icon" aria-hidden="true"><use href="#icon-sparkles"></use></svg></span><span>For You</span><b id="library-for-you-count">0</b></button>
               <button id="library-tab-playlists" type="button" role="tab" aria-selected="true" aria-controls="library-panel-playlists" data-library-tab="playlists"><span class="icon-frame"><svg class="ui-icon" aria-hidden="true"><use href="#icon-library"></use></svg></span><span>Playlists</span><b id="library-playlist-count">0</b></button>
               <button id="library-tab-liked" type="button" role="tab" aria-selected="false" aria-controls="library-panel-liked" data-library-tab="liked" tabindex="-1"><span class="icon-frame"><svg class="ui-icon" aria-hidden="true"><use href="#icon-heart-filled"></use></svg></span><span>Liked</span><b id="library-liked-count">0</b></button>
               <button id="library-tab-offline" type="button" role="tab" aria-selected="false" aria-controls="library-panel-offline" data-library-tab="offline" tabindex="-1"><span class="icon-frame"><svg class="ui-icon" aria-hidden="true"><use href="#icon-download"></use></svg></span><span>Offline</span><b id="library-offline-count">0</b></button>
             </div>
+            <section id="library-panel-for-you" class="library-section library-tab-panel for-you-library-section" role="tabpanel" aria-labelledby="library-tab-for-you" data-library-panel="for-you" hidden><div id="for-you-content" class="for-you-content"></div></section>
             <section id="library-panel-playlists" class="library-section library-tab-panel" role="tabpanel" aria-labelledby="library-tab-playlists" data-library-panel="playlists"><div class="library-section-heading"><p class="section-kicker">YOUR PLAYLISTS</p><h2>Playlists</h2></div><div id="playlist-library"></div></section>
             <section id="library-panel-liked" class="library-section library-tab-panel liked-library-section" role="tabpanel" aria-labelledby="library-tab-liked" data-library-panel="liked" hidden><div class="library-section-heading"><p class="section-kicker">QUICK COLLECTION</p><h2>Liked songs</h2></div><div id="library-catalog"></div></section>
             <section id="library-panel-offline" class="library-section library-tab-panel offline-library-section" role="tabpanel" aria-labelledby="library-tab-offline" data-library-panel="offline" hidden><div class="library-section-heading offline-heading"><div><p class="section-kicker">AVAILABLE WITHOUT INTERNET</p><h2>Offline songs</h2></div><span id="offline-storage-copy">Checking storage…</span></div><section id="download-manager" class="download-manager" aria-labelledby="download-manager-title"><div class="download-manager-heading"><div><p class="section-kicker">OFFLINE DOWNLOAD MANAGER</p><h3 id="download-manager-title">Albums and playlists</h3></div><span id="download-manager-state">Ready</span></div><div id="download-manager-queue" class="download-manager-queue"></div><div class="download-manager-controls"><button id="download-manager-pause" type="button">Pause</button><button id="download-manager-retry" type="button">Retry failed</button><button id="download-manager-clear" type="button">Clear finished</button></div><details class="download-preferences"><summary>Download preferences</summary><label><input id="download-data-saver" type="checkbox" /> <span><strong>Respect Data Saver</strong><small>Ask before a multi-song download on a metered connection.</small></span></label><label><input id="download-wifi-only" type="checkbox" /> <span><strong>Wi-Fi only</strong><small>Block queued downloads when the browser reports another connection type.</small></span></label></details></section><div id="offline-catalog"></div></section>
@@ -189,7 +194,7 @@
           <footer class="site-footer">
             <div><strong>XOTIICDUCK MUSIC</strong><span>Independent music. Direct from the artist.</span></div>
             <nav><button data-info="about">About</button><button data-info="install">Install</button><button data-info="privacy">Privacy</button><button data-info="terms">Terms</button><a href="./admin/" rel="nofollow">Artist access</a></nav>
-            <span>© <span id="year"></span> XotiicDuck · Player v16</span>
+            <span>© <span id="year"></span> XotiicDuck · Player v18</span>
           </footer>
         </div>
       </main>
@@ -324,7 +329,7 @@
             <label><input type="radio" name="appearance-accent" value="aqua" /><span class="accent-swatch aqua"></span><span><strong>Aqua</strong><small>Cyan and blue</small></span></label>
           </fieldset>
           <label class="motion-setting" for="appearance-motion"><span><svg class="ui-icon" aria-hidden="true"><use href="#icon-motion"></use></svg></span><span><strong>Interface motion</strong><small>System follows your device accessibility setting.</small></span><select id="appearance-motion"><option value="system">Use device setting</option><option value="full">Full anime energy</option><option value="reduced">Reduced motion</option></select></label>
-          <section class="app-health-card" aria-labelledby="app-health-title"><div><p class="section-kicker">APP HEALTH</p><h3 id="app-health-title">Player diagnostics</h3></div><dl><div><dt>Version</dt><dd id="health-version">14.0.0</dd></div><div><dt>Install mode</dt><dd id="health-install">Checking</dd></div><div><dt>Connection</dt><dd id="health-network">Checking</dd></div><div><dt>Offline storage</dt><dd id="health-storage">Checking</dd></div><div><dt>Saved songs</dt><dd id="health-downloads">0</dd></div></dl><button id="health-refresh" type="button">Run check</button></section>
+          <section class="app-health-card" aria-labelledby="app-health-title"><div><p class="section-kicker">APP HEALTH</p><h3 id="app-health-title">Player diagnostics</h3></div><dl><div><dt>Version</dt><dd id="health-version">18.0.0</dd></div><div><dt>Install mode</dt><dd id="health-install">Checking</dd></div><div><dt>Connection</dt><dd id="health-network">Checking</dd></div><div><dt>Offline storage</dt><dd id="health-storage">Checking</dd></div><div><dt>Saved songs</dt><dd id="health-downloads">0</dd></div><div><dt>Integrity</dt><dd id="health-integrity">Not checked</dd></div></dl><div class="storage-health-actions"><button id="health-refresh" type="button">Run check</button><button id="health-verify" type="button">Verify downloads</button><button id="health-cleanup" type="button">Clean old cache</button><button id="health-persist" type="button">Protect storage</button></div><p id="health-storage-status" class="health-storage-status" role="status" aria-live="polite"></p></section>
           <footer class="settings-footer"><span>Saved only on this device.</span><button id="appearance-reset" type="button">Restore defaults</button></footer>
         </article>
       </div>

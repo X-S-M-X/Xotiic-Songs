@@ -8,7 +8,8 @@
   const TEXT_FIELDS = [
     "release-title", "release-artist", "release-album", "release-collection",
     "release-track-number", "release-genre", "release-franchise", "release-mood",
-    "release-tags", "release-credits", "release-id", "release-youtube",
+    "release-character", "release-energy", "release-vocal-style", "release-performance",
+    "release-tags", "release-similar", "release-credits", "release-id", "release-youtube",
     "release-description", "release-lyrics", "release-schedule",
   ];
   const batch = [];

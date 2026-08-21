@@ -22,7 +22,7 @@ test("service worker serves explicitly saved media with range support", () => {
   const worker = read("sw.js");
   assert.match(worker, /xotiic-media-v1/);
   assert.match(worker, /createPartialResponse/);
-  assert.match(worker, /anime-theme\.css\?v=16/);
+  assert.match(worker, /anime-theme\.css\?v=18/);
   assert.match(worker, /SKIP_WAITING/);
   assert.doesNotMatch(worker, /addEventListener\("install"[\s\S]{0,220}skipWaiting/);
 });
@@ -51,7 +51,8 @@ test("anime appearance, compact library, and mobile swipe controls are wired", (
   assert.match(app, /const setLibraryTab =/);
   assert.match(app, /startMiniPlayerGesture/);
   assert.match(app, /skip\(dx < 0 \? 1 : -1\)/);
-  assert.match(app, /const LISTENING_INSIGHTS_ENABLED = false/);
+  assert.match(app, /const LOCAL_LISTENING_TRACKING_ENABLED = true/);
+  assert.match(app, /const HOME_LISTENING_SECTIONS_ENABLED = false/);
   assert.match(layout, /touch-action: pan-y/);
   assert.match(anime, /html\[data-theme="anime"\]/);
   assert.match(anime, /--current-cover-image/);
@@ -87,7 +88,7 @@ test("admin supports metadata edits, encrypted backup, and atomic updates", () =
   assert.match(updateStyles, /\.release-mode-selector label > span \{[\s\S]*?place-items: center;/);
   assert.match(updateStyles, /\.release-mode-selector label strong,[\s\S]*?text-align: center;/);
   assert.match(updateStyles, /\.admin-preview-player \{/);
-  assert.match(html, /update-12\.css\?v=16/);
+  assert.match(html, /update-12\.css\?v=18/);
   const ids = [...html.matchAll(/\sid="([^"]+)"/g)].map((match) => match[1]);
   assert.equal(new Set(ids).size, ids.length, "admin HTML IDs must be unique");
 });
@@ -100,7 +101,7 @@ test("async admin forms retain their form reference after awaited work", () => {
 });
 
 test("web app manifests are valid and use current versioned icons", () => {
-  for (const [file, version] of [["manifest.webmanifest", "v=16"], ["admin/manifest.webmanifest", "v=16"]]) {
+  for (const [file, version] of [["manifest.webmanifest", "v=18"], ["admin/manifest.webmanifest", "v=18"]]) {
     const manifest = JSON.parse(read(file));
     assert.ok(Array.isArray(manifest.icons) && manifest.icons.length >= 4);
     assert.ok(manifest.icons.every((icon) => icon.src.includes(version)));
@@ -140,7 +141,7 @@ test("Updates 13 and 14 expose library discovery and playback utilities", () => 
     "queue-save", "now-playing-sleep", "sleep-layer", "health-refresh",
     "track-metadata", "track-credits",
   ]) assert.match(html, new RegExp(`id=["']${id}["']`));
-  assert.match(app, /const APP_VERSION = "16\.0\.0"/);
+  assert.match(app, /const APP_VERSION = "18\.0\.0"/);
   assert.match(app, /const releaseCollections = \(\) =>/);
   assert.match(app, /const openQueuePlaylistEditor = \(\) =>/);
   assert.match(app, /const startSleepTimer = \(minutes\) =>/);
@@ -149,7 +150,7 @@ test("Updates 13 and 14 expose library discovery and playback utilities", () => 
   assert.match(styles, /\.discover-toolbar/);
   assert.match(styles, /\.collection-grid/);
   assert.match(styles, /\.sleep-modal/);
-  assert.match(worker, /update-13-14\.css\?v=16/);
+  assert.match(worker, /update-13-14\.css\?v=18/);
 });
 
 test("artist console supports Update 13 catalog metadata", () => {
@@ -166,8 +167,8 @@ test("artist console supports Update 13 catalog metadata", () => {
   assert.match(app, /releaseType/);
   assert.match(app, /parseTags/);
   assert.match(github, /const CATALOG_VERSION = 3/);
-  assert.match(worker, /xotiic-upload-v16/);
-  assert.match(worker, /update-13-14\.css\?v=16/);
+  assert.match(worker, /xotiic-upload-v18/);
+  assert.match(worker, /update-13-14\.css\?v=18/);
   assert.match(styles, /\.release-mode-selector label \{[\s\S]*?place-items: center;[\s\S]*?text-align: center;/);
   assert.match(styles, /\.release-mode-selector label strong,[\s\S]*?text-align: center;/);
 });
@@ -199,4 +200,36 @@ test("Updates 15 and 16 add Creator Studio and resilient offline downloads", () 
   assert.ok(adminManifest.share_target);
   assert.ok(Array.isArray(adminManifest.file_handlers));
   assert.match(adminWorker, /storeSharedFiles/);
+});
+
+test("Updates 17 and 18 add private discovery and offline integrity tools", () => {
+  const html = read("index.html");
+  const app = read("app.js");
+  const discovery = read("discovery.js");
+  const storage = read("storage-tools.js");
+  const offline = read("offline.js");
+  const worker = read("sw.js");
+  const adminHtml = read("admin/index.html");
+  const adminApp = read("admin/app.js");
+  for (const id of ["library-tab-for-you", "library-panel-for-you", "for-you-content", "health-integrity", "health-verify", "health-cleanup", "health-persist"]) {
+    assert.match(html, new RegExp(`id=["']${id}["']`));
+  }
+  assert.match(discovery, /const createMixes =/);
+  assert.match(discovery, /More like/);
+  assert.match(discovery, /XOTIIC RECAP/);
+  assert.match(app, /const LOCAL_LISTENING_TRACKING_ENABLED = true/);
+  assert.match(app, /const HOME_LISTENING_SECTIONS_ENABLED = false/);
+  assert.match(storage, /offline\.audit/);
+  assert.match(storage, /offline\.cleanup/);
+  assert.match(offline, /const MANIFEST_KEY/);
+  assert.match(offline, /const audit = async/);
+  assert.match(offline, /const cleanup = async/);
+  assert.match(offline, /SHA-256/);
+  assert.match(worker, /update-17-18\.css\?v=18/);
+  for (const prefix of ["release", "edit"]) {
+    for (const suffix of ["character", "energy", "vocal-style", "performance", "similar"]) {
+      assert.match(adminHtml, new RegExp(`id=["']${prefix}-${suffix}["']`));
+    }
+  }
+  assert.match(adminApp, /similarReleaseIds/);
 });

@@ -1,7 +1,7 @@
 (() => {
   "use strict";
 
-  const APP_VERSION = "16.0.0";
+  const APP_VERSION = "18.0.0";
 
   const rawCatalog = Array.isArray(window.XOTIICDUCK_RELEASES)
     ? window.XOTIICDUCK_RELEASES
@@ -98,6 +98,12 @@
         genre: text(entry.genre || "Music"),
         franchise: text(entry.franchise).trim().slice(0, 80),
         mood: text(entry.mood).trim().slice(0, 60),
+        character: text(entry.character).trim().slice(0, 80),
+        energy: text(entry.energy).trim().slice(0, 24),
+        vocalStyle: text(entry.vocalStyle).trim().slice(0, 60),
+        performance: text(entry.performance).trim().slice(0, 30),
+        similarReleaseIds: cleanList(entry.similarReleaseIds || entry.similarReleases, 12)
+          .filter((id) => /^[a-z0-9]+(?:-[a-z0-9]+)*$/.test(id)),
         tags,
         credits: text(entry.credits).trim().slice(0, 500),
         explicit: entry.explicit === true,
@@ -129,7 +135,8 @@
   const LISTENING_KEY = "xotiicduck-listening-v1";
   const LIBRARY_TAB_KEY = "xotiicduck-library-tab-v1";
   const SLEEP_KEY = "xotiicduck-sleep-v1";
-  const LISTENING_INSIGHTS_ENABLED = false;
+  const LOCAL_LISTENING_TRACKING_ENABLED = true;
+  const HOME_LISTENING_SECTIONS_ENABLED = false;
   const BACKUP_VERSION = 1;
   const offlineApi = globalThis.XotiicOffline;
   const appearanceApi = globalThis.XotiicAppearance;
@@ -225,7 +232,10 @@
 
   try {
     const storedTab = localStorage.getItem(LIBRARY_TAB_KEY);
-    activeLibraryTab = ["playlists", "liked", "offline"].includes(storedTab) ? storedTab : "playlists";
+    const requestedTab = params.get("tab");
+    activeLibraryTab = ["for-you", "playlists", "liked", "offline"].includes(requestedTab)
+      ? requestedTab
+      : ["for-you", "playlists", "liked", "offline"].includes(storedTab) ? storedTab : "playlists";
   } catch {
     activeLibraryTab = "playlists";
   }
@@ -445,6 +455,10 @@
     track.genre,
     track.franchise,
     track.mood,
+    track.character,
+    track.energy,
+    track.vocalStyle,
+    track.performance,
     track.tags.join(" "),
     track.credits,
     track.description,
@@ -485,7 +499,7 @@
   };
 
   const renderListeningSections = () => {
-    if (!LISTENING_INSIGHTS_ENABLED) {
+    if (!HOME_LISTENING_SECTIONS_ENABLED) {
       $("#recently-played-section").hidden = true;
       $("#monthly-chart-section").hidden = true;
       $("#recently-played").replaceChildren();
@@ -508,11 +522,12 @@
   };
 
   const markRecentlyPlayed = (track) => {
-    if (!LISTENING_INSIGHTS_ENABLED) return;
+    if (!LOCAL_LISTENING_TRACKING_ENABLED) return;
     if (!track) return;
     listening.recent = [{ id: track.id, playedAt: Date.now() }, ...listening.recent.filter((entry) => entry.id !== track.id)].slice(0, 20);
     saveListening();
     renderListeningSections();
+    document.dispatchEvent(new CustomEvent("xotiic:listeningchange"));
   };
 
   const recordQualifiedListen = (track) => {
@@ -528,6 +543,7 @@
     listening.months = Object.fromEntries(retainedMonths.map((month) => [month, listening.months[month]]));
     saveListening();
     renderListeningSections();
+    document.dispatchEvent(new CustomEvent("xotiic:listeningchange"));
   };
 
   const resetListenProgress = () => {
@@ -535,7 +551,7 @@
   };
 
   const updateListeningProgress = () => {
-    if (!LISTENING_INSIGHTS_ENABLED) return;
+    if (!LOCAL_LISTENING_TRACKING_ENABLED) return;
     if (!currentTrack) return;
     if (listenProgress.trackId !== currentTrack.id) resetListenProgress();
     const position = Number(audio.currentTime) || 0;
@@ -700,7 +716,7 @@
   };
 
   const setLibraryTab = (tab, { focus = false } = {}) => {
-    if (!["playlists", "liked", "offline"].includes(tab)) return;
+    if (!["for-you", "playlists", "liked", "offline"].includes(tab)) return;
     activeLibraryTab = tab;
     try { localStorage.setItem(LIBRARY_TAB_KEY, tab); } catch { /* The switcher still works for this visit. */ }
     for (const button of $$('[data-library-tab]')) {
@@ -797,7 +813,11 @@
     const metadata = [
       currentTrack.collection,
       currentTrack.franchise,
+      currentTrack.character,
       currentTrack.mood,
+      currentTrack.energy ? `${currentTrack.energy} energy` : "",
+      currentTrack.vocalStyle,
+      currentTrack.performance,
       ...currentTrack.tags.slice(0, 5),
       currentTrack.explicit ? "Explicit" : "",
     ].filter(Boolean);
@@ -2091,7 +2111,7 @@
   window.addEventListener("online", () => { updateNetworkState(); showToast("Back online."); });
   window.addEventListener("offline", updateNetworkState);
 
-  const copyTrack = (track) => track ? { ...track, tags: [...track.tags] } : null;
+  const copyTrack = (track) => track ? { ...track, tags: [...track.tags], similarReleaseIds: [...(track.similarReleaseIds || [])] } : null;
   const copyPlaylist = (playlist) => ({ ...playlist, trackIds: [...playlist.trackIds] });
   const bridgeSaveOffline = async (id, onProgress, options = {}) => {
     const track = byId(id);
@@ -2135,6 +2155,13 @@
     getFavoriteIds: () => [...favorites],
     getOfflineIds: () => [...offlineIds],
     getListening: () => JSON.parse(JSON.stringify(listening)),
+    clearListening: () => {
+      listening = { recent: [], months: {} };
+      saveListening();
+      renderListeningSections();
+      document.dispatchEvent(new CustomEvent("xotiic:listeningchange"));
+      return true;
+    },
     saveOffline: bridgeSaveOffline,
     removeOffline: bridgeRemoveOffline,
     refreshOffline: refreshOfflineState,

@@ -1,0 +1,321 @@
+.for-you-library-section {
+  min-width: 0;
+}
+
+.for-you-content,
+.personal-mixes {
+  display: grid;
+  gap: 24px;
+}
+
+.local-recap {
+  position: relative;
+  overflow: hidden;
+  display: grid;
+  grid-template-columns: minmax(0, 1.35fr) minmax(260px, 0.65fr);
+  gap: 24px;
+  padding: clamp(22px, 4vw, 40px);
+  border: 1px solid rgba(169, 255, 45, 0.18);
+  border-radius: 24px;
+  background:
+    radial-gradient(circle at 88% 12%, rgba(169, 255, 45, 0.14), transparent 38%),
+    linear-gradient(135deg, rgba(18, 32, 18, 0.98), rgba(7, 10, 8, 0.98));
+}
+
+.local-recap::after {
+  content: "XD";
+  position: absolute;
+  right: -14px;
+  bottom: -52px;
+  color: rgba(169, 255, 45, 0.035);
+  font-size: clamp(8rem, 18vw, 15rem);
+  font-weight: 950;
+  line-height: 1;
+  pointer-events: none;
+}
+
+.local-recap > * {
+  position: relative;
+  z-index: 1;
+}
+
+.local-recap h2 {
+  max-width: 660px;
+  margin: 8px 0 10px;
+  font-size: clamp(1.7rem, 4vw, 3.4rem);
+  line-height: 0.98;
+}
+
+.local-recap p:not(.section-kicker) {
+  max-width: 680px;
+  margin: 0;
+  color: var(--muted);
+  line-height: 1.6;
+}
+
+.local-recap dl {
+  display: grid;
+  align-content: start;
+  gap: 8px;
+  margin: 0;
+}
+
+.local-recap dl div {
+  display: grid;
+  gap: 3px;
+  padding: 11px 13px;
+  border: 1px solid var(--line);
+  border-radius: 12px;
+  background: rgba(255, 255, 255, 0.035);
+}
+
+.local-recap dt {
+  color: var(--muted);
+  font-size: 0.68rem;
+  font-weight: 800;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+}
+
+.local-recap dd {
+  margin: 0;
+  overflow: hidden;
+  color: var(--text);
+  font-weight: 800;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+#discovery-clear-history {
+  grid-column: 2;
+  justify-self: start;
+  min-height: 40px;
+  padding: 0 14px;
+  border: 1px solid var(--line);
+  border-radius: 11px;
+  color: var(--muted);
+  background: rgba(255, 255, 255, 0.035);
+  font: inherit;
+  font-size: 0.76rem;
+  font-weight: 750;
+  cursor: pointer;
+}
+
+#discovery-clear-history:disabled {
+  opacity: 0.45;
+  cursor: not-allowed;
+}
+
+.personal-mix-grid {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 14px;
+}
+
+.personal-mix-card {
+  min-width: 0;
+  border: 1px solid var(--line);
+  border-radius: 18px;
+  background: rgba(255, 255, 255, 0.025);
+  transition: border-color 160ms ease, background 160ms ease, transform 160ms ease;
+}
+
+.personal-mix-card:hover {
+  border-color: rgba(169, 255, 45, 0.32);
+  background: rgba(169, 255, 45, 0.045);
+  transform: translateY(-2px);
+}
+
+.personal-mix-card > button {
+  position: relative;
+  width: 100%;
+  min-height: 100%;
+  display: grid;
+  grid-template-columns: 92px minmax(0, 1fr);
+  align-items: center;
+  gap: 14px;
+  padding: 12px;
+  border: 0;
+  color: var(--text);
+  background: transparent;
+  font: inherit;
+  text-align: left;
+  cursor: pointer;
+}
+
+.mix-art-stack {
+  overflow: hidden;
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  inline-size: 92px;
+  block-size: 92px;
+  border-radius: 13px;
+  background: #101510;
+}
+
+.mix-art-stack img {
+  width: 100%;
+  height: 100%;
+  min-width: 0;
+  min-height: 0;
+  object-fit: cover;
+}
+
+.mix-art-stack img:only-child {
+  grid-column: 1 / -1;
+}
+
+.personal-mix-copy {
+  min-width: 0;
+  display: grid;
+  gap: 4px;
+}
+
+.personal-mix-copy small {
+  overflow: hidden;
+  color: var(--accent);
+  font-size: 0.62rem;
+  font-weight: 850;
+  letter-spacing: 0.08em;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.personal-mix-copy strong {
+  overflow: hidden;
+  font-size: 1rem;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.personal-mix-copy > span,
+.personal-mix-copy b {
+  color: var(--muted);
+  font-size: 0.72rem;
+  font-weight: 550;
+  line-height: 1.35;
+}
+
+.personal-mix-copy b {
+  color: var(--text-soft, #b9c0ba);
+  font-weight: 750;
+}
+
+.personal-mix-play {
+  position: absolute;
+  right: 10px;
+  bottom: 10px;
+  display: grid;
+  place-items: center;
+  inline-size: 34px;
+  block-size: 34px;
+  border-radius: 50%;
+  color: #071006;
+  background: var(--accent);
+  opacity: 0;
+  transform: translateY(4px);
+  transition: opacity 160ms ease, transform 160ms ease;
+}
+
+.personal-mix-card:hover .personal-mix-play,
+.personal-mix-card:focus-within .personal-mix-play {
+  opacity: 1;
+  transform: translateY(0);
+}
+
+.personal-mix-empty {
+  padding: 28px;
+  border: 1px dashed var(--line);
+  border-radius: 18px;
+  text-align: center;
+}
+
+.personal-mix-empty p {
+  margin: 7px auto 0;
+  max-width: 580px;
+  color: var(--muted);
+}
+
+.storage-health-actions {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 8px;
+}
+
+.app-health-card .storage-health-actions button {
+  width: 100%;
+  min-height: 42px;
+  margin: 0;
+}
+
+.health-storage-status {
+  min-height: 1.35em;
+  margin: 10px 0 0;
+  color: var(--muted);
+  font-size: 0.75rem;
+  line-height: 1.45;
+}
+
+.health-storage-status.is-busy {
+  color: var(--accent);
+}
+
+@media (max-width: 1120px) {
+  .personal-mix-grid {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+}
+
+@media (max-width: 720px) {
+  .local-recap {
+    grid-template-columns: 1fr;
+  }
+
+  #discovery-clear-history {
+    grid-column: 1;
+  }
+
+  .personal-mix-grid {
+    display: flex;
+    gap: 11px;
+    margin-inline: calc(var(--page-padding, 20px) * -1);
+    padding-inline: var(--page-padding, 20px);
+    overflow-x: auto;
+    scroll-snap-type: x proximity;
+    scrollbar-width: none;
+  }
+
+  .personal-mix-grid::-webkit-scrollbar {
+    display: none;
+  }
+
+  .personal-mix-card {
+    flex: 0 0 min(84vw, 340px);
+    scroll-snap-align: start;
+  }
+
+  .personal-mix-play {
+    opacity: 1;
+    transform: none;
+  }
+}
+
+@media (max-width: 430px) {
+  .local-recap {
+    padding: 20px;
+    border-radius: 18px;
+  }
+
+  .personal-mix-card > button {
+    grid-template-columns: 78px minmax(0, 1fr);
+  }
+
+  .mix-art-stack {
+    inline-size: 78px;
+    block-size: 78px;
+  }
+
+  .storage-health-actions {
+    grid-template-columns: 1fr;
+  }
+}

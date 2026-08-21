@@ -57,6 +57,7 @@
 
   const text = (value) => String(value ?? "");
   const parseTags = (value) => [...new Set(text(value).split(",").map((entry) => entry.trim()).filter(Boolean))].slice(0, 16);
+  const parseReleaseIds = (value) => [...new Set(text(value).split(",").map((entry) => entry.trim().toLowerCase()).filter((entry) => /^[a-z0-9]+(?:-[a-z0-9]+)*$/.test(entry)))].slice(0, 12);
   const formatBytes = (bytes) => {
     if (!Number.isFinite(bytes) || bytes <= 0) return "0 MB";
     const units = ["B", "KB", "MB", "GB"];
@@ -802,7 +803,7 @@
     if (state.suppressDraftSave) return;
     const mode = selectedReleaseMode();
     const draft = {
-      version: 2,
+      version: 3,
       updatedAt: Date.now(),
       title: draftValue("#release-title", 100),
       artist: draftValue("#release-artist", 80),
@@ -812,7 +813,12 @@
       genre: draftValue("#release-genre", 60),
       franchise: draftValue("#release-franchise", 80),
       mood: draftValue("#release-mood", 60),
+      character: draftValue("#release-character", 80),
+      energy: $("#release-energy").value,
+      vocalStyle: draftValue("#release-vocal-style", 60),
+      performance: $("#release-performance").value,
       tags: draftValue("#release-tags", 240),
+      similar: draftValue("#release-similar", 300),
       credits: draftValue("#release-credits", 500),
       explicit: $("#release-explicit").checked,
       id: draftValue("#release-id", 80),
@@ -822,7 +828,7 @@
       mode,
       schedule: mode === "scheduled" ? $("#release-schedule").value : "",
     };
-    const meaningful = draft.title || draft.id || draft.youtube || draft.description || draft.lyrics || draft.collection || draft.trackNumber || draft.franchise || draft.mood || draft.tags || draft.credits || draft.explicit
+    const meaningful = draft.title || draft.id || draft.youtube || draft.description || draft.lyrics || draft.collection || draft.trackNumber || draft.franchise || draft.mood || draft.character || draft.energy || draft.vocalStyle || draft.performance || draft.tags || draft.similar || draft.credits || draft.explicit
       || draft.artist !== "XotiicDuck" || draft.genre !== "Anime J-Rock" || draft.album !== "Single" || draft.mode !== "published";
     if (!meaningful) {
       clearReleaseDraft({ quiet: true });
@@ -846,7 +852,7 @@
   const restoreReleaseDraft = () => {
     let draft;
     try { draft = JSON.parse(localStorage.getItem(RELEASE_DRAFT_KEY) || "null"); } catch { draft = null; }
-    if (!draft || ![1, 2].includes(draft.version) || !Number.isFinite(draft.updatedAt)) return false;
+    if (!draft || ![1, 2, 3].includes(draft.version) || !Number.isFinite(draft.updatedAt)) return false;
     const albums = ["Single", "EP", "Album", "Soundtrack"];
     const modes = ["published", "scheduled", "draft"];
     state.suppressDraftSave = true;
@@ -858,7 +864,12 @@
     $("#release-genre").value = text(draft.genre).slice(0, 60) || "Anime J-Rock";
     $("#release-franchise").value = text(draft.franchise).slice(0, 80);
     $("#release-mood").value = text(draft.mood).slice(0, 60);
+    $("#release-character").value = text(draft.character).slice(0, 80);
+    $("#release-energy").value = ["Low", "Medium", "High"].includes(draft.energy) ? draft.energy : "";
+    $("#release-vocal-style").value = text(draft.vocalStyle).slice(0, 60);
+    $("#release-performance").value = ["Solo", "Versus", "Collaboration"].includes(draft.performance) ? draft.performance : "";
     $("#release-tags").value = text(draft.tags).slice(0, 240);
+    $("#release-similar").value = text(draft.similar).slice(0, 300);
     $("#release-credits").value = text(draft.credits).slice(0, 500);
     $("#release-explicit").checked = draft.explicit === true;
     $("#release-id").value = slugify(text(draft.id));
@@ -943,7 +954,12 @@
     const trackNumber = Math.max(0, Math.floor(Number($("#release-track-number").value) || 0));
     const franchise = $("#release-franchise").value.trim();
     const mood = $("#release-mood").value.trim();
+    const character = $("#release-character").value.trim();
+    const energy = $("#release-energy").value;
+    const vocalStyle = $("#release-vocal-style").value.trim();
+    const performance = $("#release-performance").value;
     const tags = parseTags($("#release-tags").value);
+    const similarReleaseIds = parseReleaseIds($("#release-similar").value);
     const credits = $("#release-credits").value.trim();
     const release = {
       id,
@@ -969,7 +985,12 @@
     if (trackNumber) release.trackNumber = trackNumber;
     if (franchise) release.franchise = franchise;
     if (mood) release.mood = mood;
+    if (character) release.character = character;
+    if (energy) release.energy = energy;
+    if (vocalStyle) release.vocalStyle = vocalStyle;
+    if (performance) release.performance = performance;
     if (tags.length) release.tags = tags;
+    if (similarReleaseIds.length) release.similarReleaseIds = similarReleaseIds;
     if (credits) release.credits = credits;
     if ($("#release-explicit").checked) release.explicit = true;
     return release;
@@ -1101,7 +1122,12 @@
     $("#edit-genre").value = text(release.genre || "Music");
     $("#edit-franchise").value = text(release.franchise);
     $("#edit-mood").value = text(release.mood);
+    $("#edit-character").value = text(release.character);
+    $("#edit-energy").value = ["Low", "Medium", "High"].includes(release.energy) ? release.energy : "";
+    $("#edit-vocal-style").value = text(release.vocalStyle);
+    $("#edit-performance").value = ["Solo", "Versus", "Collaboration"].includes(release.performance) ? release.performance : "";
     $("#edit-tags").value = Array.isArray(release.tags) ? release.tags.join(", ") : text(release.tags);
+    $("#edit-similar").value = Array.isArray(release.similarReleaseIds) ? release.similarReleaseIds.join(", ") : text(release.similarReleases);
     $("#edit-credits").value = text(release.credits);
     $("#edit-explicit").checked = release.explicit === true;
     const editorStatus = effectiveStatus(release);
@@ -1148,7 +1174,12 @@
     const trackNumber = Math.max(0, Math.floor(Number($("#edit-track-number").value) || 0));
     const franchise = $("#edit-franchise").value.trim();
     const mood = $("#edit-mood").value.trim();
+    const character = $("#edit-character").value.trim();
+    const energy = $("#edit-energy").value;
+    const vocalStyle = $("#edit-vocal-style").value.trim();
+    const performance = $("#edit-performance").value;
     const tags = parseTags($("#edit-tags").value);
+    const similarReleaseIds = parseReleaseIds($("#edit-similar").value);
     const credits = $("#edit-credits").value.trim();
     const next = {
       ...previous,
@@ -1194,7 +1225,12 @@
     if (trackNumber) next.trackNumber = trackNumber; else delete next.trackNumber;
     if (franchise) next.franchise = franchise; else delete next.franchise;
     if (mood) next.mood = mood; else delete next.mood;
+    if (character) next.character = character; else delete next.character;
+    if (energy) next.energy = energy; else delete next.energy;
+    if (vocalStyle) next.vocalStyle = vocalStyle; else delete next.vocalStyle;
+    if (performance) next.performance = performance; else delete next.performance;
     if (tags.length) next.tags = tags; else delete next.tags;
+    if (similarReleaseIds.length) next.similarReleaseIds = similarReleaseIds; else delete next.similarReleaseIds;
     if (credits) next.credits = credits; else delete next.credits;
     if ($("#edit-explicit").checked) next.explicit = true; else delete next.explicit;
     delete next.youtube;
@@ -1712,7 +1748,7 @@
   }
 
   globalThis.XotiicAdmin = Object.freeze({
-    version: "16.0.0",
+    version: "18.0.0",
     getReleases: () => JSON.parse(JSON.stringify(state.releases)),
     getReleaseFiles: () => ({
       audioFile: state.audioFile,

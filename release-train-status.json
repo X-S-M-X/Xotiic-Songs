@@ -1,7 +1,7 @@
 {
-  "currentVersion": "16.0.0",
-  "releaseId": "update-16",
-  "releaseLabel": "Updates 15 and 16",
-  "promotedAt": "2026-08-18T09:49:07.325Z",
-  "nextReleaseId": "update-18"
+  "currentVersion": "18.0.0",
+  "releaseId": "update-18",
+  "releaseLabel": "Updates 17 and 18",
+  "promotedAt": "2026-08-21T09:52:22.671Z",
+  "nextReleaseId": "update-20"
 }
