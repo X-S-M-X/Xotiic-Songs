@@ -607,5 +607,20 @@ window.XOTIICDUCK_RELEASES = [
     "status": "draft",
     "createdAt": "2026-08-22T01:31:43.896Z",
     "updatedAt": "2026-08-22T01:31:43.896Z"
+  },
+  {
+    "id": "no-crown-between-us",
+    "title": "No Crown Between Us",
+    "artist": "XotiicDuck",
+    "album": "Single",
+    "releaseType": "Single",
+    "genre": "Anime J-Rock",
+    "releaseDate": "2026-08-22",
+    "duration": 352,
+    "audio": "music/no-crown-between-us.mp3",
+    "cover": "covers/no-crown-between-us.webp",
+    "status": "draft",
+    "createdAt": "2026-08-22T02:16:29.799Z",
+    "updatedAt": "2026-08-22T02:16:29.799Z"
   }
 ];
