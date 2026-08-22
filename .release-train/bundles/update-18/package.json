@@ -1,6 +1,6 @@
 {
   "name": "xotiicduck-music-portable",
-  "version": "18.0.0",
+  "version": "18.0.1",
   "private": true,
   "description": "Static PWA validation for XotiicDuck Music Update 18.",
   "scripts": {

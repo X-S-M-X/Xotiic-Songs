@@ -137,11 +137,13 @@ test("Updates 13 and 14 expose library discovery and playback utilities", () => 
   const styles = read("update-13-14.css");
   const worker = read("sw.js");
   for (const id of [
-    "discover-search", "discover-type", "discover-sort", "collection-layer",
+    "discover-type", "discover-sort", "collection-layer",
     "queue-save", "now-playing-sleep", "sleep-layer", "health-refresh",
     "track-metadata", "track-credits",
   ]) assert.match(html, new RegExp(`id=["']${id}["']`));
-  assert.match(app, /const APP_VERSION = "18\.0\.0"/);
+  assert.doesNotMatch(html, /id=["']discover-search["']/);
+  assert.ok((html.match(/data-search-open/g) || []).length >= 2, "desktop and mobile catalog search entry points remain available");
+  assert.match(app, /const APP_VERSION = "18\.0\.1"/);
   assert.match(app, /const releaseCollections = \(\) =>/);
   assert.match(app, /const openQueuePlaylistEditor = \(\) =>/);
   assert.match(app, /const startSleepTimer = \(minutes\) =>/);
@@ -232,4 +234,21 @@ test("Updates 17 and 18 add private discovery and offline integrity tools", () =
     }
   }
   assert.match(adminApp, /similarReleaseIds/);
+});
+
+test("Update 18.1 keeps one search flow and a compact responsive queue", () => {
+  const html = read("index.html");
+  const app = read("app.js");
+  const styles = read("styles.css");
+  const worker = read("sw.js");
+  assert.doesNotMatch(html, /id=["']discover-search["']/);
+  assert.ok((html.match(/data-search-open/g) || []).length >= 2);
+  assert.match(html, /class="queue-close icon-only-button"/);
+  assert.match(app, /\$\("#discover-search"\)\?\.addEventListener/);
+  assert.match(styles, /\.queue-row-main > \.trailing-icon \{\s*display: none !important;/);
+  assert.match(styles, /grid-template-areas:\s*"copy close"\s*"actions actions"/);
+  assert.match(styles, /@media \(max-width: 360px\)/);
+  assert.match(worker, /xotiicduck-portable-v18-1-discover-queue-hotfix/);
+  assert.match(worker, /styles\.css\?v=18\.1/);
+  assert.match(worker, /app\.js\?v=18\.1/);
 });

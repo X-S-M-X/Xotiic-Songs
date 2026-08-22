@@ -17,7 +17,7 @@
     <link rel="icon" href="./favicon.svg?v=18" />
     <link rel="apple-touch-icon" href="./apple-touch-icon.png?v=18" />
     <script src="./theme.js?v=18"></script>
-    <link rel="stylesheet" href="./styles.css?v=18" />
+    <link rel="stylesheet" href="./styles.css?v=18.1" />
     <link rel="stylesheet" href="./layout.css?v=18" />
     <link rel="stylesheet" href="./anime-theme.css?v=18" />
     <link rel="stylesheet" href="./update-13-14.css?v=18" />
@@ -25,7 +25,7 @@
     <link rel="stylesheet" href="./update-17-18.css?v=18" />
     <script src="./catalog.js?v=18" defer></script>
     <script src="./offline.js?v=18" defer></script>
-    <script src="./app.js?v=18" defer></script>
+    <script src="./app.js?v=18.1" defer></script>
     <script src="./download-manager.js?v=18" defer></script>
     <script src="./discovery.js?v=18" defer></script>
     <script src="./storage-tools.js?v=18" defer></script>
@@ -164,7 +164,6 @@
             <section class="view-panel page-section" data-panel="discover" hidden>
               <div class="page-title"><p class="section-kicker">THE FULL ARCHIVE</p><h1>Discover</h1><p>Every released world, battle, and anthem in one place.</p></div>
               <div class="discover-toolbar" aria-label="Discover controls">
-                <label class="discover-search" for="discover-search"><span class="icon-frame"><svg class="ui-icon" aria-hidden="true"><use href="#icon-search"></use></svg></span><input id="discover-search" type="search" autocomplete="off" placeholder="Search titles, collections, characters or lyrics" /></label>
                 <label><span>Release type</span><select id="discover-type"><option value="all">All releases</option><option value="Single">Singles</option><option value="EP">EPs</option><option value="Album">Albums</option><option value="Soundtrack">Soundtracks</option></select></label>
                 <label><span>Sort by</span><select id="discover-sort"><option value="latest">Latest first</option><option value="oldest">Oldest first</option><option value="title">Title A to Z</option><option value="duration">Longest first</option></select></label>
                 <span id="discover-count" class="discover-count" role="status" aria-live="polite">0 releases</span>
@@ -194,7 +193,7 @@
           <footer class="site-footer">
             <div><strong>XOTIICDUCK MUSIC</strong><span>Independent music. Direct from the artist.</span></div>
             <nav><button data-info="about">About</button><button data-info="install">Install</button><button data-info="privacy">Privacy</button><button data-info="terms">Terms</button><a href="./admin/" rel="nofollow">Artist access</a></nav>
-            <span>© <span id="year"></span> XotiicDuck · Player v18</span>
+            <span>© <span id="year"></span> XotiicDuck · Player v18.1</span>
           </footer>
         </div>
       </main>
@@ -268,7 +267,7 @@
 
       <div id="queue-layer" class="modal-layer" role="dialog" aria-modal="true" aria-label="Playback queue" hidden>
         <button class="modal-backdrop" data-modal-close aria-label="Close queue"></button>
-        <div class="queue-modal"><div class="queue-modal-heading"><div><p class="section-kicker">PLAYBACK ORDER · <span id="queue-context">All tracks</span></p><h2>Queue</h2></div><div class="queue-heading-actions"><button id="queue-save" type="button">Save as playlist</button><button id="queue-clear" type="button">Clear upcoming</button><button class="icon-only-button" data-modal-close aria-label="Close"><svg class="ui-icon" aria-hidden="true"><use href="#icon-close"></use></svg></button></div></div><div id="queue-list" class="queue-modal-list"></div></div>
+        <div class="queue-modal"><div class="queue-modal-heading"><div class="queue-heading-copy"><p class="section-kicker">PLAYBACK ORDER · <span id="queue-context">All tracks</span></p><h2>Queue</h2></div><button class="queue-close icon-only-button" data-modal-close aria-label="Close queue"><svg class="ui-icon" aria-hidden="true"><use href="#icon-close"></use></svg></button><div class="queue-heading-actions"><button id="queue-save" type="button">Save as playlist</button><button id="queue-clear" type="button">Clear upcoming</button></div></div><div id="queue-list" class="queue-modal-list"></div></div>
       </div>
 
       <div id="collection-layer" class="modal-layer" role="dialog" aria-modal="true" aria-label="Release collection" hidden>
@@ -329,7 +328,7 @@
             <label><input type="radio" name="appearance-accent" value="aqua" /><span class="accent-swatch aqua"></span><span><strong>Aqua</strong><small>Cyan and blue</small></span></label>
           </fieldset>
           <label class="motion-setting" for="appearance-motion"><span><svg class="ui-icon" aria-hidden="true"><use href="#icon-motion"></use></svg></span><span><strong>Interface motion</strong><small>System follows your device accessibility setting.</small></span><select id="appearance-motion"><option value="system">Use device setting</option><option value="full">Full anime energy</option><option value="reduced">Reduced motion</option></select></label>
-          <section class="app-health-card" aria-labelledby="app-health-title"><div><p class="section-kicker">APP HEALTH</p><h3 id="app-health-title">Player diagnostics</h3></div><dl><div><dt>Version</dt><dd id="health-version">18.0.0</dd></div><div><dt>Install mode</dt><dd id="health-install">Checking</dd></div><div><dt>Connection</dt><dd id="health-network">Checking</dd></div><div><dt>Offline storage</dt><dd id="health-storage">Checking</dd></div><div><dt>Saved songs</dt><dd id="health-downloads">0</dd></div><div><dt>Integrity</dt><dd id="health-integrity">Not checked</dd></div></dl><div class="storage-health-actions"><button id="health-refresh" type="button">Run check</button><button id="health-verify" type="button">Verify downloads</button><button id="health-cleanup" type="button">Clean old cache</button><button id="health-persist" type="button">Protect storage</button></div><p id="health-storage-status" class="health-storage-status" role="status" aria-live="polite"></p></section>
+          <section class="app-health-card" aria-labelledby="app-health-title"><div><p class="section-kicker">APP HEALTH</p><h3 id="app-health-title">Player diagnostics</h3></div><dl><div><dt>Version</dt><dd id="health-version">18.0.1</dd></div><div><dt>Install mode</dt><dd id="health-install">Checking</dd></div><div><dt>Connection</dt><dd id="health-network">Checking</dd></div><div><dt>Offline storage</dt><dd id="health-storage">Checking</dd></div><div><dt>Saved songs</dt><dd id="health-downloads">0</dd></div><div><dt>Integrity</dt><dd id="health-integrity">Not checked</dd></div></dl><div class="storage-health-actions"><button id="health-refresh" type="button">Run check</button><button id="health-verify" type="button">Verify downloads</button><button id="health-cleanup" type="button">Clean old cache</button><button id="health-persist" type="button">Protect storage</button></div><p id="health-storage-status" class="health-storage-status" role="status" aria-live="polite"></p></section>
           <footer class="settings-footer"><span>Saved only on this device.</span><button id="appearance-reset" type="button">Restore defaults</button></footer>
         </article>
       </div>

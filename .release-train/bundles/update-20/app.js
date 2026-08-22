@@ -1906,7 +1906,7 @@
   $("#volume").addEventListener("input", (event) => { audio.volume = Number(event.target.value); saveSession(); });
   for (const input of [$("#progress"), $("#now-playing-progress")]) input.addEventListener("input", (event) => seekTo(event.target.value));
   $("#search-input").addEventListener("input", (event) => renderSearch(event.target.value));
-  $("#discover-search").addEventListener("input", (event) => { discoverQuery = event.target.value; renderDiscover(); });
+  $("#discover-search")?.addEventListener("input", (event) => { discoverQuery = event.target.value; renderDiscover(); });
   $("#discover-type").addEventListener("change", (event) => { selectedReleaseType = event.target.value; renderDiscover(); });
   $("#discover-sort").addEventListener("change", (event) => { discoverSort = event.target.value; renderDiscover(); });
   $("#health-refresh").addEventListener("click", () => refreshAppHealth().then(() => showToast("Player diagnostics refreshed.")));

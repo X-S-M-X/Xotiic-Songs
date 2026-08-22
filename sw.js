@@ -1,6 +1,6 @@
 importScripts("./range.js?v=18");
 
-const CACHE_NAME = "xotiicduck-portable-v18-player-hotfix-1";
+const CACHE_NAME = "xotiicduck-portable-v18-1-discover-queue-hotfix";
 const MEDIA_CACHE = "xotiic-media-v1";
 const scoped = (file) => new URL(file, self.registration.scope).href;
 const CATALOG_URL = scoped("./catalog.js");
@@ -8,7 +8,7 @@ const SHELL = [
   "./",
   "./index.html",
   "./theme.js?v=18",
-  "./styles.css?v=18",
+  "./styles.css?v=18.1",
   "./player-hotfix.css?v=1",
   "./layout.css?v=18",
   "./anime-theme.css?v=18",
@@ -18,7 +18,7 @@ const SHELL = [
   "./catalog.js",
   "./range.js?v=18",
   "./offline.js?v=18",
-  "./app.js?v=18",
+  "./app.js?v=18.1",
   "./download-manager.js?v=18",
   "./discovery.js?v=18",
   "./storage-tools.js?v=18",

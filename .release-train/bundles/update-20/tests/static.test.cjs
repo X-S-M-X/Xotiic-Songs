@@ -137,10 +137,12 @@ test("Updates 13 and 14 expose library discovery and playback utilities", () => 
   const styles = read("update-13-14.css");
   const worker = read("sw.js");
   for (const id of [
-    "discover-search", "discover-type", "discover-sort", "collection-layer",
+    "discover-type", "discover-sort", "collection-layer",
     "queue-save", "now-playing-sleep", "sleep-layer", "health-refresh",
     "track-metadata", "track-credits",
   ]) assert.match(html, new RegExp(`id=["']${id}["']`));
+  assert.doesNotMatch(html, /id=["']discover-search["']/);
+  assert.ok((html.match(/data-search-open/g) || []).length >= 2, "desktop and mobile catalog search entry points remain available");
   assert.match(app, /const APP_VERSION = "20\.0\.0"/);
   assert.match(app, /const releaseCollections = \(\) =>/);
   assert.match(app, /const openQueuePlaylistEditor = \(\) =>/);
@@ -234,6 +236,19 @@ test("Updates 17 and 18 add private discovery and offline integrity tools", () =
   assert.match(adminApp, /similarReleaseIds/);
 });
 
+test("queue hotfix keeps one search flow and a compact responsive queue", () => {
+  const html = read("index.html");
+  const app = read("app.js");
+  const styles = read("styles.css");
+  assert.doesNotMatch(html, /id=["']discover-search["']/);
+  assert.ok((html.match(/data-search-open/g) || []).length >= 2);
+  assert.match(html, /class="queue-close icon-only-button"/);
+  assert.match(app, /\$\("#discover-search"\)\?\.addEventListener/);
+  assert.match(styles, /\.queue-row-main > \.trailing-icon \{\s*display: none !important;/);
+  assert.match(styles, /grid-template-areas:\s*"copy close"\s*"actions actions"/);
+  assert.match(styles, /@media \(max-width: 360px\)/);
+});
+
 test("Updates 19 and 20 keep online services optional and prepare connected devices", () => {
   const html = read("index.html");
   const config = read("online-config.js");
@@ -253,7 +268,7 @@ test("Updates 19 and 20 keep online services optional and prepare connected devi
   assert.match(devices, /watchAvailability/);
   assert.match(worker, /update-19-20\.css\?v=20/);
   assert.match(worker, /connected-devices\.js\?v=20/);
-  assert.equal(wrapper.status, "preparation-only");
+  assert.equal(wrapper.status, "ready-to-initialize");
   assert.equal(wrapper.signingKeyIncluded, false);
   assert.match(assetLinks, /REPLACE_WITH_THE_REAL_SIGNING_CERTIFICATE/);
   assert.ok(!fs.existsSync(path.join(root, ".well-known", "assetlinks.json")), "a placeholder asset link must not be published live");

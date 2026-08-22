@@ -169,7 +169,6 @@
             <section class="view-panel page-section" data-panel="discover" hidden>
               <div class="page-title"><p class="section-kicker">THE FULL ARCHIVE</p><h1>Discover</h1><p>Every released world, battle, and anthem in one place.</p></div>
               <div class="discover-toolbar" aria-label="Discover controls">
-                <label class="discover-search" for="discover-search"><span class="icon-frame"><svg class="ui-icon" aria-hidden="true"><use href="#icon-search"></use></svg></span><input id="discover-search" type="search" autocomplete="off" placeholder="Search titles, collections, characters or lyrics" /></label>
                 <label><span>Release type</span><select id="discover-type"><option value="all">All releases</option><option value="Single">Singles</option><option value="EP">EPs</option><option value="Album">Albums</option><option value="Soundtrack">Soundtracks</option></select></label>
                 <label><span>Sort by</span><select id="discover-sort"><option value="latest">Latest first</option><option value="oldest">Oldest first</option><option value="title">Title A to Z</option><option value="duration">Longest first</option></select></label>
                 <span id="discover-count" class="discover-count" role="status" aria-live="polite">0 releases</span>
@@ -274,7 +273,7 @@
 
       <div id="queue-layer" class="modal-layer" role="dialog" aria-modal="true" aria-label="Playback queue" hidden>
         <button class="modal-backdrop" data-modal-close aria-label="Close queue"></button>
-        <div class="queue-modal"><div class="queue-modal-heading"><div><p class="section-kicker">PLAYBACK ORDER · <span id="queue-context">All tracks</span></p><h2>Queue</h2></div><div class="queue-heading-actions"><button id="queue-save" type="button">Save as playlist</button><button id="queue-clear" type="button">Clear upcoming</button><button class="icon-only-button" data-modal-close aria-label="Close"><svg class="ui-icon" aria-hidden="true"><use href="#icon-close"></use></svg></button></div></div><div id="queue-list" class="queue-modal-list"></div></div>
+        <div class="queue-modal"><div class="queue-modal-heading"><div class="queue-heading-copy"><p class="section-kicker">PLAYBACK ORDER · <span id="queue-context">All tracks</span></p><h2>Queue</h2></div><button class="queue-close icon-only-button" data-modal-close aria-label="Close queue"><svg class="ui-icon" aria-hidden="true"><use href="#icon-close"></use></svg></button><div class="queue-heading-actions"><button id="queue-save" type="button">Save as playlist</button><button id="queue-clear" type="button">Clear upcoming</button></div></div><div id="queue-list" class="queue-modal-list"></div></div>
       </div>
 
       <div id="collection-layer" class="modal-layer" role="dialog" aria-modal="true" aria-label="Release collection" hidden>
