@@ -592,5 +592,20 @@ window.XOTIICDUCK_RELEASES = [
     "status": "draft",
     "createdAt": "2026-08-19T11:27:03.890Z",
     "updatedAt": "2026-08-19T11:27:03.890Z"
+  },
+  {
+    "id": "no-world-above-us",
+    "title": "No World Above Us",
+    "artist": "XotiicDuck",
+    "album": "Single",
+    "releaseType": "Single",
+    "genre": "Anime J-Rock",
+    "releaseDate": "2026-08-22",
+    "duration": 378,
+    "audio": "music/no-world-above-us.mp3",
+    "cover": "covers/no-world-above-us.webp",
+    "status": "draft",
+    "createdAt": "2026-08-22T01:31:43.896Z",
+    "updatedAt": "2026-08-22T01:31:43.896Z"
   }
 ];
