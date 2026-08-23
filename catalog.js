@@ -672,5 +672,20 @@ window.XOTIICDUCK_RELEASES = [
     "status": "draft",
     "createdAt": "2026-08-23T09:52:36.949Z",
     "updatedAt": "2026-08-23T09:52:36.949Z"
+  },
+  {
+    "id": "across-two-thousand-years",
+    "title": "Across Two Thousand Years",
+    "artist": "XotiicDuck",
+    "album": "Single",
+    "releaseType": "Single",
+    "genre": "Anime J-Rock",
+    "releaseDate": "2026-08-23",
+    "duration": 322,
+    "audio": "music/across-two-thousand-years.mp3",
+    "cover": "covers/across-two-thousand-years.webp",
+    "status": "draft",
+    "createdAt": "2026-08-23T09:59:11.078Z",
+    "updatedAt": "2026-08-23T09:59:11.078Z"
   }
 ];
