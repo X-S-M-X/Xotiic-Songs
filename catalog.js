@@ -687,5 +687,20 @@ window.XOTIICDUCK_RELEASES = [
     "status": "draft",
     "createdAt": "2026-08-23T09:59:11.078Z",
     "updatedAt": "2026-08-23T09:59:11.078Z"
+  },
+  {
+    "id": "crimson-blades-of-hell",
+    "title": "Crimson Blades Of Hell",
+    "artist": "XotiicDuck",
+    "album": "Single",
+    "releaseType": "Single",
+    "genre": "Anime J-Rock",
+    "releaseDate": "2026-08-23",
+    "duration": 352,
+    "audio": "music/crimson-blades-of-hell.mp3",
+    "cover": "covers/crimson-blades-of-hell.webp",
+    "status": "draft",
+    "createdAt": "2026-08-23T10:27:03.936Z",
+    "updatedAt": "2026-08-23T10:27:03.936Z"
   }
 ];
