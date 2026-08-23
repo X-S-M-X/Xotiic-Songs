@@ -627,5 +627,20 @@ window.XOTIICDUCK_RELEASES = [
     "status": "draft",
     "createdAt": "2026-08-22T02:16:29.799Z",
     "updatedAt": "2026-08-22T02:16:29.799Z"
+  },
+  {
+    "id": "every-life-finds-you",
+    "title": "Every Life Finds You",
+    "artist": "XotiicDuck",
+    "album": "Single",
+    "releaseType": "Single",
+    "genre": "Anime J-Rock",
+    "releaseDate": "2026-08-23",
+    "duration": 479,
+    "audio": "music/every-life-finds-you.mp3",
+    "cover": "covers/every-life-finds-you.webp",
+    "status": "draft",
+    "createdAt": "2026-08-23T08:47:53.347Z",
+    "updatedAt": "2026-08-23T08:47:53.347Z"
   }
 ];
