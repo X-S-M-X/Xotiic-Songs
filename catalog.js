@@ -657,5 +657,20 @@ window.XOTIICDUCK_RELEASES = [
     "status": "draft",
     "createdAt": "2026-08-23T09:32:09.458Z",
     "updatedAt": "2026-08-23T09:32:09.458Z"
+  },
+  {
+    "id": "nothing-ends-today",
+    "title": "Nothing Ends Today",
+    "artist": "XotiicDuck",
+    "album": "Single",
+    "releaseType": "Single",
+    "genre": "Anime J-Rock",
+    "releaseDate": "2026-08-23",
+    "duration": 391,
+    "audio": "music/nothing-ends-today.mp3",
+    "cover": "covers/nothing-ends-today.webp",
+    "status": "draft",
+    "createdAt": "2026-08-23T09:52:36.949Z",
+    "updatedAt": "2026-08-23T09:52:36.949Z"
   }
 ];
