@@ -630,7 +630,7 @@ window.XOTIICDUCK_RELEASES = [
   },
   {
     "id": "every-life-finds-you",
-    "title": "Every Life Finds You",
+    "title": "Every Life Finds You - Orihime Inoue",
     "artist": "XotiicDuck",
     "album": "Single",
     "releaseType": "Single",
@@ -641,7 +641,7 @@ window.XOTIICDUCK_RELEASES = [
     "cover": "covers/every-life-finds-you.webp",
     "status": "draft",
     "createdAt": "2026-08-23T08:47:53.347Z",
-    "updatedAt": "2026-08-23T08:47:53.347Z"
+    "updatedAt": "2026-08-23T09:33:27.797Z"
   },
   {
     "id": "every-life-finds-you-ichigo-kurosaki",
