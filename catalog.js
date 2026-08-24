@@ -655,10 +655,10 @@ window.XOTIICDUCK_RELEASES = [
     "duration": 454,
     "audio": "music/every-life-finds-you-ichigo-kurosaki.mp3",
     "cover": "covers/every-life-finds-you-ichigo-kurosaki.webp",
-    "status": "scheduled",
+    "status": "published",
     "createdAt": "2026-08-23T09:32:09.458Z",
-    "updatedAt": "2026-08-23T13:05:00.816Z",
-    "releaseAt": "2026-08-24T11:00:00.000Z"
+    "updatedAt": "2026-08-24T05:02:39.876Z",
+    "publishedAt": "2026-08-24T05:02:39.876Z"
   },
   {
     "id": "nothing-ends-today",
