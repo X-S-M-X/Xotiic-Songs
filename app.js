@@ -1,7 +1,7 @@
 (() => {
   "use strict";
 
-  const APP_VERSION = "18.0.1";
+  const APP_VERSION = "20.0.0";
 
   const rawCatalog = Array.isArray(window.XOTIICDUCK_RELEASES)
     ? window.XOTIICDUCK_RELEASES
@@ -910,7 +910,7 @@
     syncPlaybackIndicators();
   };
 
-  const modalLayers = () => [$("#search-layer"), $("#queue-layer"), $("#info-layer"), $("#playlist-layer"), $("#playlist-picker-layer"), $("#playlist-editor-layer"), $("#settings-layer"), $("#collection-layer"), $("#sleep-layer")];
+  const modalLayers = () => [$("#search-layer"), $("#queue-layer"), $("#info-layer"), $("#playlist-layer"), $("#playlist-picker-layer"), $("#playlist-editor-layer"), $("#settings-layer"), $("#collection-layer"), $("#sleep-layer"), $("#devices-layer")];
 
   const openModal = (layer, focusSelector = "button:not([disabled]), input, select, textarea, a[href]") => {
     if (!layer) return;

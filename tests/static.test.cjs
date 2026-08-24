@@ -22,7 +22,7 @@ test("service worker serves explicitly saved media with range support", () => {
   const worker = read("sw.js");
   assert.match(worker, /xotiic-media-v1/);
   assert.match(worker, /createPartialResponse/);
-  assert.match(worker, /anime-theme\.css\?v=18/);
+  assert.match(worker, /anime-theme\.css\?v=20/);
   assert.match(worker, /SKIP_WAITING/);
   assert.doesNotMatch(worker, /addEventListener\("install"[\s\S]{0,220}skipWaiting/);
 });
@@ -88,7 +88,7 @@ test("admin supports metadata edits, encrypted backup, and atomic updates", () =
   assert.match(updateStyles, /\.release-mode-selector label > span \{[\s\S]*?place-items: center;/);
   assert.match(updateStyles, /\.release-mode-selector label strong,[\s\S]*?text-align: center;/);
   assert.match(updateStyles, /\.admin-preview-player \{/);
-  assert.match(html, /update-12\.css\?v=18/);
+  assert.match(html, /update-12\.css\?v=20/);
   const ids = [...html.matchAll(/\sid="([^"]+)"/g)].map((match) => match[1]);
   assert.equal(new Set(ids).size, ids.length, "admin HTML IDs must be unique");
 });
@@ -101,7 +101,7 @@ test("async admin forms retain their form reference after awaited work", () => {
 });
 
 test("web app manifests are valid and use current versioned icons", () => {
-  for (const [file, version] of [["manifest.webmanifest", "v=18"], ["admin/manifest.webmanifest", "v=18"]]) {
+  for (const [file, version] of [["manifest.webmanifest", "v=20"], ["admin/manifest.webmanifest", "v=20"]]) {
     const manifest = JSON.parse(read(file));
     assert.ok(Array.isArray(manifest.icons) && manifest.icons.length >= 4);
     assert.ok(manifest.icons.every((icon) => icon.src.includes(version)));
@@ -143,7 +143,7 @@ test("Updates 13 and 14 expose library discovery and playback utilities", () => 
   ]) assert.match(html, new RegExp(`id=["']${id}["']`));
   assert.doesNotMatch(html, /id=["']discover-search["']/);
   assert.ok((html.match(/data-search-open/g) || []).length >= 2, "desktop and mobile catalog search entry points remain available");
-  assert.match(app, /const APP_VERSION = "18\.0\.1"/);
+  assert.match(app, /const APP_VERSION = "20\.0\.0"/);
   assert.match(app, /const releaseCollections = \(\) =>/);
   assert.match(app, /const openQueuePlaylistEditor = \(\) =>/);
   assert.match(app, /const startSleepTimer = \(minutes\) =>/);
@@ -152,7 +152,7 @@ test("Updates 13 and 14 expose library discovery and playback utilities", () => 
   assert.match(styles, /\.discover-toolbar/);
   assert.match(styles, /\.collection-grid/);
   assert.match(styles, /\.sleep-modal/);
-  assert.match(worker, /update-13-14\.css\?v=18/);
+  assert.match(worker, /update-13-14\.css\?v=20/);
 });
 
 test("artist console supports Update 13 catalog metadata", () => {
@@ -169,8 +169,8 @@ test("artist console supports Update 13 catalog metadata", () => {
   assert.match(app, /releaseType/);
   assert.match(app, /parseTags/);
   assert.match(github, /const CATALOG_VERSION = 3/);
-  assert.match(worker, /xotiic-upload-v18/);
-  assert.match(worker, /update-13-14\.css\?v=18/);
+  assert.match(worker, /xotiic-upload-v20/);
+  assert.match(worker, /update-13-14\.css\?v=20/);
   assert.match(styles, /\.release-mode-selector label \{[\s\S]*?place-items: center;[\s\S]*?text-align: center;/);
   assert.match(styles, /\.release-mode-selector label strong,[\s\S]*?text-align: center;/);
 });
@@ -227,7 +227,7 @@ test("Updates 17 and 18 add private discovery and offline integrity tools", () =
   assert.match(offline, /const audit = async/);
   assert.match(offline, /const cleanup = async/);
   assert.match(offline, /SHA-256/);
-  assert.match(worker, /update-17-18\.css\?v=18/);
+  assert.match(worker, /update-17-18\.css\?v=20/);
   for (const prefix of ["release", "edit"]) {
     for (const suffix of ["character", "energy", "vocal-style", "performance", "similar"]) {
       assert.match(adminHtml, new RegExp(`id=["']${prefix}-${suffix}["']`));
@@ -236,11 +236,10 @@ test("Updates 17 and 18 add private discovery and offline integrity tools", () =
   assert.match(adminApp, /similarReleaseIds/);
 });
 
-test("Update 18.1 keeps one search flow and a compact responsive queue", () => {
+test("queue hotfix keeps one search flow and a compact responsive queue", () => {
   const html = read("index.html");
   const app = read("app.js");
   const styles = read("styles.css");
-  const worker = read("sw.js");
   assert.doesNotMatch(html, /id=["']discover-search["']/);
   assert.ok((html.match(/data-search-open/g) || []).length >= 2);
   assert.match(html, /class="queue-close icon-only-button"/);
@@ -248,7 +247,29 @@ test("Update 18.1 keeps one search flow and a compact responsive queue", () => {
   assert.match(styles, /\.queue-row-main > \.trailing-icon \{\s*display: none !important;/);
   assert.match(styles, /grid-template-areas:\s*"copy close"\s*"actions actions"/);
   assert.match(styles, /@media \(max-width: 360px\)/);
-  assert.match(worker, /xotiicduck-portable-v18-1-discover-queue-hotfix/);
-  assert.match(worker, /styles\.css\?v=18\.1/);
-  assert.match(worker, /app\.js\?v=18\.1/);
+});
+
+test("Updates 19 and 20 keep online services optional and prepare connected devices", () => {
+  const html = read("index.html");
+  const config = read("online-config.js");
+  const platform = read("online-platform.js");
+  const devices = read("connected-devices.js");
+  const worker = read("sw.js");
+  const wrapper = JSON.parse(read("android-twa/wrapper-values.json"));
+  const assetLinks = read("android-twa/assetlinks.template.json");
+  for (const id of ["online-platform-card", "online-platform-status", "now-playing-devices", "devices-layer", "device-picker-button", "device-copy-link"]) {
+    assert.match(html, new RegExp(`id=["']${id}["']`));
+  }
+  assert.match(config, /enabled: false/);
+  assert.match(config, /endpoint: ""/);
+  assert.doesNotMatch(platform, /request\([^)]*\)[\s\S]*?\.then\(/);
+  assert.match(devices, /remote\.prompt/);
+  assert.match(devices, /webkitShowPlaybackTargetPicker/);
+  assert.match(devices, /watchAvailability/);
+  assert.match(worker, /update-19-20\.css\?v=20/);
+  assert.match(worker, /connected-devices\.js\?v=20/);
+  assert.equal(wrapper.status, "ready-to-initialize");
+  assert.equal(wrapper.signingKeyIncluded, false);
+  assert.match(assetLinks, /REPLACE_WITH_THE_REAL_SIGNING_CERTIFICATE/);
+  assert.ok(!fs.existsSync(path.join(root, ".well-known", "assetlinks.json")), "a placeholder asset link must not be published live");
 });

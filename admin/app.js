@@ -1748,7 +1748,7 @@
   }
 
   globalThis.XotiicAdmin = Object.freeze({
-    version: "18.0.0",
+    version: "20.0.0",
     getReleases: () => JSON.parse(JSON.stringify(state.releases)),
     getReleaseFiles: () => ({
       audioFile: state.audioFile,

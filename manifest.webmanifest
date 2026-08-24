@@ -12,14 +12,15 @@
   "categories": ["music", "entertainment"],
   "prefer_related_applications": false,
   "shortcuts": [
-    { "name": "Discover releases", "short_name": "Discover", "description": "Browse and filter the complete XotiicDuck catalog", "url": "./?view=discover", "icons": [{ "src": "./icon-192.png?v=18", "sizes": "192x192", "type": "image/png" }] },
-    { "name": "Your library", "short_name": "Library", "description": "Open playlists, favorites, and offline songs", "url": "./?view=library", "icons": [{ "src": "./icon-192.png?v=18", "sizes": "192x192", "type": "image/png" }] },
-    { "name": "Offline downloads", "short_name": "Offline", "description": "Manage music saved for offline listening", "url": "./?view=library&tab=offline", "icons": [{ "src": "./icon-192.png?v=18", "sizes": "192x192", "type": "image/png" }] }
+    { "name": "Discover releases", "short_name": "Discover", "description": "Browse and filter the complete XotiicDuck catalog", "url": "./?view=discover", "icons": [{ "src": "./icon-192.png?v=20", "sizes": "192x192", "type": "image/png" }] },
+    { "name": "Your library", "short_name": "Library", "description": "Open playlists, favorites, and offline songs", "url": "./?view=library", "icons": [{ "src": "./icon-192.png?v=20", "sizes": "192x192", "type": "image/png" }] },
+    { "name": "Offline downloads", "short_name": "Offline", "description": "Manage music saved for offline listening", "url": "./?view=library&tab=offline", "icons": [{ "src": "./icon-192.png?v=20", "sizes": "192x192", "type": "image/png" }] },
+    { "name": "Personal collections", "short_name": "For You", "description": "Open private on-device mixes and listening recap", "url": "./?view=library&tab=for-you", "icons": [{ "src": "./icon-192.png?v=20", "sizes": "192x192", "type": "image/png" }] }
   ],
   "icons": [
-    { "src": "./icon-192.png?v=18", "sizes": "192x192", "type": "image/png", "purpose": "any" },
-    { "src": "./icon-512.png?v=18", "sizes": "512x512", "type": "image/png", "purpose": "any" },
-    { "src": "./icon-maskable-192.png?v=18", "sizes": "192x192", "type": "image/png", "purpose": "maskable" },
-    { "src": "./icon-maskable-512.png?v=18", "sizes": "512x512", "type": "image/png", "purpose": "maskable" }
+    { "src": "./icon-192.png?v=20", "sizes": "192x192", "type": "image/png", "purpose": "any" },
+    { "src": "./icon-512.png?v=20", "sizes": "512x512", "type": "image/png", "purpose": "any" },
+    { "src": "./icon-maskable-192.png?v=20", "sizes": "192x192", "type": "image/png", "purpose": "maskable" },
+    { "src": "./icon-maskable-512.png?v=20", "sizes": "512x512", "type": "image/png", "purpose": "maskable" }
   ]
 }

@@ -13,22 +13,26 @@
     <meta name="apple-mobile-web-app-title" content="XotiicDuck" />
     <meta name="format-detection" content="telephone=no" />
     <title>XotiicDuck Music | Anime Worlds. Original Sound.</title>
-    <link rel="manifest" href="./manifest.webmanifest?v=18" />
-    <link rel="icon" href="./favicon.svg?v=18" />
-    <link rel="apple-touch-icon" href="./apple-touch-icon.png?v=18" />
-    <script src="./theme.js?v=18"></script>
-    <link rel="stylesheet" href="./styles.css?v=18.1" />
-    <link rel="stylesheet" href="./layout.css?v=18" />
-    <link rel="stylesheet" href="./anime-theme.css?v=18" />
-    <link rel="stylesheet" href="./update-13-14.css?v=18" />
-    <link rel="stylesheet" href="./update-15-16.css?v=18" />
-    <link rel="stylesheet" href="./update-17-18.css?v=18" />
-    <script src="./catalog.js?v=18" defer></script>
-    <script src="./offline.js?v=18" defer></script>
-    <script src="./app.js?v=18.1" defer></script>
-    <script src="./download-manager.js?v=18" defer></script>
-    <script src="./discovery.js?v=18" defer></script>
-    <script src="./storage-tools.js?v=18" defer></script>
+    <link rel="manifest" href="./manifest.webmanifest?v=20" />
+    <link rel="icon" href="./favicon.svg?v=20" />
+    <link rel="apple-touch-icon" href="./apple-touch-icon.png?v=20" />
+    <script src="./theme.js?v=20"></script>
+    <link rel="stylesheet" href="./styles.css?v=20" />
+    <link rel="stylesheet" href="./layout.css?v=20" />
+    <link rel="stylesheet" href="./anime-theme.css?v=20" />
+    <link rel="stylesheet" href="./update-13-14.css?v=20" />
+    <link rel="stylesheet" href="./update-15-16.css?v=20" />
+    <link rel="stylesheet" href="./update-17-18.css?v=20" />
+    <link rel="stylesheet" href="./update-19-20.css?v=20" />
+    <script src="./catalog.js?v=20" defer></script>
+    <script src="./offline.js?v=20" defer></script>
+    <script src="./app.js?v=20" defer></script>
+    <script src="./download-manager.js?v=20" defer></script>
+    <script src="./discovery.js?v=20" defer></script>
+    <script src="./storage-tools.js?v=20" defer></script>
+    <script src="./online-config.js?v=20" defer></script>
+    <script src="./online-platform.js?v=20" defer></script>
+    <script src="./connected-devices.js?v=20" defer></script>
       <link rel="stylesheet" href="./player-hotfix.css?v=1" />
   </head>
   <body>
@@ -50,6 +54,7 @@
       <symbol id="icon-repeat-one" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="m17 3 3 3-3 3"></path><path d="M4 11V9a3 3 0 0 1 3-3h13"></path><path d="m7 21-3-3 3-3"></path><path d="M20 13v2a3 3 0 0 1-3 3H4"></path><path d="M11.1 11.1 12.5 10v5"></path></symbol>
       <symbol id="icon-queue" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M9 6h11M9 12h11M9 18h11"></path><circle cx="4.5" cy="6" r="1"></circle><circle cx="4.5" cy="12" r="1"></circle><circle cx="4.5" cy="18" r="1"></circle></symbol>
       <symbol id="icon-volume" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M5 10v4h4l5 4V6l-5 4H5Z"></path><path d="M17 9a4 4 0 0 1 0 6"></path><path d="M19.5 6.5a8 8 0 0 1 0 11"></path></symbol>
+      <symbol id="icon-cast" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M4 5h16v12H9"></path><path d="M4 19a1 1 0 0 1 1 1"></path><path d="M4 15a5 5 0 0 1 5 5"></path><path d="M4 11a9 9 0 0 1 9 9"></path></symbol>
       <symbol id="icon-chevron-down" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><path d="m6.5 9.5 5.5 5 5.5-5"></path></symbol>
       <symbol id="icon-plus" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M12 5v14M5 12h14"></path></symbol>
       <symbol id="icon-lyrics" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M5 6h14M5 11h14M5 16h9M5 21h6"></path></symbol>
@@ -193,7 +198,7 @@
           <footer class="site-footer">
             <div><strong>XOTIICDUCK MUSIC</strong><span>Independent music. Direct from the artist.</span></div>
             <nav><button data-info="about">About</button><button data-info="install">Install</button><button data-info="privacy">Privacy</button><button data-info="terms">Terms</button><a href="./admin/" rel="nofollow">Artist access</a></nav>
-            <span>© <span id="year"></span> XotiicDuck · Player v18.1</span>
+            <span>© <span id="year"></span> XotiicDuck · Player v18</span>
           </footer>
         </div>
       </main>
@@ -250,6 +255,7 @@
                 <button id="now-playing-queue" type="button"><span class="icon-frame"><svg class="ui-icon" aria-hidden="true"><use href="#icon-queue"></use></svg></span><small>Queue</small></button>
                 <button id="now-playing-offline" type="button"><span class="icon-frame"><svg class="ui-icon" aria-hidden="true"><use href="#icon-download"></use></svg></span><small id="now-playing-offline-label">Save offline</small></button>
                 <button id="now-playing-share" type="button"><span class="icon-frame"><svg class="ui-icon" aria-hidden="true"><use href="#icon-share"></use></svg></span><small>Share</small></button>
+                <button id="now-playing-devices" type="button" aria-haspopup="dialog"><span class="icon-frame"><svg class="ui-icon" aria-hidden="true"><use href="#icon-cast"></use></svg></span><small id="now-playing-devices-label">Devices</small></button>
                 <button id="now-playing-sleep" type="button" aria-haspopup="dialog"><span class="icon-frame"><svg class="ui-icon" aria-hidden="true"><use href="#icon-clock"></use></svg></span><small id="now-playing-sleep-label">Sleep timer</small></button>
                 <button id="now-playing-lyrics-toggle" type="button" aria-expanded="false" hidden><span class="icon-frame"><svg class="ui-icon" aria-hidden="true"><use href="#icon-lyrics"></use></svg></span><small>Lyrics</small></button>
               </div>
@@ -328,7 +334,8 @@
             <label><input type="radio" name="appearance-accent" value="aqua" /><span class="accent-swatch aqua"></span><span><strong>Aqua</strong><small>Cyan and blue</small></span></label>
           </fieldset>
           <label class="motion-setting" for="appearance-motion"><span><svg class="ui-icon" aria-hidden="true"><use href="#icon-motion"></use></svg></span><span><strong>Interface motion</strong><small>System follows your device accessibility setting.</small></span><select id="appearance-motion"><option value="system">Use device setting</option><option value="full">Full anime energy</option><option value="reduced">Reduced motion</option></select></label>
-          <section class="app-health-card" aria-labelledby="app-health-title"><div><p class="section-kicker">APP HEALTH</p><h3 id="app-health-title">Player diagnostics</h3></div><dl><div><dt>Version</dt><dd id="health-version">18.0.1</dd></div><div><dt>Install mode</dt><dd id="health-install">Checking</dd></div><div><dt>Connection</dt><dd id="health-network">Checking</dd></div><div><dt>Offline storage</dt><dd id="health-storage">Checking</dd></div><div><dt>Saved songs</dt><dd id="health-downloads">0</dd></div><div><dt>Integrity</dt><dd id="health-integrity">Not checked</dd></div></dl><div class="storage-health-actions"><button id="health-refresh" type="button">Run check</button><button id="health-verify" type="button">Verify downloads</button><button id="health-cleanup" type="button">Clean old cache</button><button id="health-persist" type="button">Protect storage</button></div><p id="health-storage-status" class="health-storage-status" role="status" aria-live="polite"></p></section>
+          <section class="app-health-card" aria-labelledby="app-health-title"><div><p class="section-kicker">APP HEALTH</p><h3 id="app-health-title">Player diagnostics</h3></div><dl><div><dt>Version</dt><dd id="health-version">20.0.0</dd></div><div><dt>Install mode</dt><dd id="health-install">Checking</dd></div><div><dt>Connection</dt><dd id="health-network">Checking</dd></div><div><dt>Offline storage</dt><dd id="health-storage">Checking</dd></div><div><dt>Saved songs</dt><dd id="health-downloads">0</dd></div><div><dt>Integrity</dt><dd id="health-integrity">Not checked</dd></div></dl><div class="storage-health-actions"><button id="health-refresh" type="button">Run check</button><button id="health-verify" type="button">Verify downloads</button><button id="health-cleanup" type="button">Clean old cache</button><button id="health-persist" type="button">Protect storage</button></div><p id="health-storage-status" class="health-storage-status" role="status" aria-live="polite"></p></section>
+          <section id="online-platform-card" class="online-platform-card" aria-labelledby="online-platform-title"><div><p class="section-kicker">OPTIONAL ONLINE PLATFORM</p><h3 id="online-platform-title">Local-only mode</h3><p id="online-platform-copy">Accounts, global charts, and release alerts are disabled. The player works without a backend.</p></div><dl><div><dt>Account sync</dt><dd id="online-account-status">Off</dd></div><div><dt>Global charts</dt><dd id="online-chart-status">Off</dd></div><div><dt>Release alerts</dt><dd id="online-alert-status">Off</dd></div></dl><span id="online-platform-status">NO ENDPOINT CONNECTED</span></section>
           <footer class="settings-footer"><span>Saved only on this device.</span><button id="appearance-reset" type="button">Restore defaults</button></footer>
         </article>
       </div>
@@ -336,6 +343,22 @@
       <div id="sleep-layer" class="modal-layer" role="dialog" aria-modal="true" aria-labelledby="sleep-title" hidden>
         <button class="modal-backdrop" data-modal-close aria-label="Close sleep timer"></button>
         <article class="sleep-modal"><button class="modal-close icon-only-button" data-modal-close aria-label="Close"><svg class="ui-icon" aria-hidden="true"><use href="#icon-close"></use></svg></button><p class="section-kicker">PLAYBACK TIMER</p><h2 id="sleep-title">Sleep timer</h2><p id="sleep-status">Stop playback automatically without changing the sound.</p><div class="sleep-options"><button type="button" data-sleep-minutes="15">15 minutes</button><button type="button" data-sleep-minutes="30">30 minutes</button><button type="button" data-sleep-minutes="45">45 minutes</button><button type="button" data-sleep-minutes="60">1 hour</button><button type="button" data-sleep-after-track>After this song</button><button type="button" data-sleep-cancel class="sleep-cancel">Turn timer off</button></div></article>
+      </div>
+
+      <div id="devices-layer" class="modal-layer devices-layer" role="dialog" aria-modal="true" aria-labelledby="devices-title" hidden>
+        <button class="modal-backdrop" data-modal-close aria-label="Close connected devices"></button>
+        <article class="devices-modal">
+          <button class="modal-close icon-only-button" data-modal-close aria-label="Close connected devices"><svg class="ui-icon" aria-hidden="true"><use href="#icon-close"></use></svg></button>
+          <header><span><svg class="ui-icon" aria-hidden="true"><use href="#icon-cast"></use></svg></span><div><p class="section-kicker">CONNECTED PLAYBACK</p><h2 id="devices-title">Listen on another screen</h2><p>Use your browser's device picker when available, or open the player directly on a console or TV browser.</p></div></header>
+          <section class="device-picker-card"><div><strong id="device-picker-title">Checking this browser</strong><p id="device-picker-copy">Looking for Remote Playback or AirPlay support.</p></div><button id="device-picker-button" type="button">Choose a device</button></section>
+          <div class="device-option-grid">
+            <article><span>01</span><div><strong>Cast or AirPlay</strong><p>Choose a nearby playback target while this phone remains the controller.</p></div></article>
+            <article><span>02</span><div><strong>Console browser</strong><p>Open the same player URL in the console browser. Background play during games depends on that console and browser.</p></div></article>
+            <article><span>03</span><div><strong>Lock-screen controls</strong><p>Installed-app playback uses your device's Media Session controls when supported.</p></div></article>
+          </div>
+          <div class="device-link-card"><div><strong>Player address</strong><code id="device-player-url"></code></div><button id="device-copy-link" type="button">Copy link</button></div>
+          <p class="device-support-note">Bluetooth pairing remains controlled by your phone, speaker, or console settings. This player does not request Bluetooth permissions.</p>
+        </article>
       </div>
 
       <div id="network-banner" class="network-banner" role="status" aria-live="polite" hidden><span class="status-dot"></span><span>You are offline. Saved songs remain playable.</span></div>

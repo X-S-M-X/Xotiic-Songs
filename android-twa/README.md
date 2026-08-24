@@ -51,40 +51,15 @@ During Bubblewrap's one-time questions, use:
 
 Create strong, unique keystore and key passwords and save them in a password manager. Bubblewrap asks for them locally. The script does not record them.
 
-After a successful build, the important files are placed in `android-twa\output`. The APK version portion follows the version accepted during Bubblewrap setup:
+After a successful build, the important files are placed in:
 
 ```text
-android-twa\output\XotiicDuck-Music-*-signed.apk
+android-twa\output\XotiicDuck-Music-1.0.0-signed.apk
 android-twa\output\APK-SHA256.txt
 android-twa\output\assetlinks.json
 ```
 
 The `.aab` output is kept only in case Google Play is considered later.
-
-If Google's PageSpeed service returns HTTP 429 during validation, build without that optional external report:
-
-```powershell
-.\BUILD-ANDROID.ps1 -SkipPwaValidation
-```
-
-This skips only the PageSpeed request. Android compilation, signing, checksum creation, and local signature verification still run.
-
-## Publish the official website download
-
-The website downloads a stable GitHub Release asset named `XotiicDuck-Music-Android.apk`. Do not commit the APK, Android App Bundle, or signing key into the source branch.
-
-Install GitHub CLI once, sign in through its browser flow, then publish:
-
-```powershell
-winget install --id GitHub.cli
-gh auth login --web
-
-$repo = "C:\Users\Xotii\Downloads\XotiicDuck-Music-Portable"
-Set-Location "$repo\android-twa"
-.\PUBLISH-ANDROID-RELEASE.ps1
-```
-
-The publishing script verifies the latest signed APK again, requires the SHA-256 advertised by the website, creates the stable public filename, and uploads both the APK and `APK-SHA256.txt`. It refuses to overwrite an existing release tag.
 
 ## Connect the APK to the GitHub Pages website
 
@@ -124,7 +99,7 @@ If a custom domain is adopted later, publish the same file at that domain's root
 To install through USB debugging instead, connect a phone and run this from the generated project folder:
 
 ```powershell
-npx --yes @bubblewrap/cli@1.22.7 install --apkFile="..\output\XotiicDuck-Music-1-signed.apk"
+npx --yes @bubblewrap/cli@1.22.7 install --apkFile="..\output\XotiicDuck-Music-1.0.0-signed.apk"
 ```
 
 ## Future APK updates

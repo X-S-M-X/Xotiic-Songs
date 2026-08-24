@@ -1,8 +1,9 @@
 {
   "version": 1,
-  "lastPromotedAt": "2026-08-21T09:52:22.671Z",
+  "lastPromotedAt": "2026-08-24T10:04:24.212Z",
   "completed": [
     "update-16",
-    "update-18"
+    "update-18",
+    "update-20"
   ]
 }
