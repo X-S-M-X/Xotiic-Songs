@@ -704,5 +704,20 @@ window.XOTIICDUCK_RELEASES = [
     "status": "draft",
     "createdAt": "2026-08-23T10:27:03.936Z",
     "updatedAt": "2026-08-23T10:27:03.936Z"
+  },
+  {
+    "id": "the-cages-we-became",
+    "title": "The Cages We Became",
+    "artist": "XotiicDuck",
+    "album": "Single",
+    "releaseType": "Single",
+    "genre": "Anime J-Rock",
+    "releaseDate": "2026-08-24",
+    "duration": 309,
+    "audio": "music/the-cages-we-became.mp3",
+    "cover": "covers/the-cages-we-became.webp",
+    "status": "draft",
+    "createdAt": "2026-08-24T04:59:24.203Z",
+    "updatedAt": "2026-08-24T04:59:24.203Z"
   }
 ];
