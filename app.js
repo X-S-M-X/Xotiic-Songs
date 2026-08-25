@@ -1,7 +1,7 @@
 (() => {
   "use strict";
 
-  const APP_VERSION = "20.0.0";
+  const APP_VERSION = "20.1.0";
 
   const rawCatalog = Array.isArray(window.XOTIICDUCK_RELEASES)
     ? window.XOTIICDUCK_RELEASES
@@ -922,6 +922,16 @@
     requestAnimationFrame(() => layer.querySelector(focusSelector)?.focus());
   };
 
+  const accentNames = Object.freeze({
+    pulse: "Pulse",
+    sakura: "Sakura",
+    aqua: "Aqua",
+    ember: "Ember",
+    royal: "Royal",
+    void: "Void",
+    custom: "Custom",
+  });
+
   const syncAppearanceControls = (settings = appearanceApi?.read?.()) => {
     if (!settings) return;
     const theme = $(`input[name="appearance-theme"][value="${settings.theme}"]`);
@@ -929,18 +939,29 @@
     if (theme) theme.checked = true;
     if (accent) accent.checked = true;
     $("#appearance-motion").value = settings.motion;
+    $("#appearance-primary-color").value = settings.primary;
+    $("#appearance-secondary-color").value = settings.secondary;
+    $("#appearance-primary-value").textContent = settings.primary.toUpperCase();
+    $("#appearance-secondary-value").textContent = settings.secondary.toUpperCase();
+    $("#custom-accent-fields").hidden = settings.accent !== "custom";
   };
 
-  const saveAppearanceFromControls = () => {
+  const saveAppearanceFromControls = ({ silent = false } = {}) => {
     if (!appearanceApi) return;
     const previous = appearanceApi.read();
     const settings = appearanceApi.apply({
       theme: $('input[name="appearance-theme"]:checked')?.value || previous.theme,
       accent: $('input[name="appearance-accent"]:checked')?.value || previous.accent,
       motion: $("#appearance-motion").value || previous.motion,
+      primary: $("#appearance-primary-color").value || previous.primary,
+      secondary: $("#appearance-secondary-color").value || previous.secondary,
     }, { persist: true, announce: true });
     syncAppearanceControls(settings);
-    showToast(settings.theme === "anime" ? "Anime Pulse appearance saved." : "Classic Xotiic appearance saved.");
+    if (silent) return settings;
+    showToast(settings.theme === "anime"
+      ? `${accentNames[settings.accent] || "Anime"} colour pair saved.`
+      : "Classic Xotiic appearance saved.");
+    return settings;
   };
 
   const refreshAppHealth = async () => {
@@ -965,6 +986,11 @@
     syncAppearanceControls();
     refreshAppHealth().catch(() => undefined);
     openModal($("#settings-layer"), 'input[name="appearance-theme"]:checked');
+  };
+
+  const openDevices = () => {
+    document.dispatchEvent(new CustomEvent("xotiic:devicesopen"));
+    openModal($("#devices-layer"), "#device-picker-button:not([disabled]), #device-share-link:not([hidden]), #device-copy-link");
   };
 
   const openPlaylist = (id) => {
@@ -1871,6 +1897,7 @@
   for (const button of [$("#shuffle"), $("#now-playing-shuffle")]) button.addEventListener("click", toggleShuffle);
   for (const button of [$("#repeat"), $("#now-playing-repeat")]) button.addEventListener("click", cycleRepeat);
   for (const button of [$("#queue-open"), $("#now-playing-queue")]) button.addEventListener("click", openQueue);
+  $("#now-playing-devices").addEventListener("click", openDevices);
   $("#now-favorite").addEventListener("click", () => currentTrack && toggleFavorite(currentTrack.id));
   $("#player-favorite").addEventListener("click", () => currentTrack && toggleFavorite(currentTrack.id));
   $("#now-playing-favorite").addEventListener("click", () => currentTrack && toggleFavorite(currentTrack.id));
@@ -1910,8 +1937,12 @@
   $("#discover-type").addEventListener("change", (event) => { selectedReleaseType = event.target.value; renderDiscover(); });
   $("#discover-sort").addEventListener("change", (event) => { discoverSort = event.target.value; renderDiscover(); });
   $("#health-refresh").addEventListener("click", () => refreshAppHealth().then(() => showToast("Player diagnostics refreshed.")));
-  for (const input of $$('input[name="appearance-theme"], input[name="appearance-accent"]')) input.addEventListener("change", saveAppearanceFromControls);
-  $("#appearance-motion").addEventListener("change", saveAppearanceFromControls);
+  for (const input of $$('input[name="appearance-theme"], input[name="appearance-accent"]')) input.addEventListener("change", () => saveAppearanceFromControls());
+  $("#appearance-motion").addEventListener("change", () => saveAppearanceFromControls());
+  for (const input of [$("#appearance-primary-color"), $("#appearance-secondary-color")]) {
+    input.addEventListener("input", () => saveAppearanceFromControls({ silent: true }));
+    input.addEventListener("change", () => saveAppearanceFromControls());
+  }
   $("#appearance-reset").addEventListener("click", () => {
     if (!appearanceApi) return;
     const settings = appearanceApi.apply(appearanceApi.defaults, { persist: true, announce: true });

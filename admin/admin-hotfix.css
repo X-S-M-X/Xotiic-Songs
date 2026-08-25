@@ -1,6 +1,7 @@
 /* Admin workspace hotfix: shared appearance, calmer release flow, and private song testing. */
 :root {
   --accent: var(--acid);
+  --accent-on: #091007;
 }
 
 html[data-theme="classic"] {
@@ -41,6 +42,54 @@ html[data-theme="anime"][data-accent="aqua"] {
   --violet-rgb: 76, 125, 255;
   --cyan: #b9fbff;
   --accent: var(--acid);
+}
+
+html[data-theme="anime"][data-accent="ember"] {
+  --acid: #ff9d4d;
+  --acid-soft: #ffd4ad;
+  --acid-rgb: 255, 157, 77;
+  --violet: #ff4f70;
+  --violet-rgb: 255, 79, 112;
+  --cyan: #ffd166;
+  --accent: var(--acid);
+}
+
+html[data-theme="anime"][data-accent="royal"] {
+  --acid: #ffd75c;
+  --acid-soft: #ffecae;
+  --acid-rgb: 255, 215, 92;
+  --violet: #5577ff;
+  --violet-rgb: 85, 119, 255;
+  --cyan: #9be8ff;
+  --accent: var(--acid);
+}
+
+html[data-theme="anime"][data-accent="void"] {
+  --acid: #bd94ff;
+  --acid-soft: #dbc6ff;
+  --acid-rgb: 189, 148, 255;
+  --violet: #ff55ad;
+  --violet-rgb: 255, 85, 173;
+  --cyan: #65e7ff;
+  --accent: var(--acid);
+}
+
+html[data-theme="anime"][data-accent="custom"] {
+  --acid: var(--admin-custom-primary);
+  --acid-soft: var(--admin-custom-soft);
+  --acid-rgb: var(--admin-custom-primary-rgb);
+  --violet: var(--admin-custom-secondary);
+  --violet-rgb: var(--admin-custom-secondary-rgb);
+  --cyan: var(--admin-custom-third);
+  --accent: var(--acid);
+  --accent-on: var(--admin-custom-on);
+}
+
+html[data-theme="anime"] .brand-mark,
+html[data-theme="anime"] .owner-avatar,
+html[data-theme="anime"] .player-link,
+html[data-theme="anime"] .primary-action {
+  color: var(--accent-on);
 }
 
 html[data-theme="classic"] body {

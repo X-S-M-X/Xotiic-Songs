@@ -143,7 +143,7 @@ test("Updates 13 and 14 expose library discovery and playback utilities", () => 
   ]) assert.match(html, new RegExp(`id=["']${id}["']`));
   assert.doesNotMatch(html, /id=["']discover-search["']/);
   assert.ok((html.match(/data-search-open/g) || []).length >= 2, "desktop and mobile catalog search entry points remain available");
-  assert.match(app, /const APP_VERSION = "20\.0\.0"/);
+  assert.match(app, /const APP_VERSION = "20\.1\.0"/);
   assert.match(app, /const releaseCollections = \(\) =>/);
   assert.match(app, /const openQueuePlaylistEditor = \(\) =>/);
   assert.match(app, /const startSleepTimer = \(minutes\) =>/);
@@ -267,9 +267,49 @@ test("Updates 19 and 20 keep online services optional and prepare connected devi
   assert.match(devices, /webkitShowPlaybackTargetPicker/);
   assert.match(devices, /watchAvailability/);
   assert.match(worker, /update-19-20\.css\?v=20/);
-  assert.match(worker, /connected-devices\.js\?v=20/);
+  assert.match(worker, /connected-devices\.js\?v=20\.1/);
   assert.equal(wrapper.status, "ready-to-initialize");
   assert.equal(wrapper.signingKeyIncluded, false);
   assert.match(assetLinks, /REPLACE_WITH_THE_REAL_SIGNING_CERTIFICATE/);
   assert.ok(!fs.existsSync(path.join(root, ".well-known", "assetlinks.json")), "a placeholder asset link must not be published live");
+});
+
+test("Update 20.1 rebuilds Devices, Queue, and Settings around the active theme", () => {
+  const html = read("index.html");
+  const app = read("app.js");
+  const theme = read("theme.js");
+  const devices = read("connected-devices.js");
+  const styles = read("update-20-1.css");
+  const worker = read("sw.js");
+  const adminTheme = read("admin/theme-sync.js");
+  const adminStyles = read("admin/admin-hotfix.css");
+  const adminWorker = read("admin/sw.js");
+
+  assert.match(html, /symbol id="icon-devices"/);
+  assert.match(html, /id="now-playing-devices"[\s\S]*?href="#icon-devices"/);
+  assert.doesNotMatch(html, /id="now-playing-devices"[\s\S]{0,240}?href="#icon-cast"/);
+  for (const id of ["device-support-badge", "device-share-link", "custom-accent-fields", "appearance-primary-color", "appearance-secondary-color"]) {
+    assert.match(html, new RegExp(`id=["']${id}["']`));
+  }
+  for (const accent of ["pulse", "sakura", "aqua", "ember", "royal", "void", "custom"]) {
+    assert.match(html, new RegExp(`name=["']appearance-accent["'] value=["']${accent}["']`));
+    assert.match(theme, new RegExp(`\\b${accent}\\b`));
+  }
+  assert.match(theme, /--anime-custom-main/);
+  assert.match(theme, /contrastColor/);
+  assert.match(app, /xotiic:devicesopen/);
+  assert.match(app, /appearance-primary-color/);
+  assert.match(devices, /supportsShare/);
+  assert.match(devices, /Direct picker unavailable here/);
+  assert.match(devices, /button\.disabled = disabled/);
+  assert.match(styles, /--accent: var\(--acid\)/);
+  assert.match(styles, /\.queue-heading-actions #queue-save \{/);
+  assert.match(styles, /\.settings-disclosure\.app-health-card/);
+  assert.match(styles, /@media \(max-width: 360px\)/);
+  assert.match(worker, /update-20-1\.css\?v=20\.1/);
+  assert.match(worker, /xotiicduck-portable-v20-1-devices-theme-ui/);
+  assert.match(adminTheme, /"ember", "royal", "void", "custom"/);
+  assert.match(adminTheme, /--admin-custom-primary/);
+  assert.match(adminStyles, /data-accent="custom"/);
+  assert.match(adminWorker, /xotiic-upload-v20-1-theme-sync/);
 });

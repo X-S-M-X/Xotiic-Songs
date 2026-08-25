@@ -1,13 +1,13 @@
 importScripts("./range.js?v=20");
 
-const CACHE_NAME = "xotiicduck-portable-v20-player-hotfix-1";
+const CACHE_NAME = "xotiicduck-portable-v20-1-devices-theme-ui";
 const MEDIA_CACHE = "xotiic-media-v1";
 const scoped = (file) => new URL(file, self.registration.scope).href;
 const CATALOG_URL = scoped("./catalog.js");
 const SHELL = [
   "./",
   "./index.html",
-  "./theme.js?v=20",
+  "./theme.js?v=20.1",
   "./styles.css?v=20",
   "./player-hotfix.css?v=1",
   "./layout.css?v=20",
@@ -16,16 +16,17 @@ const SHELL = [
   "./update-15-16.css?v=20",
   "./update-17-18.css?v=20",
   "./update-19-20.css?v=20",
+  "./update-20-1.css?v=20.1",
   "./catalog.js",
   "./range.js?v=20",
   "./offline.js?v=20",
-  "./app.js?v=20",
+  "./app.js?v=20.1",
   "./download-manager.js?v=20",
   "./discovery.js?v=20",
   "./storage-tools.js?v=20",
   "./online-config.js?v=20",
   "./online-platform.js?v=20",
-  "./connected-devices.js?v=20",
+  "./connected-devices.js?v=20.1",
   "./manifest.webmanifest?v=20",
   "./favicon.svg?v=20",
   "./apple-touch-icon.png?v=20",

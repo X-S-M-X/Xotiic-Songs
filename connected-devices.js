@@ -10,8 +10,10 @@
   const remote = audio.remote;
   const supportsRemote = Boolean(remote && typeof remote.prompt === "function");
   const supportsAirPlay = typeof audio.webkitShowPlaybackTargetPicker === "function";
-  let available = false;
+  const supportsShare = typeof navigator.share === "function";
+  let available = null;
   let availabilityWatchId = null;
+  let copyResetTimer = 0;
 
   audio.disableRemotePlayback = false;
 
@@ -23,71 +25,90 @@
     return url.href;
   };
 
+  const setPickerState = ({ state, badge, title, copy, action, disabled = false }) => {
+    $("#device-status-card").dataset.state = state;
+    $("#device-support-badge").lastChild.textContent = badge;
+    $("#device-picker-title").textContent = title;
+    $("#device-picker-copy").textContent = copy;
+    const button = $("#device-picker-button");
+    button.querySelector("span").textContent = action;
+    button.disabled = disabled;
+  };
+
   const update = () => {
     const connected = remote?.state === "connected" || audio.webkitCurrentPlaybackTargetIsWireless === true;
     const connecting = remote?.state === "connecting";
-    const title = $("#device-picker-title");
-    const copy = $("#device-picker-copy");
-    const button = $("#device-picker-button");
+
     if (connected) {
-      title.textContent = "Playing on a connected device";
-      copy.textContent = "Playback controls remain available in XotiicDuck Music.";
-      button.textContent = "Change or disconnect";
+      setPickerState({
+        state: "connected",
+        badge: "CONNECTED",
+        title: "Playing on another device",
+        copy: "This player remains your controller. Use the button to change the target.",
+        action: "Change playback device",
+        disabled: !(supportsRemote || supportsAirPlay),
+      });
     } else if (connecting) {
-      title.textContent = "Connecting to device";
-      copy.textContent = "Keep this player open while the browser completes the connection.";
-      button.textContent = "Connecting";
+      setPickerState({
+        state: "connecting",
+        badge: "CONNECTING",
+        title: "Connecting to your device",
+        copy: "Keep XotiicDuck open while the browser completes the connection.",
+        action: "Connecting",
+        disabled: true,
+      });
+    } else if (supportsRemote && available === true) {
+      setPickerState({
+        state: "available",
+        badge: "DEVICE FOUND",
+        title: "A compatible player is nearby",
+        copy: "Open the browser picker and choose where to send this song.",
+        action: "Choose playback device",
+      });
+    } else if (supportsRemote && available === false) {
+      setPickerState({
+        state: "unavailable",
+        badge: "NONE FOUND",
+        title: "No compatible target found",
+        copy: "Keep both devices on the same network, or use Share or Copy link below.",
+        action: "No devices available",
+        disabled: true,
+      });
     } else if (supportsRemote) {
-      title.textContent = available ? "A playback device is available" : "Browser device picker ready";
-      copy.textContent = available ? "Choose the nearby target you want to use." : "Your browser will show compatible targets if it finds any.";
-      button.textContent = "Choose a device";
+      setPickerState({
+        state: "supported",
+        badge: "SUPPORTED",
+        title: "Browser device picker available",
+        copy: "Your browser will decide which compatible playback targets it can show.",
+        action: "Open device picker",
+      });
     } else if (supportsAirPlay) {
-      title.textContent = "AirPlay picker ready";
-      copy.textContent = "Safari can show nearby AirPlay playback targets.";
-      button.textContent = "Choose AirPlay device";
+      setPickerState({
+        state: "supported",
+        badge: "AIRPLAY READY",
+        title: "AirPlay picker available",
+        copy: "Safari can show nearby AirPlay targets from this button.",
+        action: "Choose AirPlay device",
+      });
     } else {
-      title.textContent = "No in-page device picker here";
-      copy.textContent = "Use the browser menu, your operating system media output, or open the player URL on the other device.";
-      button.textContent = "Show fallback options";
+      setPickerState({
+        state: "unsupported",
+        badge: "LINK MODE",
+        title: "Direct picker unavailable here",
+        copy: "This browser cannot open a wireless player list. Share or copy the player link instead.",
+        action: "Picker unavailable",
+        disabled: true,
+      });
     }
-    button.disabled = connecting;
+
     $("#now-playing-devices").classList.toggle("is-connected", connected);
     $("#now-playing-devices-label").textContent = connected ? "Connected" : "Devices";
   };
 
-  const open = () => {
-    $("#device-player-url").textContent = publicUrl();
-    layer.hidden = false;
-    document.body.classList.add("modal-open");
-    update();
-    requestAnimationFrame(() => $("#device-picker-button").focus());
-  };
-
-  const prompt = async () => {
-    if (supportsRemote) {
-      try {
-        await remote.prompt();
-      } catch (error) {
-        if (error?.name !== "NotAllowedError" && error?.name !== "AbortError") player.showToast("The browser could not open its device picker.");
-      }
-      update();
-      return;
-    }
-    if (supportsAirPlay) {
-      try { audio.webkitShowPlaybackTargetPicker(); } catch { player.showToast("AirPlay could not open from this browser."); }
-      return;
-    }
-    player.showToast("Use the copied player link or your device's audio-output menu.");
-    $("#device-copy-link").focus();
-  };
-
-  $("#now-playing-devices")?.addEventListener("click", open);
-  $("#device-picker-button")?.addEventListener("click", prompt);
-  $("#device-copy-link")?.addEventListener("click", async () => {
+  const copyLink = async () => {
     const value = publicUrl();
     try {
       await navigator.clipboard.writeText(value);
-      player.showToast("Player link copied.");
     } catch {
       const input = document.createElement("textarea");
       input.value = value;
@@ -96,19 +117,82 @@
       input.style.opacity = "0";
       document.body.append(input);
       input.select();
-      document.execCommand("copy");
+      const copied = document.execCommand("copy");
       input.remove();
-      player.showToast("Player link copied.");
+      if (!copied) throw new Error("Copy is unavailable");
     }
+
+    const label = $("#device-copy-link strong");
+    label.textContent = "Link copied";
+    clearTimeout(copyResetTimer);
+    copyResetTimer = window.setTimeout(() => { label.textContent = "Copy player link"; }, 1800);
+    player.showToast("Player link copied.");
+  };
+
+  const prompt = async () => {
+    if (supportsRemote) {
+      try {
+        await remote.prompt();
+      } catch (error) {
+        if (error?.name === "AbortError" || error?.name === "NotAllowedError") return;
+        player.showToast(error?.name === "InvalidStateError"
+          ? "No compatible playback device is available."
+          : "The browser could not open its device picker.");
+      } finally {
+        update();
+      }
+      return;
+    }
+
+    if (supportsAirPlay) {
+      try { audio.webkitShowPlaybackTargetPicker(); }
+      catch { player.showToast("AirPlay could not open from this browser."); }
+    }
+  };
+
+  const shareLink = async () => {
+    if (!supportsShare) {
+      await copyLink();
+      return;
+    }
+    try {
+      await navigator.share({
+        title: "XotiicDuck Music",
+        text: "Open the XotiicDuck Music player on this device.",
+        url: publicUrl(),
+      });
+    } catch (error) {
+      if (error?.name !== "AbortError") player.showToast("Sharing is unavailable. Use Copy player link instead.");
+    }
+  };
+
+  document.addEventListener("xotiic:devicesopen", () => {
+    $("#device-player-url").textContent = publicUrl().replace(/^https?:\/\//, "");
+    $("#device-share-link").hidden = !supportsShare;
+    $(".device-link-actions").classList.toggle("single-action", !supportsShare);
+    update();
+  });
+  $("#device-picker-button")?.addEventListener("click", prompt);
+  $("#device-share-link")?.addEventListener("click", shareLink);
+  $("#device-copy-link")?.addEventListener("click", () => {
+    copyLink().catch(() => player.showToast("Copy is blocked here. Select the address manually."));
   });
 
   for (const eventName of ["connecting", "connect", "disconnect"]) remote?.addEventListener?.(eventName, update);
   audio.addEventListener("webkitcurrentplaybacktargetiswirelesschanged", update);
+
   if (supportsRemote && typeof remote.watchAvailability === "function") {
-    remote.watchAvailability((value) => { available = Boolean(value); update(); })
-      .then((id) => { availabilityWatchId = id; })
-      .catch(() => undefined);
+    remote.watchAvailability((value) => {
+      available = Boolean(value);
+      update();
+    }).then((id) => {
+      availabilityWatchId = id;
+    }).catch(() => {
+      available = null;
+      update();
+    });
   }
+
   window.addEventListener("beforeunload", () => {
     if (availabilityWatchId === null) return;
     try {
@@ -116,14 +200,9 @@
       cancellation?.catch?.(() => undefined);
     } catch { /* The browser is already closing. */ }
   });
-  document.addEventListener("keydown", (event) => {
-    if (event.key === "Escape" && !layer.hidden) {
-      layer.hidden = true;
-      document.body.classList.remove("modal-open");
-      $("#now-playing-devices")?.focus();
-    }
-  });
 
-  $("#device-player-url").textContent = publicUrl();
+  $("#device-player-url").textContent = publicUrl().replace(/^https?:\/\//, "");
+  $("#device-share-link").hidden = !supportsShare;
+  $(".device-link-actions").classList.toggle("single-action", !supportsShare);
   update();
 })();
