@@ -143,7 +143,7 @@ test("Updates 13 and 14 expose library discovery and playback utilities", () => 
   ]) assert.match(html, new RegExp(`id=["']${id}["']`));
   assert.doesNotMatch(html, /id=["']discover-search["']/);
   assert.ok((html.match(/data-search-open/g) || []).length >= 2, "desktop and mobile catalog search entry points remain available");
-  assert.match(app, /const APP_VERSION = "20\.1\.0"/);
+  assert.match(app, /const APP_VERSION = "20\.1\.1"/);
   assert.match(app, /const releaseCollections = \(\) =>/);
   assert.match(app, /const openQueuePlaylistEditor = \(\) =>/);
   assert.match(app, /const startSleepTimer = \(minutes\) =>/);
@@ -306,10 +306,32 @@ test("Update 20.1 rebuilds Devices, Queue, and Settings around the active theme"
   assert.match(styles, /\.queue-heading-actions #queue-save \{/);
   assert.match(styles, /\.settings-disclosure\.app-health-card/);
   assert.match(styles, /@media \(max-width: 360px\)/);
-  assert.match(worker, /update-20-1\.css\?v=20\.1/);
-  assert.match(worker, /xotiicduck-portable-v20-1-devices-theme-ui/);
+  assert.match(worker, /update-20-1\.css\?v=20\.1\.1/);
+  assert.match(worker, /xotiicduck-portable-v20-1-1-queue-layout/);
   assert.match(adminTheme, /"ember", "royal", "void", "custom"/);
   assert.match(adminTheme, /--admin-custom-primary/);
   assert.match(adminStyles, /data-accent="custom"/);
   assert.match(adminWorker, /xotiic-upload-v20-1-theme-sync/);
+});
+
+test("Update 20.1.1 keeps queue header actions inside narrow screens", () => {
+  const html = read("index.html");
+  const app = read("app.js");
+  const styles = read("update-20-1.css");
+  const worker = read("sw.js");
+  const manifest = JSON.parse(read("package.json"));
+  const mobileStart = styles.indexOf("@media (max-width: 720px)");
+  const mobileEnd = styles.indexOf("@media (max-width: 480px)");
+  const mobile = styles.slice(mobileStart, mobileEnd);
+
+  assert.ok(mobileStart >= 0 && mobileEnd > mobileStart, "mobile queue rules must exist");
+  assert.match(mobile, /\.queue-modal-heading\s*\{[^}]*display:\s*grid;/s);
+  assert.match(mobile, /\.queue-heading-actions\s*\{[^}]*display:\s*grid;[^}]*grid-template-columns:\s*repeat\(2,\s*minmax\(0,\s*1fr\)\);/s);
+  assert.match(mobile, /\.queue-heading-actions #queue-clear\s*\{[^}]*max-width:\s*none;[^}]*min-height:\s*44px;[^}]*height:\s*auto;/s);
+  assert.match(mobile, /white-space:\s*normal;/);
+  assert.match(html, /update-20-1\.css\?v=20\.1\.1/);
+  assert.match(html, /app\.js\?v=20\.1\.1/);
+  assert.match(app, /const APP_VERSION = "20\.1\.1"/);
+  assert.match(worker, /xotiicduck-portable-v20-1-1-queue-layout/);
+  assert.equal(manifest.version, "20.1.1");
 });

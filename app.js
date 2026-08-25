@@ -1,7 +1,7 @@
 (() => {
   "use strict";
 
-  const APP_VERSION = "20.1.0";
+  const APP_VERSION = "20.1.1";
 
   const rawCatalog = Array.isArray(window.XOTIICDUCK_RELEASES)
     ? window.XOTIICDUCK_RELEASES

@@ -1,6 +1,6 @@
 importScripts("./range.js?v=20");
 
-const CACHE_NAME = "xotiicduck-portable-v20-1-devices-theme-ui";
+const CACHE_NAME = "xotiicduck-portable-v20-1-1-queue-layout";
 const MEDIA_CACHE = "xotiic-media-v1";
 const scoped = (file) => new URL(file, self.registration.scope).href;
 const CATALOG_URL = scoped("./catalog.js");
@@ -16,11 +16,11 @@ const SHELL = [
   "./update-15-16.css?v=20",
   "./update-17-18.css?v=20",
   "./update-19-20.css?v=20",
-  "./update-20-1.css?v=20.1",
+  "./update-20-1.css?v=20.1.1",
   "./catalog.js",
   "./range.js?v=20",
   "./offline.js?v=20",
-  "./app.js?v=20.1",
+  "./app.js?v=20.1.1",
   "./download-manager.js?v=20",
   "./discovery.js?v=20",
   "./storage-tools.js?v=20",

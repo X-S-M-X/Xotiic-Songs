@@ -446,9 +446,29 @@ html[data-theme="anime"][data-accent="custom"] {
 
 .queue-modal-heading {
   min-height: 0;
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) auto auto;
+  grid-template-areas: "copy actions close";
+  align-items: center;
+  gap: 10px;
   padding: 15px 17px;
   border-bottom: 1px solid var(--ui-border);
   background: rgba(0, 0, 0, 0.12);
+}
+
+.queue-heading-copy {
+  grid-area: copy;
+  min-width: 0;
+}
+
+.queue-heading-actions {
+  grid-area: actions;
+  min-width: 0;
+}
+
+.queue-modal-heading > .queue-close {
+  grid-area: close;
+  justify-self: end;
 }
 
 .queue-heading-copy h2 {
@@ -890,24 +910,37 @@ html[data-theme="anime"][data-accent="custom"] {
   }
 
   .queue-modal-heading {
+    display: grid;
     grid-template-columns: minmax(0, 1fr) 42px;
     grid-template-areas:
       "copy close"
       "actions actions";
+    align-items: center;
     gap: 10px;
     padding: 13px 14px 11px;
   }
 
   .queue-heading-actions {
+    display: grid;
     grid-template-columns: repeat(2, minmax(0, 1fr));
+    width: 100%;
+    min-width: 0;
     gap: 7px;
   }
 
   .queue-heading-actions #queue-save,
   .queue-heading-actions #queue-clear {
-    min-height: 42px;
-    padding-inline: 8px;
+    box-sizing: border-box;
+    width: 100%;
+    max-width: none;
+    min-width: 0;
+    min-height: 44px;
+    height: auto;
+    padding: 9px 8px;
     font-size: 0.7rem;
+    line-height: 1.2;
+    white-space: normal;
+    text-align: center;
   }
 
   .queue-modal-list {
