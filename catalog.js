@@ -781,5 +781,20 @@ window.XOTIICDUCK_RELEASES = [
     "status": "draft",
     "createdAt": "2026-08-26T04:35:21.537Z",
     "updatedAt": "2026-08-26T04:35:21.537Z"
+  },
+  {
+    "id": "who-owns-winter",
+    "title": "Who Owns Winter",
+    "artist": "XotiicDuck",
+    "album": "Single",
+    "releaseType": "Single",
+    "genre": "Anime J-Rock",
+    "releaseDate": "2026-08-26",
+    "duration": 287,
+    "audio": "music/who-owns-winter.mp3",
+    "cover": "covers/who-owns-winter.webp",
+    "status": "draft",
+    "createdAt": "2026-08-26T04:36:02.817Z",
+    "updatedAt": "2026-08-26T04:36:02.817Z"
   }
 ];
