@@ -844,5 +844,21 @@ window.XOTIICDUCK_RELEASES = [
     "status": "draft",
     "createdAt": "2026-08-26T04:41:47.655Z",
     "updatedAt": "2026-08-26T04:41:47.655Z"
+  },
+  {
+    "id": "beyond-calculation",
+    "title": "Beyond Calculation",
+    "artist": "XotiicDuck",
+    "album": "Single",
+    "releaseType": "Single",
+    "genre": "Anime J-Rock",
+    "releaseDate": "2026-08-27",
+    "duration": 324,
+    "audio": "music/beyond-calculation.mp3",
+    "cover": "covers/beyond-calculation.webp",
+    "status": "scheduled",
+    "createdAt": "2026-08-26T09:09:15.284Z",
+    "updatedAt": "2026-08-26T09:09:15.284Z",
+    "releaseAt": "2026-08-26T22:00:00.000Z"
   }
 ];
