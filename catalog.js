@@ -556,13 +556,15 @@ window.XOTIICDUCK_RELEASES = [
     "artist": "XotiicDuck",
     "album": "Single",
     "genre": "Anime J-Rock",
-    "releaseDate": "2026-08-17",
+    "releaseDate": "2026-08-27",
     "duration": 477,
     "audio": "music/last-light-of-mankind.mp3",
     "cover": "covers/last-light-of-mankind.webp",
-    "status": "draft",
+    "status": "scheduled",
     "createdAt": "2026-08-17T00:31:11.543Z",
-    "updatedAt": "2026-08-17T00:31:11.543Z"
+    "updatedAt": "2026-08-26T09:08:10.565Z",
+    "releaseType": "Single",
+    "releaseAt": "2026-08-26T20:00:00.000Z"
   },
   {
     "id": "thrones-above-heaven",
