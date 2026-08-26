@@ -811,5 +811,20 @@ window.XOTIICDUCK_RELEASES = [
     "status": "draft",
     "createdAt": "2026-08-26T04:39:07.232Z",
     "updatedAt": "2026-08-26T04:39:07.232Z"
+  },
+  {
+    "id": "gears-of-freedom",
+    "title": "Gears Of Freedom",
+    "artist": "XotiicDuck",
+    "album": "Single",
+    "releaseType": "Single",
+    "genre": "Anime J-Rock",
+    "releaseDate": "2026-08-26",
+    "duration": 311,
+    "audio": "music/gears-of-freedom.mp3",
+    "cover": "covers/gears-of-freedom.webp",
+    "status": "draft",
+    "createdAt": "2026-08-26T04:41:06.439Z",
+    "updatedAt": "2026-08-26T04:41:06.439Z"
   }
 ];
