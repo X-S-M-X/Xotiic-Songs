@@ -766,5 +766,20 @@ window.XOTIICDUCK_RELEASES = [
     "status": "draft",
     "createdAt": "2026-08-26T04:08:45.602Z",
     "updatedAt": "2026-08-26T04:08:45.602Z"
+  },
+  {
+    "id": "beyond-every-limit",
+    "title": "Beyond Every Limit",
+    "artist": "XotiicDuck",
+    "album": "Single",
+    "releaseType": "Single",
+    "genre": "Anime J-Rock",
+    "releaseDate": "2026-08-26",
+    "duration": 288,
+    "audio": "music/beyond-every-limit.mp3",
+    "cover": "covers/beyond-every-limit.webp",
+    "status": "draft",
+    "createdAt": "2026-08-26T04:35:21.537Z",
+    "updatedAt": "2026-08-26T04:35:21.537Z"
   }
 ];
