@@ -682,13 +682,14 @@ window.XOTIICDUCK_RELEASES = [
     "album": "Single",
     "releaseType": "Single",
     "genre": "Anime J-Rock",
-    "releaseDate": "2026-08-23",
+    "releaseDate": "2026-08-27",
     "duration": 322,
     "audio": "music/across-two-thousand-years.mp3",
     "cover": "covers/across-two-thousand-years.webp",
-    "status": "draft",
+    "status": "scheduled",
     "createdAt": "2026-08-23T09:59:11.078Z",
-    "updatedAt": "2026-08-23T09:59:11.078Z"
+    "updatedAt": "2026-08-26T09:06:19.773Z",
+    "releaseAt": "2026-08-26T18:00:00.000Z"
   },
   {
     "id": "crimson-blades-of-hell",
