@@ -751,5 +751,20 @@ window.XOTIICDUCK_RELEASES = [
     "status": "draft",
     "createdAt": "2026-08-25T08:30:13.235Z",
     "updatedAt": "2026-08-25T08:30:13.235Z"
+  },
+  {
+    "id": "steal-the-heavens",
+    "title": "Steal The Heavens",
+    "artist": "XotiicDuck",
+    "album": "Single",
+    "releaseType": "Single",
+    "genre": "Anime J-Rock",
+    "releaseDate": "2026-08-26",
+    "duration": 323,
+    "audio": "music/steal-the-heavens.mp3",
+    "cover": "covers/steal-the-heavens.webp",
+    "status": "draft",
+    "createdAt": "2026-08-26T04:08:45.602Z",
+    "updatedAt": "2026-08-26T04:08:45.602Z"
   }
 ];
