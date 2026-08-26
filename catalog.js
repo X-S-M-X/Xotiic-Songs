@@ -826,5 +826,20 @@ window.XOTIICDUCK_RELEASES = [
     "status": "draft",
     "createdAt": "2026-08-26T04:41:06.439Z",
     "updatedAt": "2026-08-26T04:41:06.439Z"
+  },
+  {
+    "id": "no-final-form",
+    "title": "No Final Form",
+    "artist": "XotiicDuck",
+    "album": "Single",
+    "releaseType": "Single",
+    "genre": "Anime J-Rock",
+    "releaseDate": "2026-08-26",
+    "duration": 339,
+    "audio": "music/no-final-form.mp3",
+    "cover": "covers/no-final-form.webp",
+    "status": "draft",
+    "createdAt": "2026-08-26T04:41:47.655Z",
+    "updatedAt": "2026-08-26T04:41:47.655Z"
   }
 ];
