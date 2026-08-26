@@ -796,5 +796,20 @@ window.XOTIICDUCK_RELEASES = [
     "status": "draft",
     "createdAt": "2026-08-26T04:36:02.817Z",
     "updatedAt": "2026-08-26T04:36:02.817Z"
+  },
+  {
+    "id": "tomorrow-has-no-king",
+    "title": "Tomorrow Has No King",
+    "artist": "XotiicDuck",
+    "album": "Single",
+    "releaseType": "Single",
+    "genre": "Anime J-Rock",
+    "releaseDate": "2026-08-26",
+    "duration": 316,
+    "audio": "music/tomorrow-has-no-king.mp3",
+    "cover": "covers/tomorrow-has-no-king.webp",
+    "status": "draft",
+    "createdAt": "2026-08-26T04:39:07.232Z",
+    "updatedAt": "2026-08-26T04:39:07.232Z"
   }
 ];
