@@ -860,5 +860,21 @@ window.XOTIICDUCK_RELEASES = [
     "createdAt": "2026-08-26T09:09:15.284Z",
     "updatedAt": "2026-08-26T09:09:15.284Z",
     "releaseAt": "2026-08-26T22:00:00.000Z"
+  },
+  {
+    "id": "legends-don-t-kneel",
+    "title": "Legends Don't Kneel",
+    "artist": "XotiicDuck",
+    "album": "Single",
+    "releaseType": "Single",
+    "genre": "Anime J-Rock",
+    "releaseDate": "2026-08-28",
+    "duration": 308,
+    "audio": "music/legends-don-t-kneel.mp3",
+    "cover": "covers/legends-don-t-kneel.webp",
+    "status": "draft",
+    "createdAt": "2026-08-28T08:41:03.503Z",
+    "updatedAt": "2026-08-28T08:41:03.503Z",
+    "trackNumber": 1
   }
 ];
