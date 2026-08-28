@@ -906,5 +906,21 @@ window.XOTIICDUCK_RELEASES = [
     "status": "draft",
     "createdAt": "2026-08-28T09:29:42.911Z",
     "updatedAt": "2026-08-28T09:29:42.911Z"
+  },
+  {
+    "id": "a-future-we-erase",
+    "title": "A Future We Erase",
+    "artist": "XotiicDuck",
+    "album": "Single",
+    "releaseType": "Single",
+    "genre": "Anime J-Rock",
+    "releaseDate": "2026-08-29",
+    "duration": 352,
+    "audio": "music/a-future-we-erase.mp3",
+    "cover": "covers/a-future-we-erase.webp",
+    "status": "scheduled",
+    "createdAt": "2026-08-28T12:35:54.136Z",
+    "updatedAt": "2026-08-28T12:35:54.136Z",
+    "releaseAt": "2026-08-28T14:00:00.000Z"
   }
 ];
