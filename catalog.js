@@ -891,5 +891,20 @@ window.XOTIICDUCK_RELEASES = [
     "status": "draft",
     "createdAt": "2026-08-28T09:16:05.171Z",
     "updatedAt": "2026-08-28T09:16:05.171Z"
+  },
+  {
+    "id": "no-hero-s-crown",
+    "title": "No Hero's Crown",
+    "artist": "XotiicDuck",
+    "album": "Single",
+    "releaseType": "Single",
+    "genre": "Anime J-Rock",
+    "releaseDate": "2026-08-28",
+    "duration": 291,
+    "audio": "music/no-hero-s-crown.mp3",
+    "cover": "covers/no-hero-s-crown.webp",
+    "status": "draft",
+    "createdAt": "2026-08-28T09:29:42.911Z",
+    "updatedAt": "2026-08-28T09:29:42.911Z"
   }
 ];
