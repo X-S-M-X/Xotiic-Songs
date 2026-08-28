@@ -876,5 +876,20 @@ window.XOTIICDUCK_RELEASES = [
     "createdAt": "2026-08-28T08:41:03.503Z",
     "updatedAt": "2026-08-28T08:41:03.503Z",
     "trackNumber": 1
+  },
+  {
+    "id": "a-thousand-deaths",
+    "title": "A Thousand Deaths",
+    "artist": "XotiicDuck",
+    "album": "Single",
+    "releaseType": "Single",
+    "genre": "Anime J-Rock",
+    "releaseDate": "2026-08-28",
+    "duration": 298,
+    "audio": "music/a-thousand-deaths.mp3",
+    "cover": "covers/a-thousand-deaths.webp",
+    "status": "draft",
+    "createdAt": "2026-08-28T09:16:05.171Z",
+    "updatedAt": "2026-08-28T09:16:05.171Z"
   }
 ];
