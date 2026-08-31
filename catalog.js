@@ -868,14 +868,15 @@ window.XOTIICDUCK_RELEASES = [
     "album": "Single",
     "releaseType": "Single",
     "genre": "Anime J-Rock",
-    "releaseDate": "2026-08-28",
+    "releaseDate": "2026-09-01",
     "duration": 308,
     "audio": "music/legends-don-t-kneel.mp3",
     "cover": "covers/legends-don-t-kneel.webp",
-    "status": "draft",
+    "status": "scheduled",
     "createdAt": "2026-08-28T08:41:03.503Z",
-    "updatedAt": "2026-08-28T08:41:03.503Z",
-    "trackNumber": 1
+    "updatedAt": "2026-08-31T10:10:47.954Z",
+    "trackNumber": 1,
+    "releaseAt": "2026-08-31T12:00:00.000Z"
   },
   {
     "id": "a-thousand-deaths",
