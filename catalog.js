@@ -969,5 +969,20 @@ window.XOTIICDUCK_RELEASES = [
     "status": "draft",
     "createdAt": "2026-09-01T08:43:16.730Z",
     "updatedAt": "2026-09-01T08:43:16.730Z"
+  },
+  {
+    "id": "no-law-above-the-blade",
+    "title": "No Law Above The Blade",
+    "artist": "XotiicDuck",
+    "album": "Single",
+    "releaseType": "Single",
+    "genre": "Anime J-Rock",
+    "releaseDate": "2026-09-01",
+    "duration": 327,
+    "audio": "music/no-law-above-the-blade.mp3",
+    "cover": "covers/no-law-above-the-blade.webp",
+    "status": "draft",
+    "createdAt": "2026-09-01T09:44:39.501Z",
+    "updatedAt": "2026-09-01T09:44:39.501Z"
   }
 ];
