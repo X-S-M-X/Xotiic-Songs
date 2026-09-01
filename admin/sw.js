@@ -1,4 +1,4 @@
-const CACHE_NAME = "xotiic-upload-v20-1-theme-sync";
+const CACHE_NAME = "xotiic-upload-v21-artwork-vault";
 const SHARED_DB = "xotiic-upload-share-inbox-v1";
 const SHARED_STORE = "files";
 const scoped = (file) => new URL(file, self.registration.scope).href;
@@ -11,13 +11,15 @@ const SHELL = [
   "./update-15-16.css?v=20",
   "./admin-hotfix.css?v=20.1",
   "./admin-player-v2.css?v=20.2",
+  "./update-21.css?v=21.0.0",
   "./theme-sync.js?v=20.1",
   "./config.js?v=20",
   "./crypto.js?v=20",
   "./github.js?v=20",
-  "./app.js?v=20.2",
+  "./app.js?v=21.0.0",
   "./studio.js?v=20",
-  "./manifest.webmanifest?v=20",
+  "./artwork-vault.js?v=21.0.0",
+  "./manifest.webmanifest?v=21",
   "../favicon.svg?v=20",
   "../apple-touch-icon.png?v=20",
   "../icon-192.png?v=20",

@@ -33,6 +33,12 @@ The release form shows the active device timezone. While preparing a release, it
 
 Updates 13 and 14 add optional collection and discovery metadata. Songs that share the exact same collection title and artist are grouped into a collection page in the public player. Track numbers control their order. Empty optional fields are omitted from the catalog, and older catalog entries remain compatible.
 
+## Artwork Vault concepts
+
+Update 21 adds an Artwork Vault for square covers whose songs are not finished yet. These concepts are separate from the encrypted GitHub credential vault and separate from the published catalog. Their cover images and working metadata are stored locally in IndexedDB on the current browser/app installation.
+
+Use **Artwork → Back up** regularly. Clearing site data, uninstalling the PWA, or changing browsers can remove local concepts. Restoring an Artwork Vault backup does not restore or expose the GitHub token, console password, MP3 files, or published catalog.
+
 ## Add another phone or computer
 
 Open the admin address on that device and repeat first-time setup using a valid fine-grained token. Alternatively, download the already-encrypted file from **Security → Back up this device vault**, restore it on the new device, then enter its existing username and password. Device vaults remain separate after restoration.

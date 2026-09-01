@@ -342,7 +342,8 @@
     state.toastTimer = setTimeout(() => { toast.hidden = true; }, 4200);
   };
 
-  const isStandalone = () => window.matchMedia("(display-mode: standalone)").matches
+  const isStandalone = () => ["standalone", "fullscreen", "minimal-ui"]
+    .some((mode) => window.matchMedia(`(display-mode: ${mode})`).matches)
     || window.navigator.standalone === true
     || document.referrer.startsWith("android-app://");
 
@@ -361,6 +362,7 @@
 
   const updateInstallButton = () => {
     const installed = isStandalone() || state.installAccepted;
+    document.body.classList.toggle("admin-installed", installed);
     const button = $("[data-install]");
     const label = button?.querySelector("[data-install-label]");
     const icon = button?.querySelector("[data-install-icon]");
@@ -506,7 +508,7 @@
     resetIdleTimer();
     await loadCatalog({ silent: false }).catch(() => undefined);
     const requestedPanel = new URLSearchParams(location.search).get("panel");
-    selectAdminPanel(["overview", "upload", "releases", "security"].includes(requestedPanel) ? requestedPanel : "overview");
+    selectAdminPanel(["overview", "artwork", "upload", "releases", "security"].includes(requestedPanel) ? requestedPanel : "overview");
   };
 
   const loadCatalog = async ({ silent = false } = {}) => {
@@ -684,6 +686,7 @@
     $$('[data-admin-panel]').forEach((button) => button.classList.toggle("active", button.dataset.adminPanel === name));
     const headings = {
       overview: ["Release overview", "See what is live, scheduled, drafted, and ready for your next move."],
+      artwork: ["Artwork Vault", "Store square covers and working song ideas now, then attach the final MP3 later."],
       upload: ["Publish a new release", "Upload the final MP3 and square artwork from this device."],
       releases: ["Manage your catalog", "Privately test any song, then publish, schedule, edit, hide, or archive it."],
       security: ["Security and access", "Maintain the encrypted owner vault on this device."],
@@ -692,6 +695,7 @@
     $("#dashboard-subtitle").textContent = headings[name][1];
     if (name === "overview") renderOverview();
     if (name === "releases") loadCatalog().catch(() => undefined);
+    document.dispatchEvent(new CustomEvent("xotiic:adminpanel", { detail: { panel: name } }));
     window.scrollTo({ top: 0, behavior: "smooth" });
   };
 
@@ -1748,7 +1752,7 @@
   }
 
   globalThis.XotiicAdmin = Object.freeze({
-    version: "20.0.0",
+    version: "21.0.0",
     getReleases: () => JSON.parse(JSON.stringify(state.releases)),
     getReleaseFiles: () => ({
       audioFile: state.audioFile,

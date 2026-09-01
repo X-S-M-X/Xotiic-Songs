@@ -1,9 +1,9 @@
 {
   "name": "xotiicduck-music-portable",
-  "version": "20.1.1",
+  "version": "21.0.0",
   "private": true,
-  "description": "Static PWA validation for XotiicDuck Music Update 20.1.1 queue layout hotfix.",
+  "description": "Static PWA validation for XotiicDuck Music Update 21 adaptive listener and Artwork Vault.",
   "scripts": {
-    "test": "node --check theme.js && node --check app.js && node --check offline.js && node --check download-manager.js && node --check discovery.js && node --check storage-tools.js && node --check online-config.js && node --check online-platform.js && node --check connected-devices.js && node --check range.js && node --check sw.js && node --check admin/theme-sync.js && node --check admin/app.js && node --check admin/studio.js && node --check admin/crypto.js && node --check admin/github.js && node --check admin/sw.js && node --test tests/*.test.cjs"
+    "test": "node --check theme.js && node --check app.js && node --check offline.js && node --check download-manager.js && node --check discovery.js && node --check storage-tools.js && node --check online-config.js && node --check online-platform.js && node --check connected-devices.js && node --check range.js && node --check sw.js && node --check admin/theme-sync.js && node --check admin/app.js && node --check admin/studio.js && node --check admin/artwork-vault.js && node --check admin/crypto.js && node --check admin/github.js && node --check admin/sw.js && node --test tests/*.test.cjs"
   }
 }

@@ -29,6 +29,8 @@ Each device has its own encrypted vault. Resetting a device vault does not delet
 
 Open Xotiic Upload, unlock it, select the MP3 from Files, select the square cover from Gallery, enter the release information, then choose **Publish now**, **Schedule**, or **Draft**. Publish now uses the current date automatically. Scheduled releases stay hidden until the chosen local date and time, then the player makes them public automatically. The console commits the MP3, cover, and `catalog.js` together.
 
+If the song is not finished yet, open **Artwork Vault** instead. A concept needs only a square cover and working title. Optional franchise, character, mood, performance, tags, and notes can be saved with it. Later, choose **Attach MP3** to preload the real release form and continue from the audio step. Artwork Vault concepts stay in IndexedDB on that device and never enter the public catalog; use the vault's **Back up** command before changing devices, browsers, or clearing site data.
+
 ## Phone and tablet support
 
 Both apps adapt from 320-pixel phones through large tablets, including portrait and landscape layouts. Navigation, the music player, upload forms, dialogs, and safe areas for notches/home indicators are handled separately from the desktop layout.
@@ -41,6 +43,8 @@ The Library is split into **Playlists**, **Liked**, and **Offline** tabs so smal
 
 Lyrics are optional. The Lyrics control appears only when a published catalog entry contains lyric text, so releases without lyrics keep a clean player.
 
+Home can show private **Recently played** and **Your listening this month** sections after meaningful listening. Those sections are calculated locally, stay only on that device, and can be cleared by the listener. They are not a public chart and are not sent to an analytics service.
+
 - **Android/Chrome or Edge:** the Install button opens the browser prompt when available; otherwise follow its menu instructions.
 - **Samsung Internet:** use **☰ → Add page to → Home screen**, or **Install app** when shown.
 - **iPhone/iPad:** open in Safari, choose **Share → Add to Home Screen**, enable **Open as Web App**, and tap **Add**.
@@ -48,6 +52,23 @@ Lyrics are optional. The Lyrics control appears only when a published catalog en
 Installation support belongs to the browser. On browsers without installable-web-app support, the complete website still works normally.
 
 Background controls use the browser Media Session API where supported, so installed copies can continue audio when the app is in the background and provide lock-screen controls. Force-closing the browser/PWA or an operating-system battery rule can still stop playback.
+
+## What Update 21 adds
+
+- Deliberately different phone, tablet, desktop, and large-desktop layouts instead of scaling one desktop page down.
+- A cover-first phone Home screen, two-column phone release grid, compact player, four-item listener navigation, and bottom-sheet dialogs.
+- A persistent tablet navigation rail, wider tablet workspace, and tablet player placement that does not compete with phone navigation.
+- More readable desktop cards, a less crowded content column, and a Now Playing inspector reserved for genuinely wide screens.
+- One adaptive Update 21 foundation loaded after the historical styles, replacing the pattern of adding another small responsive hotfix for every screen.
+- Meaningful Discover controls only: release-type and genre controls hide when the live catalog has no real choice to offer.
+- Restored local Recently played and monthly listening sections with matching privacy wording.
+- Installed APK/PWA detection that removes installation promotions inside installed contexts and on supported browsers that detect the related Android app.
+- A first-class Artist Console **Artwork Vault** backed by IndexedDB for square cover concepts without MP3 files.
+- Artwork Vault search, statuses, inspector, edit/delete, JSON backup/restore, and a direct **Attach MP3** path into New release.
+- A four-step phone release workflow for Artwork, Audio, Details, and Review, while tablets and desktops keep a dense production workspace.
+- The existing Classic black-and-green theme, anime palettes, custom two-colour theme, player data, GitHub catalog, and Android wrapper remain intact.
+
+See `UPDATE-21-INSTRUCTIONS.md` for the protected updater and device checks.
 
 ## What Updates 13 and 14 add
 
@@ -81,7 +102,7 @@ No equalizer, crossfade, loudness normalization, or other sound-processing contr
 - Clear offline states using **Saved**, **Save offline**, and **Remove** labels instead of unexplained icons.
 - A redesigned artist console with aligned file controls, visible device timezone details, and recoverable metadata drafts while preparing a release.
 - A private full-song admin test player for live, scheduled, draft, and archived catalog MP3 files.
-- The multi-song play tracker is paused, so partially played tracks do not fill the Home screen. Only the active player's timeline is shown. There is no global listening backend.
+- Private listening sections qualify a play only after meaningful listening, remain on the device, and never use a global listening backend.
 
 See `UPDATE-13-14-INSTRUCTIONS.md` for the protected Windows update process that keeps the live catalog, songs, and covers intact.
 

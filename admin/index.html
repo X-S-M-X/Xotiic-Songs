@@ -14,7 +14,7 @@
     <meta name="format-detection" content="telephone=no" />
     <meta name="robots" content="noindex, nofollow, noarchive" />
     <title>Xotiic Upload | Artist Console</title>
-    <link rel="manifest" href="./manifest.webmanifest?v=20" />
+    <link rel="manifest" href="./manifest.webmanifest?v=21" />
     <link rel="icon" href="../favicon.svg?v=20" />
     <link rel="apple-touch-icon" href="../apple-touch-icon.png?v=20" />
     <script src="./theme-sync.js?v=20.1"></script>
@@ -24,11 +24,13 @@
     <link rel="stylesheet" href="./update-15-16.css?v=20" />
     <link rel="stylesheet" href="./admin-hotfix.css?v=20.1" />
     <link rel="stylesheet" href="./admin-player-v2.css?v=20.2" />
+    <link rel="stylesheet" href="./update-21.css?v=21.0.0" />
     <script src="./config.js?v=20" defer></script>
     <script src="./crypto.js?v=20" defer></script>
     <script src="./github.js?v=20" defer></script>
-    <script src="./app.js?v=20.2" defer></script>
+    <script src="./app.js?v=21.0.0" defer></script>
     <script src="./studio.js?v=20" defer></script>
+    <script src="./artwork-vault.js?v=21.0.0" defer></script>
   </head>
   <body>
     <svg class="icon-sprite" aria-hidden="true" focusable="false">
@@ -52,6 +54,9 @@
       <symbol id="admin-icon-edit" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M4 20h4l11-11-4-4L4 16v4Z"></path><path d="m13.5 6.5 4 4"></path></symbol>
       <symbol id="admin-icon-home" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="m3 11 9-8 9 8"></path><path d="M5.5 10v10h13V10"></path><path d="M9.5 20v-6h5v6"></path></symbol>
       <symbol id="admin-icon-clock" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="9"></circle><path d="M12 7v5l3 2"></path></symbol>
+      <symbol id="admin-icon-image" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="4" width="18" height="16" rx="2"></rect><circle cx="8.5" cy="9" r="1.5"></circle><path d="m4 17 4.5-4.5 3.5 3 2.5-2.5L20 18"></path></symbol>
+      <symbol id="admin-icon-trash" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M4 7h16M9 7V4h6v3M7 7l1 13h8l1-13M10 11v5M14 11v5"></path></symbol>
+      <symbol id="admin-icon-box" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="m4 7 8-4 8 4-8 4-8-4Z"></path><path d="m4 7 8 4 8-4v10l-8 4-8-4V7Z"></path><path d="M12 11v10"></path></symbol>
     </svg>
     <div class="ambient ambient-one"></div>
     <div class="ambient ambient-two"></div>
@@ -134,6 +139,7 @@
             <nav aria-label="Artist console navigation">
               <p class="section-label">RELEASE TOOLS</p>
               <button class="active" type="button" data-admin-panel="overview"><span class="icon-frame"><svg class="ui-icon" aria-hidden="true"><use href="#admin-icon-home"></use></svg></span><span>Overview</span></button>
+              <button type="button" data-admin-panel="artwork"><span class="icon-frame"><svg class="ui-icon" aria-hidden="true"><use href="#admin-icon-image"></use></svg></span><span>Artwork</span><b id="artwork-count-badge">0</b></button>
               <button type="button" data-admin-panel="upload"><span class="icon-frame"><svg class="ui-icon" aria-hidden="true"><use href="#admin-icon-upload"></use></svg></span><span>New release</span></button>
               <button type="button" data-admin-panel="releases"><span class="icon-frame"><svg class="ui-icon" aria-hidden="true"><use href="#admin-icon-music"></use></svg></span><span>Manage music</span><b id="release-count-badge">0</b></button>
               <p class="section-label account-label">ACCOUNT</p>
@@ -154,6 +160,7 @@
                 <article><span>LIVE NOW</span><strong id="overview-live">0</strong><small>public releases</small></article>
                 <article><span>SCHEDULED</span><strong id="overview-scheduled">0</strong><small>upcoming releases</small></article>
                 <article><span>DRAFTS</span><strong id="overview-drafts">0</strong><small>hidden works</small></article>
+                <article><span>ARTWORK</span><strong id="overview-concepts">0</strong><small>local concepts</small></article>
                 <article><span>ARCHIVED</span><strong id="overview-archived">0</strong><small>recoverable releases</small></article>
               </div>
               <div class="overview-grid">
@@ -163,7 +170,7 @@
                 </article>
                 <article class="panel-card overview-actions-card">
                   <p class="section-label">QUICK ACTIONS</p><h2>What do you want to do?</h2>
-                  <div class="overview-actions"><button type="button" data-admin-panel="upload"><span><svg class="ui-icon" aria-hidden="true"><use href="#admin-icon-upload"></use></svg></span><strong>Prepare a release</strong><small>Publish now, schedule, or save a draft.</small></button><button type="button" data-admin-panel="releases"><span><svg class="ui-icon" aria-hidden="true"><use href="#admin-icon-music"></use></svg></span><strong>Manage catalog</strong><small>Edit metadata or restore an archived song.</small></button></div>
+                  <div class="overview-actions"><button type="button" data-admin-panel="artwork"><span><svg class="ui-icon" aria-hidden="true"><use href="#admin-icon-image"></use></svg></span><strong>Save an artwork idea</strong><small>Keep a cover and working title before the MP3 exists.</small></button><button type="button" data-admin-panel="upload"><span><svg class="ui-icon" aria-hidden="true"><use href="#admin-icon-upload"></use></svg></span><strong>Prepare a release</strong><small>Publish now, schedule, or save a draft.</small></button><button type="button" data-admin-panel="releases"><span><svg class="ui-icon" aria-hidden="true"><use href="#admin-icon-music"></use></svg></span><strong>Manage catalog</strong><small>Edit metadata or restore an archived song.</small></button></div>
                 </article>
                 <article class="panel-card diagnostics-card">
                   <div class="panel-heading"><div><p class="section-label">SYSTEM CHECK</p><h2>Publishing diagnostics</h2></div><span id="diagnostics-state" class="diagnostics-state">READY</span></div>
@@ -177,7 +184,45 @@
               </div>
             </section>
 
+            <section class="admin-panel artwork-panel" data-panel="artwork" hidden>
+              <div class="artwork-toolbar">
+                <div><p class="section-label">ON-DEVICE CREATIVE STORAGE</p><h2>Artwork Vault</h2><p>Save square covers and working metadata now. Attach the final MP3 when the song is ready.</p></div>
+                <div class="artwork-toolbar-actions">
+                  <button id="artwork-import" type="button" class="ghost-action"><svg class="ui-icon" aria-hidden="true"><use href="#admin-icon-upload"></use></svg><span>Restore</span></button>
+                  <input id="artwork-import-file" type="file" accept="application/json,.json" hidden />
+                  <button id="artwork-export" type="button" class="ghost-action"><svg class="ui-icon" aria-hidden="true"><use href="#admin-icon-download"></use></svg><span>Back up</span></button>
+                  <button id="artwork-new" type="button" class="primary-action"><span>New concept</span><span class="icon-frame"><svg class="ui-icon" aria-hidden="true"><use href="#admin-icon-plus"></use></svg></span></button>
+                </div>
+              </div>
+              <div class="artwork-local-notice"><span><svg class="ui-icon" aria-hidden="true"><use href="#admin-icon-lock"></use></svg></span><div><strong>Saved only on this device</strong><p>Concepts never enter the public player or GitHub catalog. Use Back up before changing browsers or devices.</p></div></div>
+              <div class="artwork-summary" aria-label="Artwork concept summary">
+                <article><span>ALL CONCEPTS</span><strong id="artwork-total">0</strong></article>
+                <article><span>NEEDS AUDIO</span><strong id="artwork-needs-audio">0</strong></article>
+                <article><span>READY</span><strong id="artwork-ready">0</strong></article>
+              </div>
+              <div class="artwork-controls">
+                <label class="artwork-search"><svg class="ui-icon" aria-hidden="true"><use href="#admin-icon-image"></use></svg><span class="sr-only">Search concepts</span><input id="artwork-search" type="search" maxlength="100" placeholder="Search titles, franchises, characters…" /></label>
+                <label><span>Status</span><select id="artwork-filter"><option value="all">All concepts</option><option value="concept">Concept</option><option value="needs-audio">Needs audio</option><option value="ready">Ready</option></select></label>
+                <label><span>Sort</span><select id="artwork-sort"><option value="updated">Recently updated</option><option value="created">Recently created</option><option value="title">Title A–Z</option></select></label>
+              </div>
+              <div class="artwork-workspace">
+                <div>
+                  <div id="artwork-grid" class="artwork-grid"></div>
+                  <div id="artwork-empty" class="artwork-empty"><span><svg class="ui-icon" aria-hidden="true"><use href="#admin-icon-image"></use></svg></span><h3>Your unused covers belong here.</h3><p>Create a concept with a square image and working title. An MP3 is not required.</p><button type="button" data-artwork-new>Create the first concept</button></div>
+                </div>
+                <aside id="artwork-inspector" class="artwork-inspector" aria-live="polite">
+                  <div class="artwork-inspector-empty"><span><svg class="ui-icon" aria-hidden="true"><use href="#admin-icon-box"></use></svg></span><strong>Select a concept</strong><p>Its artwork, notes, and release shortcut will appear here.</p></div>
+                </aside>
+              </div>
+            </section>
+
             <section class="admin-panel" data-panel="upload" hidden>
+              <nav class="release-stepper" aria-label="New release steps">
+                <button class="active" type="button" data-release-step-button="artwork"><span>1</span><strong>Artwork</strong><small>Square cover</small></button>
+                <button type="button" data-release-step-button="audio"><span>2</span><strong>Audio</strong><small>Final MP3</small></button>
+                <button type="button" data-release-step-button="details"><span>3</span><strong>Details</strong><small>Metadata</small></button>
+                <button type="button" data-release-step-button="review"><span>4</span><strong>Review</strong><small>Visibility</small></button>
+              </nav>
               <details id="creator-studio-tools" class="creator-studio-tools">
                 <summary class="studio-heading"><div><p class="section-label">ADVANCED RELEASE TOOLS</p><h2 id="creator-studio-title">Batch and workspace tools</h2><p>Open this only when you need multi-MP3 intake, shared album details, saved metadata workspaces, or preflight checks.</p></div><span id="studio-batch-count">0 queued</span></summary>
                 <div class="studio-grid">
@@ -272,6 +317,11 @@
                   <div class="safety-strip"><span><svg class="ui-icon" aria-hidden="true"><use href="#admin-icon-shield"></use></svg></span><div><strong>Owner-only publishing</strong><p>The console verifies your GitHub identity before every session. Your token is decrypted only while this page is unlocked.</p></div></div>
                 </div>
               </form>
+              <div class="release-step-actions" aria-label="Release step controls">
+                <button id="release-step-back" type="button" class="ghost-action">Back</button>
+                <span id="release-step-status">Step 1 of 4 · Artwork</span>
+                <button id="release-step-next" type="button" class="primary-action"><span>Continue</span><span class="icon-frame"><svg class="ui-icon" aria-hidden="true"><use href="#admin-icon-arrow-right"></use></svg></span></button>
+              </div>
             </section>
 
             <section class="admin-panel" data-panel="releases" hidden>
@@ -319,6 +369,41 @@
           </section>
         </section>
       </main>
+    </div>
+
+    <div id="artwork-editor-layer" class="modal-layer artwork-editor-layer" hidden>
+      <button class="modal-backdrop" type="button" data-artwork-editor-close aria-label="Close artwork concept editor"></button>
+      <form id="artwork-editor-form" class="artwork-editor" role="dialog" aria-modal="true" aria-labelledby="artwork-editor-title">
+        <button class="modal-close icon-only-button" type="button" data-artwork-editor-close aria-label="Close"><svg class="ui-icon" aria-hidden="true"><use href="#admin-icon-close"></use></svg></button>
+        <header class="artwork-editor-heading"><div><p class="section-label">ARTWORK VAULT</p><h2 id="artwork-editor-title">New artwork concept</h2><p>Only the square cover and working title are required.</p></div><span class="local-only-badge"><svg class="ui-icon" aria-hidden="true"><use href="#admin-icon-lock"></use></svg> This device</span></header>
+        <input id="artwork-editor-id" type="hidden" />
+        <div class="artwork-editor-layout">
+          <div class="artwork-editor-cover-column">
+            <label id="artwork-cover-drop" class="artwork-cover-drop">
+              <input id="artwork-cover-file" type="file" accept="image/jpeg,image/png,image/webp" />
+              <span id="artwork-cover-preview" class="artwork-cover-preview"><svg class="ui-icon" aria-hidden="true"><use href="#admin-icon-image"></use></svg><strong>Add square cover</strong><small>JPG, PNG or WebP · up to 10 MB</small></span>
+            </label>
+            <p id="artwork-cover-status" class="artwork-cover-status">A cover is required for a new concept.</p>
+          </div>
+          <div class="artwork-editor-fields">
+            <label class="field field-wide"><span>Working title</span><input id="artwork-title" required maxlength="100" placeholder="e.g. Unfinished Hero Theme" /></label>
+            <label class="field"><span>Status</span><select id="artwork-status"><option value="concept">Concept</option><option value="needs-audio">Needs audio</option><option value="ready">Ready for release</option></select></label>
+            <label class="field"><span>Franchise <small>optional</small></span><input id="artwork-franchise" maxlength="80" placeholder="Anime or world" /></label>
+            <label class="field"><span>Character <small>optional</small></span><input id="artwork-character" maxlength="80" placeholder="Character or matchup" /></label>
+            <label class="field"><span>Mood <small>optional</small></span><input id="artwork-mood" maxlength="60" placeholder="Cinematic battle" /></label>
+            <label class="field"><span>Performance <small>optional</small></span><select id="artwork-performance"><option value="">Not set</option><option>Solo</option><option>Versus</option><option>Collaboration</option></select></label>
+            <label class="field field-wide"><span>Discovery tags <small>optional</small></span><input id="artwork-tags" maxlength="240" placeholder="rivalry, transformation, anime opening" /></label>
+            <label class="field field-wide"><span>Creative notes <small>optional</small></span><textarea id="artwork-notes" maxlength="2000" rows="5" placeholder="Song idea, visual direction, lyric notes, collaborators…"></textarea><small><span id="artwork-notes-count">0</span>/2,000</small></label>
+          </div>
+        </div>
+        <div class="artwork-editor-actions">
+          <button id="artwork-delete" type="button" class="danger-action" hidden><svg class="ui-icon" aria-hidden="true"><use href="#admin-icon-trash"></use></svg><span>Delete concept</span></button>
+          <span class="artwork-editor-spacer"></span>
+          <button type="button" class="ghost-action" data-artwork-editor-close>Cancel</button>
+          <button id="artwork-save" type="submit" class="primary-action"><span>Save concept</span><span class="icon-frame"><svg class="ui-icon" aria-hidden="true"><use href="#admin-icon-check"></use></svg></span></button>
+          <button id="artwork-continue" type="button" class="secondary-action"><span>Attach MP3</span><span class="icon-frame"><svg class="ui-icon" aria-hidden="true"><use href="#admin-icon-music"></use></svg></span></button>
+        </div>
+      </form>
     </div>
 
     <div id="review-modal" class="modal-layer" hidden>

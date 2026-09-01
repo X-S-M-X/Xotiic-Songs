@@ -1,7 +1,7 @@
 (() => {
   "use strict";
 
-  const APP_VERSION = "20.1.1";
+  const APP_VERSION = "21.0.0";
 
   const rawCatalog = Array.isArray(window.XOTIICDUCK_RELEASES)
     ? window.XOTIICDUCK_RELEASES
@@ -136,7 +136,7 @@
   const LIBRARY_TAB_KEY = "xotiicduck-library-tab-v1";
   const SLEEP_KEY = "xotiicduck-sleep-v1";
   const LOCAL_LISTENING_TRACKING_ENABLED = true;
-  const HOME_LISTENING_SECTIONS_ENABLED = false;
+  const HOME_LISTENING_SECTIONS_ENABLED = true;
   const BACKUP_VERSION = 1;
   const offlineApi = globalThis.XotiicOffline;
   const appearanceApi = globalThis.XotiicAppearance;
@@ -170,6 +170,7 @@
   let lyricsExpanded = false;
   let installPrompt = null;
   let installAccepted = false;
+  let relatedAppInstalled = false;
   let toastTimer = null;
   let favorites = new Set();
   let offlineIds = new Set(offlineApi?.readIndex?.() || []);
@@ -603,8 +604,26 @@
 
   const renderDiscover = () => {
     const genres = ["All tracks", ...new Set(tracks.map((track) => track.genre))];
+    const releaseTypeOrder = ["Single", "EP", "Album", "Soundtrack"];
+    const availableReleaseTypes = new Set(tracks.map((track) => track.releaseType).filter(Boolean));
+    const releaseTypes = releaseTypeOrder.filter((type) => availableReleaseTypes.has(type));
+    const typeSelect = $("#discover-type");
+    const typeSignature = releaseTypes.join("|");
+    if (typeSelect.dataset.availableTypes !== typeSignature) {
+      const labels = { Single: "Singles", EP: "EPs", Album: "Albums", Soundtrack: "Soundtracks" };
+      typeSelect.innerHTML = `<option value="all">All releases</option>${releaseTypes.map((type) => `<option value="${type}">${labels[type]}</option>`).join("")}`;
+      typeSelect.dataset.availableTypes = typeSignature;
+    }
+    const typeFilter = document.querySelector('[data-discover-filter="type"]');
+    const hasUsefulTypeFilter = releaseTypes.length > 1;
+    if (selectedReleaseType !== "all" && !availableReleaseTypes.has(selectedReleaseType)) selectedReleaseType = "all";
+    typeSelect.value = selectedReleaseType;
+    if (!hasUsefulTypeFilter) selectedReleaseType = "all";
+    if (typeFilter) typeFilter.hidden = !hasUsefulTypeFilter;
     if (!genres.includes(selectedGenre)) selectedGenre = "All tracks";
-    $("#genre-row").hidden = tracks.length === 0;
+    const hasUsefulGenreFilter = genres.length > 2;
+    if (!hasUsefulGenreFilter) selectedGenre = "All tracks";
+    $("#genre-row").hidden = !hasUsefulGenreFilter;
     $("#genre-row").innerHTML = genres.map((genre) => `<button data-genre="${escapeHtml(genre)}" class="${genre === selectedGenre ? "active" : ""}">${escapeHtml(genre)}</button>`).join("");
     const query = discoverQuery.trim().toLowerCase();
     let visible = tracks.filter((track) => selectedGenre === "All tracks" || track.genre === selectedGenre)
@@ -1634,7 +1653,8 @@
     if (lyricsExpanded) setTimeout(() => $("#lyrics-panel").scrollIntoView({ behavior: "smooth", block: "start" }), 0);
   };
 
-  const isStandalone = () => window.matchMedia("(display-mode: standalone)").matches
+  const isStandalone = () => ["standalone", "fullscreen", "minimal-ui"]
+    .some((mode) => window.matchMedia(`(display-mode: ${mode})`).matches)
     || window.navigator.standalone === true
     || document.referrer.startsWith("android-app://");
 
@@ -1657,7 +1677,7 @@
   const installSteps = (steps) => `<ol class="install-steps">${steps.map((step) => `<li><span class="install-step-copy">${step}</span></li>`).join("")}</ol>`;
 
   const installGuide = (status = "manual") => {
-    if (isStandalone() || installAccepted || status === "installed" || status === "accepted") {
+    if (isStandalone() || installAccepted || relatedAppInstalled || status === "installed" || status === "accepted") {
       return {
         eyebrow: "PLAYER READY",
         title: status === "accepted" ? "Installation accepted." : "XotiicDuck Music is installed.",
@@ -1721,7 +1741,7 @@
   };
 
   const updateInstallButtons = () => {
-    const installed = isStandalone() || installAccepted;
+    const installed = isStandalone() || installAccepted || relatedAppInstalled;
     app.classList.toggle("app-installed", installed);
     for (const button of $$('[data-install]')) {
       const label = button.querySelector("[data-install-label]");
@@ -1735,6 +1755,17 @@
     }
   };
 
+  const detectInstalledRelatedApp = async () => {
+    if (typeof navigator.getInstalledRelatedApps !== "function") return;
+    try {
+      const related = await navigator.getInstalledRelatedApps();
+      relatedAppInstalled = related.some((entry) => entry?.id === "music.xotiicduck.player" || entry?.platform === "webapp");
+      if (relatedAppInstalled) updateInstallButtons();
+    } catch {
+      // This optional browser capability must never block the player.
+    }
+  };
+
   const infoContent = {
     about: {
       eyebrow: "ABOUT THE SIGNAL",
@@ -1745,7 +1776,7 @@
     privacy: {
       eyebrow: "PRIVACY",
       title: "A small player should collect very little.",
-      copy: `<section><h3>Saved on this device</h3><p>Favorites, playlists, the active song position, and offline choices stay in this browser. They are not connected to a listener account.</p></section><section><h3>No listening tracker</h3><p>This release does not display multi-song listening progress or send song plays to a chart service, advertising network, or analytics backend.</p></section><section><h3>Separate artist access</h3><p>The owner publishing console stores its GitHub connection in an encrypted device vault. Public listeners cannot publish releases without the verified repository owner’s GitHub access.</p></section><section><h3>External links</h3><p>YouTube links open an external service governed by its own privacy terms. This player does not embed a YouTube video.</p></section>`,
+      copy: `<section><h3>Saved on this device</h3><p>Favorites, playlists, the active song position, offline choices, recently played songs, and your monthly listening recap stay in this browser. They are not connected to a listener account.</p></section><section><h3>No public tracking</h3><p>Listening history is used only for your private on-device sections. It is not sent to a chart service, advertising network, or analytics backend.</p></section><section><h3>Separate artist access</h3><p>The owner publishing console stores its GitHub connection in an encrypted device vault. Public listeners cannot publish releases without the verified repository owner’s GitHub access.</p></section><section><h3>External links</h3><p>YouTube links open an external service governed by its own privacy terms. This player does not embed a YouTube video.</p></section>`,
     },
     terms: {
       eyebrow: "TERMS",
@@ -1764,7 +1795,7 @@
   };
 
   const requestInstall = async () => {
-    if (isStandalone() || installAccepted) {
+    if (isStandalone() || installAccepted || relatedAppInstalled) {
       openInfo("install", "installed");
       return;
     }
@@ -2221,6 +2252,7 @@
   syncAppearanceControls();
   switchView(currentView);
   updateInstallButtons();
+  detectInstalledRelatedApp();
   updateNetworkState();
   refreshOfflineState();
   syncSleepUi();

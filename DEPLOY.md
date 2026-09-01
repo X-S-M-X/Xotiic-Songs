@@ -30,6 +30,8 @@ Push the complete package and wait for GitHub Pages to finish before creating th
 
 Music published through Xotiic Upload is committed directly to `main`. GitHub Pages will redeploy automatically. Source changes made in VS Code can still be committed and pushed normally.
 
+For Update 21, use the protected `APPLY-UPDATE-21.ps1` script in the update package. It pulls the live branch before checking the source version, stages only the listed app files, and never copies or stages `catalog.js`, `music/`, `covers/`, `.release-train/`, or Android build/signing folders. Artwork Vault concepts are not GitHub files: they remain in the browser's IndexedDB and should be backed up from the console before browser storage is cleared.
+
 Before copying Updates 13 and 14, save and pull the newest catalog and songs that Xotiic Upload may already have published. Then copy only the app files, leaving `.git`, `catalog.js`, `music/`, and `covers/` untouched:
 
 ```powershell
