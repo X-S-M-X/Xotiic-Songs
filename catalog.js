@@ -954,5 +954,20 @@ window.XOTIICDUCK_RELEASES = [
     "status": "draft",
     "createdAt": "2026-09-01T08:36:08.181Z",
     "updatedAt": "2026-09-01T08:36:08.181Z"
+  },
+  {
+    "id": "the-peak-knows-no-king",
+    "title": "The Peak Knows No King",
+    "artist": "XotiicDuck",
+    "album": "Single",
+    "releaseType": "Single",
+    "genre": "Anime J-Rock",
+    "releaseDate": "2026-09-01",
+    "duration": 297,
+    "audio": "music/the-peak-knows-no-king.mp3",
+    "cover": "covers/the-peak-knows-no-king.webp",
+    "status": "draft",
+    "createdAt": "2026-09-01T08:43:16.730Z",
+    "updatedAt": "2026-09-01T08:43:16.730Z"
   }
 ];
