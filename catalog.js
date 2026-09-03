@@ -753,7 +753,7 @@ window.XOTIICDUCK_RELEASES = [
     "cover": "covers/cut-through-fate.webp",
     "status": "draft",
     "createdAt": "2026-08-25T08:30:13.235Z",
-    "updatedAt": "2026-08-25T08:30:13.235Z"
+    "updatedAt": "2026-09-03T04:40:07.290Z"
   },
   {
     "id": "steal-the-heavens",
