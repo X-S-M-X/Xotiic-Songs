@@ -993,12 +993,13 @@ window.XOTIICDUCK_RELEASES = [
     "album": "Single",
     "releaseType": "Single",
     "genre": "Anime J-Rock",
-    "releaseDate": "2026-09-01",
+    "releaseDate": "2026-09-05",
     "duration": 361,
     "audio": "music/bury-this-future.mp3",
     "cover": "covers/bury-this-future.webp",
-    "status": "draft",
+    "status": "published",
     "createdAt": "2026-09-01T09:45:15.208Z",
-    "updatedAt": "2026-09-01T09:45:15.208Z"
+    "updatedAt": "2026-09-05T06:04:09.865Z",
+    "publishedAt": "2026-09-05T06:04:09.865Z"
   }
 ];
