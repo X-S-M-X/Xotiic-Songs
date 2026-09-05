@@ -715,13 +715,14 @@ window.XOTIICDUCK_RELEASES = [
     "album": "Single",
     "releaseType": "Single",
     "genre": "Anime J-Rock",
-    "releaseDate": "2026-08-24",
+    "releaseDate": "2026-09-05",
     "duration": 309,
     "audio": "music/the-cages-we-became.mp3",
     "cover": "covers/the-cages-we-became.webp",
-    "status": "draft",
+    "status": "published",
     "createdAt": "2026-08-24T04:59:24.203Z",
-    "updatedAt": "2026-08-24T04:59:24.203Z"
+    "updatedAt": "2026-09-05T06:07:30.814Z",
+    "publishedAt": "2026-09-05T06:07:30.814Z"
   },
   {
     "id": "gods-of-a-broken-world",
