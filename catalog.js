@@ -749,13 +749,14 @@ window.XOTIICDUCK_RELEASES = [
     "album": "Single",
     "releaseType": "Single",
     "genre": "Anime J-Rock",
-    "releaseDate": "2026-08-25",
+    "releaseDate": "2026-09-06",
     "duration": 278,
     "audio": "music/cut-through-fate.mp3",
     "cover": "covers/cut-through-fate.webp",
-    "status": "draft",
+    "status": "published",
     "createdAt": "2026-08-25T08:30:13.235Z",
-    "updatedAt": "2026-09-03T04:40:07.290Z"
+    "updatedAt": "2026-09-06T01:15:01.392Z",
+    "publishedAt": "2026-09-06T01:15:01.392Z"
   },
   {
     "id": "steal-the-heavens",
