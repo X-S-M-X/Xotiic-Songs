@@ -887,13 +887,14 @@ window.XOTIICDUCK_RELEASES = [
     "album": "Single",
     "releaseType": "Single",
     "genre": "Anime J-Rock",
-    "releaseDate": "2026-08-28",
+    "releaseDate": "2026-09-06",
     "duration": 298,
     "audio": "music/a-thousand-deaths.mp3",
     "cover": "covers/a-thousand-deaths.webp",
-    "status": "draft",
+    "status": "published",
     "createdAt": "2026-08-28T09:16:05.171Z",
-    "updatedAt": "2026-08-28T09:16:05.171Z"
+    "updatedAt": "2026-09-06T01:13:45.489Z",
+    "publishedAt": "2026-09-06T01:13:45.489Z"
   },
   {
     "id": "no-hero-s-crown",
