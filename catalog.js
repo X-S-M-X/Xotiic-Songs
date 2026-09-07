@@ -388,7 +388,9 @@ window.XOTIICDUCK_RELEASES = [
     "duration": 259,
     "audio": "music/thunderclap-grin.mp3",
     "cover": "covers/thunderclap-grin.webp",
-    "status": "draft"
+    "status": "archived",
+    "archivedAt": "2026-09-07T10:50:26.287Z",
+    "updatedAt": "2026-09-07T10:50:29.078Z"
   },
   {
     "id": "black-moon-blade",
