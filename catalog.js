@@ -512,7 +512,9 @@ window.XOTIICDUCK_RELEASES = [
     "duration": 345,
     "audio": "music/blessing-of-the-void.mp3",
     "cover": "covers/blessing-of-the-void.webp",
-    "status": "draft"
+    "status": "archived",
+    "archivedAt": "2026-09-07T13:00:03.637Z",
+    "updatedAt": "2026-09-07T13:00:05.974Z"
   },
   {
     "id": "judgement-of-the-void",
