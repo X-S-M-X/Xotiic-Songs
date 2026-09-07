@@ -192,7 +192,7 @@
       return { ...result, releases: nextReleases };
     }
 
-    async updateRelease({ id, release, audioFile = null, coverFile = null, onStep }) {
+    async updateRelease({ id, release, audioFile = null, coverFile = null, expectedUpdatedAt = null, onStep }) {
       onStep?.("catalog", 0.06, "Reading the latest release");
       const { headSha, treeSha } = await this.getHeadContext();
       const { releases } = await this.getCatalogAt(headSha);
@@ -200,6 +200,7 @@
       if (index < 0) throw new GitHubError("That release is no longer in the catalog.", { code: "RELEASE_MISSING" });
       if (release.id !== id) throw new GitHubError("A release ID cannot be changed after publishing.", { code: "RELEASE_ID_CHANGED" });
       const previous = releases[index];
+      if (expectedUpdatedAt !== null && (previous.updatedAt || "") !== expectedUpdatedAt) throw new GitHubError("This release changed. Refresh before saving.", {code:"RELEASE_CHANGED"});
       const entries = [];
 
       if (audioFile) {
@@ -208,7 +209,7 @@
         onStep?.("audio-upload", 0.3, "Uploading the replacement MP3");
         const sha = await this.createBlob(content, "base64");
         entries.push({ path: release.audio, mode: "100644", type: "blob", sha });
-        if (previous.audio !== release.audio && /^(music|covers)\/[a-zA-Z0-9._/-]+$/.test(previous.audio || "") && !previous.audio.includes("..")) {
+        if (!releases.some((r) => r.id !== id && (r.audio === previous.audio || r.cover === previous.audio)) && previous.audio !== release.audio && /^(music|covers)\/[a-zA-Z0-9._/-]+$/.test(previous.audio || "") && !previous.audio.includes("..")) {
           entries.push({ path: previous.audio, mode: "100644", type: "blob", sha: null });
         }
       }
@@ -219,7 +220,7 @@
         onStep?.("cover-upload", 0.58, "Uploading the replacement cover");
         const sha = await this.createBlob(content, "base64");
         entries.push({ path: release.cover, mode: "100644", type: "blob", sha });
-        if (previous.cover !== release.cover && /^(music|covers)\/[a-zA-Z0-9._/-]+$/.test(previous.cover || "") && !previous.cover.includes("..")) {
+        if (!releases.some((r) => r.id !== id && (r.audio === previous.cover || r.cover === previous.cover)) && previous.cover !== release.cover && /^(music|covers)\/[a-zA-Z0-9._/-]+$/.test(previous.cover || "") && !previous.cover.includes("..")) {
           entries.push({ path: previous.cover, mode: "100644", type: "blob", sha: null });
         }
       }
@@ -277,8 +278,9 @@
       return { ...result, releases: nextReleases };
     }
 
-    async deleteRelease(id) {
+    async deleteRelease(id, expectedHead = null) {
       const { headSha, treeSha } = await this.getHeadContext();
+      if (expectedHead && headSha !== expectedHead) throw new GitHubError("The source changed. Both copies are retained for review.", {code:"BRANCH_CHANGED"});
       const { releases } = await this.getCatalogAt(headSha);
       const release = releases.find((entry) => entry.id === id);
       if (!release) throw new GitHubError("That release is no longer in the catalog.", { code: "RELEASE_MISSING" });
@@ -286,7 +288,7 @@
       const catalogSha = await this.createBlob(formatCatalog(nextReleases), "utf-8");
       const entries = [{ path: "catalog.js", mode: "100644", type: "blob", sha: catalogSha }];
       for (const path of [release.audio, release.cover]) {
-        if (typeof path === "string" && /^(music|covers)\/[a-zA-Z0-9._/-]+$/.test(path) && !path.includes("..")) {
+        if (typeof path === "string" && /^(music|covers)\/[a-zA-Z0-9._/-]+$/.test(path) && !path.includes("..") && !nextReleases.some((entry) => entry.audio === path || entry.cover === path)) {
           entries.push({ path, mode: "100644", type: "blob", sha: null });
         }
       }

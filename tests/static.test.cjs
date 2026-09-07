@@ -22,7 +22,7 @@ test("service worker serves explicitly saved media with range support", () => {
   const worker = read("sw.js");
   assert.match(worker, /xotiic-media-v1/);
   assert.match(worker, /createPartialResponse/);
-  assert.match(worker, /anime-theme\.css\?v=20/);
+  assert.match(worker, /ui\/(?:player|console)\.css\?v=22\.0\.0/);
   assert.match(worker, /SKIP_WAITING/);
   assert.doesNotMatch(worker, /addEventListener\("install"[\s\S]{0,220}skipWaiting/);
 });
@@ -88,7 +88,7 @@ test("admin supports metadata edits, encrypted backup, and atomic updates", () =
   assert.match(updateStyles, /\.release-mode-selector label > span \{[\s\S]*?place-items: center;/);
   assert.match(updateStyles, /\.release-mode-selector label strong,[\s\S]*?text-align: center;/);
   assert.match(updateStyles, /\.admin-preview-player \{/);
-  assert.match(html, /update-12\.css\?v=20/);
+  assert.match(html, /ui\/(?:player|console)\.css\?v=22\.0\.0/);
   const ids = [...html.matchAll(/\sid="([^"]+)"/g)].map((match) => match[1]);
   assert.equal(new Set(ids).size, ids.length, "admin HTML IDs must be unique");
 });
@@ -143,7 +143,7 @@ test("Updates 13 and 14 expose library discovery and playback utilities", () => 
   ]) assert.match(html, new RegExp(`id=["']${id}["']`));
   assert.doesNotMatch(html, /id=["']discover-search["']/);
   assert.ok((html.match(/data-search-open/g) || []).length >= 2, "desktop and mobile catalog search entry points remain available");
-  assert.match(app, /const APP_VERSION = "21\.0\.0"/);
+  assert.match(app, /const APP_VERSION = "22\.0\.0"/);
   assert.match(app, /const releaseCollections = \(\) =>/);
   assert.match(app, /const openQueuePlaylistEditor = \(\) =>/);
   assert.match(app, /const startSleepTimer = \(minutes\) =>/);
@@ -152,7 +152,7 @@ test("Updates 13 and 14 expose library discovery and playback utilities", () => 
   assert.match(styles, /\.discover-toolbar/);
   assert.match(styles, /\.collection-grid/);
   assert.match(styles, /\.sleep-modal/);
-  assert.match(worker, /update-13-14\.css\?v=20/);
+  assert.match(worker, /ui\/(?:player|console)\.css\?v=22\.0\.0/);
 });
 
 test("artist console supports Update 13 catalog metadata", () => {
@@ -169,8 +169,8 @@ test("artist console supports Update 13 catalog metadata", () => {
   assert.match(app, /releaseType/);
   assert.match(app, /parseTags/);
   assert.match(github, /const CATALOG_VERSION = 3/);
-  assert.match(worker, /xotiic-upload-v21/);
-  assert.match(worker, /update-13-14\.css\?v=20/);
+  assert.match(worker, /xotiic-upload-v22/);
+  assert.match(worker, /ui\/(?:player|console)\.css\?v=22\.0\.0/);
   assert.match(styles, /\.release-mode-selector label \{[\s\S]*?place-items: center;[\s\S]*?text-align: center;/);
   assert.match(styles, /\.release-mode-selector label strong,[\s\S]*?text-align: center;/);
 });
@@ -227,7 +227,7 @@ test("Updates 17 and 18 add private discovery and offline integrity tools", () =
   assert.match(offline, /const audit = async/);
   assert.match(offline, /const cleanup = async/);
   assert.match(offline, /SHA-256/);
-  assert.match(worker, /update-17-18\.css\?v=20/);
+  assert.match(worker, /ui\/(?:player|console)\.css\?v=22\.0\.0/);
   for (const prefix of ["release", "edit"]) {
     for (const suffix of ["character", "energy", "vocal-style", "performance", "similar"]) {
       assert.match(adminHtml, new RegExp(`id=["']${prefix}-${suffix}["']`));
@@ -266,7 +266,7 @@ test("Updates 19 and 20 keep online services optional and prepare connected devi
   assert.match(devices, /remote\.prompt/);
   assert.match(devices, /webkitShowPlaybackTargetPicker/);
   assert.match(devices, /watchAvailability/);
-  assert.match(worker, /update-19-20\.css\?v=20/);
+  assert.match(worker, /ui\/(?:player|console)\.css\?v=22\.0\.0/);
   assert.match(worker, /connected-devices\.js\?v=20\.1/);
   assert.equal(wrapper.status, "ready-to-initialize");
   assert.equal(wrapper.signingKeyIncluded, false);
@@ -306,12 +306,12 @@ test("Update 20.1 rebuilds Devices, Queue, and Settings around the active theme"
   assert.match(styles, /\.queue-heading-actions #queue-save \{/);
   assert.match(styles, /\.settings-disclosure\.app-health-card/);
   assert.match(styles, /@media \(max-width: 360px\)/);
-  assert.match(worker, /update-20-1\.css\?v=20\.1\.1/);
-  assert.match(worker, /xotiicduck-portable-v21-adaptive-ui/);
+  assert.match(worker, /ui\/(?:player|console)\.css\?v=22\.0\.0/);
+  assert.match(worker, /xotiicduck-portable-v22-studio/);
   assert.match(adminTheme, /"ember", "royal", "void", "custom"/);
   assert.match(adminTheme, /--admin-custom-primary/);
   assert.match(adminStyles, /data-accent="custom"/);
-  assert.match(adminWorker, /xotiic-upload-v21-artwork-vault/);
+  assert.match(adminWorker, /xotiic-upload-v22-projects/);
 });
 
 test("Update 20.1.1 queue safeguards remain active in Update 21", () => {
@@ -329,11 +329,11 @@ test("Update 20.1.1 queue safeguards remain active in Update 21", () => {
   assert.match(mobile, /\.queue-heading-actions\s*\{[^}]*display:\s*grid;[^}]*grid-template-columns:\s*repeat\(2,\s*minmax\(0,\s*1fr\)\);/s);
   assert.match(mobile, /\.queue-heading-actions #queue-clear\s*\{[^}]*max-width:\s*none;[^}]*min-height:\s*44px;[^}]*height:\s*auto;/s);
   assert.match(mobile, /white-space:\s*normal;/);
-  assert.match(html, /update-20-1\.css\?v=20\.1\.1/);
-  assert.match(html, /app\.js\?v=21\.0\.0/);
-  assert.match(app, /const APP_VERSION = "21\.0\.0"/);
-  assert.match(worker, /xotiicduck-portable-v21-adaptive-ui/);
-  assert.equal(manifest.version, "21.0.0");
+  assert.match(html, /ui\/(?:player|console)\.css\?v=22\.0\.0/);
+  assert.match(html, /app\.js\?v=22\.0\.0/);
+  assert.match(app, /const APP_VERSION = "22\.0\.0"/);
+  assert.match(worker, /xotiicduck-portable-v22-studio/);
+  assert.equal(manifest.version, "22.0.0");
 });
 
 test("Update 21 provides adaptive listener layouts and a local Artwork Vault", () => {
@@ -348,7 +348,7 @@ test("Update 21 provides adaptive listener layouts and a local Artwork Vault", (
   const artwork = read("admin/artwork-vault.js");
   const adminWorker = read("admin/sw.js");
 
-  assert.match(html, /update-21\.css\?v=21\.0\.0/);
+  assert.match(html, /ui\/(?:player|console)\.css\?v=22\.0\.0/);
   assert.match(styles, /@media \(min-width: 760px\) and \(max-width: 1040px\)/);
   assert.match(styles, /@media \(max-width: 759px\)/);
   assert.match(styles, /container: player-content \/ inline-size/);
@@ -357,16 +357,16 @@ test("Update 21 provides adaptive listener layouts and a local Artwork Vault", (
   assert.match(app, /hasUsefulTypeFilter/);
   assert.match(app, /getInstalledRelatedApps/);
   assert.ok(manifest.related_applications.some((entry) => entry.id === "music.xotiicduck.player"));
-  assert.match(worker, /update-21\.css\?v=21\.0\.0/);
+  assert.match(worker, /ui\/(?:player|console)\.css\?v=22\.0\.0/);
 
   for (const id of [
     "overview-concepts", "artwork-grid", "artwork-inspector", "artwork-editor-layer",
     "artwork-cover-file", "artwork-export", "artwork-import", "release-step-next",
   ]) assert.match(adminHtml, new RegExp(`id=["']${id}["']`));
   assert.match(adminHtml, /data-admin-panel="artwork"/);
-  assert.match(adminHtml, /artwork-vault\.js\?v=21\.0\.0/);
+  assert.match(adminHtml, /artwork-vault\.js\?v=22\.0\.0/);
   assert.match(adminApp, /artwork: \["Artwork Vault"/);
-  assert.match(adminApp, /version: "21\.0\.0"/);
+  assert.match(adminApp, /version: "22\.0\.0"/);
   assert.match(artwork, /indexedDB\.open\(DB_NAME, DB_VERSION\)/);
   assert.match(artwork, /coverBlob: prepared\.blob/);
   assert.match(artwork, /new DataTransfer\(\)/);
@@ -375,5 +375,5 @@ test("Update 21 provides adaptive listener layouts and a local Artwork Vault", (
   assert.match(artwork, /const setReleaseStep =/);
   assert.match(adminStyles, /grid-template-columns: repeat\(5, minmax\(0, 1fr\)\)/);
   assert.match(adminStyles, /body\[data-release-step="artwork"\] #audio-drop/);
-  assert.match(adminWorker, /artwork-vault\.js\?v=21\.0\.0/);
+  assert.match(adminWorker, /artwork-vault\.js\?v=22\.0\.0/);
 });

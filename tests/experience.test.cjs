@@ -1,0 +1,41 @@
+const test=require("node:test"), assert=require("node:assert/strict");
+const {load}=require("./dom-helper.cjs");
+const delay=()=>new Promise((resolve)=>setTimeout(resolve,30));
+test("player boots with release pages, grouped settings and stable Back navigation",async(t)=>{
+  const {w,dom,errors}=load();t.after(()=>dom.window.close());
+  assert.equal(w.XotiicPlayer.version,"22.0.0");
+  assert.ok(w.document.querySelector("#u22-density"));
+  w.XotiicPlayer.openPanel("settings-layer");await delay();
+  assert.equal(w.document.querySelector("#settings-layer").hidden,false);
+  w.XotiicPlayer.openPanel("sleep-layer");await delay();
+  w.history.back();await delay();
+  assert.equal(w.document.querySelector("#sleep-layer").hidden,true);
+  w.XotiicPlayer.openPanel("settings-layer");await delay();
+  w.document.querySelector("#u22-downloads").click();await delay();
+  assert.equal(w.document.querySelector('[data-panel="library"]').hidden,false);
+  assert.equal(w.document.querySelector("#settings-layer").hidden,true);
+  w.XotiicPlayer.switchView("home");
+  const button=w.document.querySelector("[data-release-open]");assert.ok(button);button.click();
+  assert.equal(w.document.querySelector('[data-panel="release"]').hidden,false);
+  assert.ok(w.location.hash.startsWith("#release/"));
+  assert.deepEqual(errors,[]);
+});
+test("queue removal can be undone and selecting another queue invalidates undo",async(t)=>{
+  const {w,dom,errors}=load();t.after(()=>dom.window.close());
+  const api=w.XotiicPlayer, ids=api.getTracks().slice(0,3).map((r)=>r.id);assert.equal(ids.length,3);
+  api.playQueue(ids);api.openPanel("queue-layer");
+  w.document.querySelector(`[data-queue-remove="${ids[1]}"]`).click();
+  assert.equal(api.getQueue().length,2);assert.equal(api.undoQueue(),true);assert.equal(api.getQueue().length,3);
+  w.document.querySelector(`[data-queue-remove="${ids[1]}"]`).click();api.playQueue([ids[0],ids[2]]);
+  assert.equal(api.undoQueue(),false);await delay();assert.deepEqual(errors,[]);
+});
+test("console boots with project controls and preserves release version fields",async(t)=>{
+  const {w,dom,errors}=load("admin/index.html");t.after(()=>dom.window.close());await delay();
+  assert.equal(w.XotiicAdmin.version,"22.0.0");
+  assert.ok(w.document.querySelector("#project-bulk-covers"));
+  const release={versionLabel:"AMV edit",relatedReleaseIds:["full-song"],spotifyUrl:"https://open.spotify.com/track/example",appleMusicUrl:""};
+  w.document.dispatchEvent(new w.CustomEvent("xotiic:editrelease",{detail:release}));
+  const next={};w.document.dispatchEvent(new w.CustomEvent("xotiic:buildrelease",{detail:{release:next,prefix:"edit"}}));
+  assert.equal(next.versionLabel,release.versionLabel);assert.equal(next.relatedReleaseIds[0],"full-song");assert.equal(next.spotifyUrl,release.spotifyUrl);
+  assert.deepEqual(errors,[]);
+});

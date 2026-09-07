@@ -9,7 +9,10 @@
   "background_color": "#050705",
   "theme_color": "#050705",
   "orientation": "any",
-  "categories": ["music", "productivity"],
+  "categories": [
+    "music",
+    "productivity"
+  ],
   "prefer_related_applications": false,
   "share_target": {
     "action": "./share-target",
@@ -20,8 +23,21 @@
       "text": "text",
       "url": "url",
       "files": [
-        { "name": "audio", "accept": ["audio/mpeg", ".mp3"] },
-        { "name": "cover", "accept": ["image/jpeg", "image/png", "image/webp"] }
+        {
+          "name": "audio",
+          "accept": [
+            "audio/mpeg",
+            ".mp3"
+          ]
+        },
+        {
+          "name": "cover",
+          "accept": [
+            "image/jpeg",
+            "image/png",
+            "image/webp"
+          ]
+        }
       ]
     }
   },
@@ -29,23 +45,97 @@
     {
       "action": "./?panel=upload",
       "accept": {
-        "audio/mpeg": [".mp3"],
-        "image/jpeg": [".jpg", ".jpeg"],
-        "image/png": [".png"],
-        "image/webp": [".webp"]
+        "audio/mpeg": [
+          ".mp3"
+        ],
+        "image/jpeg": [
+          ".jpg",
+          ".jpeg"
+        ],
+        "image/png": [
+          ".png"
+        ],
+        "image/webp": [
+          ".webp"
+        ]
       }
     }
   ],
   "shortcuts": [
-    { "name": "Artwork Vault", "short_name": "Artwork", "url": "./?panel=artwork", "icons": [{ "src": "../icon-192.png?v=20", "sizes": "192x192", "type": "image/png" }] },
-    { "name": "New release", "short_name": "Upload", "url": "./?panel=upload", "icons": [{ "src": "../icon-192.png?v=20", "sizes": "192x192", "type": "image/png" }] },
-    { "name": "Manage music", "short_name": "Releases", "url": "./?panel=releases", "icons": [{ "src": "../icon-192.png?v=20", "sizes": "192x192", "type": "image/png" }] },
-    { "name": "Release calendar", "short_name": "Calendar", "url": "./?panel=overview", "icons": [{ "src": "../icon-192.png?v=20", "sizes": "192x192", "type": "image/png" }] }
+    {
+      "name": "Artwork Vault",
+      "short_name": "Artwork",
+      "url": "./?panel=artwork",
+      "icons": [
+        {
+          "src": "../icon-192.png?v=20",
+          "sizes": "192x192",
+          "type": "image/png"
+        }
+      ]
+    },
+    {
+      "name": "New release",
+      "short_name": "Upload",
+      "url": "./?panel=upload",
+      "icons": [
+        {
+          "src": "../icon-192.png?v=20",
+          "sizes": "192x192",
+          "type": "image/png"
+        }
+      ]
+    },
+    {
+      "name": "Manage music",
+      "short_name": "Releases",
+      "url": "./?panel=releases",
+      "icons": [
+        {
+          "src": "../icon-192.png?v=20",
+          "sizes": "192x192",
+          "type": "image/png"
+        }
+      ]
+    },
+    {
+      "name": "Release calendar",
+      "short_name": "Calendar",
+      "url": "./?panel=overview",
+      "icons": [
+        {
+          "src": "../icon-192.png?v=20",
+          "sizes": "192x192",
+          "type": "image/png"
+        }
+      ]
+    }
   ],
   "icons": [
-    { "src": "../icon-192.png?v=20", "sizes": "192x192", "type": "image/png", "purpose": "any" },
-    { "src": "../icon-512.png?v=20", "sizes": "512x512", "type": "image/png", "purpose": "any" },
-    { "src": "../icon-maskable-192.png?v=20", "sizes": "192x192", "type": "image/png", "purpose": "maskable" },
-    { "src": "../icon-maskable-512.png?v=20", "sizes": "512x512", "type": "image/png", "purpose": "maskable" }
-  ]
+    {
+      "src": "../icon-192.png?v=20",
+      "sizes": "192x192",
+      "type": "image/png",
+      "purpose": "any"
+    },
+    {
+      "src": "../icon-512.png?v=20",
+      "sizes": "512x512",
+      "type": "image/png",
+      "purpose": "any"
+    },
+    {
+      "src": "../icon-maskable-192.png?v=20",
+      "sizes": "192x192",
+      "type": "image/png",
+      "purpose": "maskable"
+    },
+    {
+      "src": "../icon-maskable-512.png?v=20",
+      "sizes": "512x512",
+      "type": "image/png",
+      "purpose": "maskable"
+    }
+  ],
+  "version": "22.0.0"
 }

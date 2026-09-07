@@ -1,0 +1,35 @@
+/* Shared player and Artist Console primitives. Colours are inherited from the saved theme. */
+:root {
+  --ui-bg: #070a08;
+  --ui-surface: #101612;
+  --ui-raised: #18221b;
+  --ui-text: #f3f7f4;
+  --ui-muted: #b0bdb3;
+  --ui-border: #334338;
+  --ui-radius: 1rem;
+  --ui-space: clamp(1rem, 2.5vw, 2rem);
+  --ui-accent: var(--accent, #b5f45c);
+  --ui-action-ink: #071006;
+  --ui-link: #b5f45c;
+  color-scheme: dark;
+}
+html[data-theme="anime"] { --ui-bg: #090b0d; --ui-surface: #12171a; --ui-raised: #1d2528; }
+body { font-size: 1rem; color: var(--ui-text); }
+button, input, select, textarea { font: inherit; }
+:where(button, a, input, select, textarea):focus-visible { outline: 3px solid var(--ui-link); outline-offset: 3px; }
+.u22-card { background: var(--ui-surface); border: 1px solid var(--ui-border); border-radius: var(--ui-radius); padding: var(--ui-space); }
+.u22-actions { display: flex; align-items: center; gap: .65rem; flex-wrap: wrap; }
+.u22-actions button, .u22-action { min-height: 44px; border: 1px solid var(--ui-border); border-radius: .65rem; padding: .6rem 1rem; background: var(--ui-raised); color: var(--ui-text); cursor: pointer; }
+.u22-actions button:disabled { opacity: .5; cursor: default; }
+.u22-actions .primary-action, .u22-action.primary-action { background: var(--ui-accent); color: var(--ui-action-ink); }
+.u22-field { display: grid; gap: .5rem; font-size: .875rem; }
+.u22-field input, .u22-field select { width: 100%; min-height: 44px; border: 1px solid var(--ui-border); border-radius: .6rem; padding: .6rem; background: var(--ui-bg); color: var(--ui-text); }
+.u22-note { font-size: .875rem; color: var(--ui-muted); line-height: 1.6; }
+.u22-status { padding: .7rem 0; color: var(--ui-muted); font-size: .875rem; white-space: pre-line; }
+.u22-scroll { overflow: auto; max-height: 55dvh; }
+.u22-table { width: 100%; border-collapse: collapse; font-size: .875rem; }
+.u22-table th, .u22-table td { text-align: left; padding: .8rem; border-bottom: 1px solid var(--ui-border); vertical-align: top; }
+.u22-table input[type="checkbox"] { width: 24px; height: 24px; }
+.u22-table input:not([type="checkbox"]) { min-width: 9rem; max-width: 100%; padding: .6rem; }
+[hidden] { display: none !important; }
+@media (prefers-reduced-motion: reduce) { html { scroll-behavior: auto; } }

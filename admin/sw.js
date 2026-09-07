@@ -1,25 +1,23 @@
-const CACHE_NAME = "xotiic-upload-v21-artwork-vault";
+const CACHE_NAME = "xotiic-upload-v22-projects";
 const SHARED_DB = "xotiic-upload-share-inbox-v1";
 const SHARED_STORE = "files";
 const scoped = (file) => new URL(file, self.registration.scope).href;
 const SHELL = [
   "./",
   "./index.html",
-  "./styles.css?v=20",
-  "./update-12.css?v=20",
-  "./update-13-14.css?v=20",
-  "./update-15-16.css?v=20",
-  "./admin-hotfix.css?v=20.1",
-  "./admin-player-v2.css?v=20.2",
-  "./update-21.css?v=21.0.0",
   "./theme-sync.js?v=20.1",
-  "./config.js?v=20",
+  "../ui/console.css?v=22.0.0&rev=dd4e0e32286b",
+  "../ui/contrast.js?v=22.0.0&rev=9cf31ddeba2d",
+  "../release-model.js?v=22.0.0&rev=b6eb5720a508",
+  "./private-publisher.js?v=22.0.0&rev=54f08b457362",
+  "./project-workflow.js?v=22.0.0&rev=73bcdedd4ab4",
+  "./config.js?v=22.0.0&rev=bbfffba4ca82",
   "./crypto.js?v=20",
-  "./github.js?v=20",
-  "./app.js?v=21.0.0",
+  "./github.js?v=22.0.0&rev=c1ddab36772a",
+  "./app.js?v=22.0.0&rev=03a7d63b5f6e",
   "./studio.js?v=20",
-  "./artwork-vault.js?v=21.0.0",
-  "./manifest.webmanifest?v=21",
+  "./artwork-vault.js?v=22.0.0&rev=bd9e7f3d5bfa",
+  "./manifest.webmanifest?v=22",
   "../favicon.svg?v=20",
   "../apple-touch-icon.png?v=20",
   "../icon-192.png?v=20",

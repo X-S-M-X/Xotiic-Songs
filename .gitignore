@@ -11,5 +11,12 @@ android-twa/**/local.properties
 android-twa/**/*-release*.apk
 android-twa/**/*-release*.aab
 android-twa/**/.gradle/
+_site/
+test-results/
+playwright-report/
 android-twa/generated/
 android-twa/output/
+*.jks
+*.keystore
+*.p12
+*.pem

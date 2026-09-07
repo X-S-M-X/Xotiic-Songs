@@ -5,7 +5,7 @@
   const DB_VERSION = 1;
   const STORE_NAME = "concepts";
   const BACKUP_APP = "XotiicDuck Artwork Vault";
-  const BACKUP_VERSION = 1;
+  const BACKUP_VERSION = 2;
   const MAX_COVER_BYTES = 10 * 1024 * 1024;
   const MAX_IMPORT_BYTES = 120 * 1024 * 1024;
   const VALID_STATUS = new Set(["concept", "needs-audio", "ready"]);
@@ -25,6 +25,7 @@
     concepts: [],
     selectedId: "",
     editorCover: null,
+    editorOriginal: null,
     editorCoverName: "",
     editorCoverType: "",
     editorCoverWidth: 0,
@@ -105,6 +106,21 @@
     } finally {
       database.close();
     }
+  };
+
+  const saveBatch = async (records) => {
+    if (records.some((r) => !r.id || !r.title || !(r.coverBlob instanceof Blob))) throw new Error("Every project needs an ID, title and cover.");
+    const database = await openDatabase();
+    try {
+      await new Promise((resolve, reject) => {
+        const transaction = database.transaction(STORE_NAME, "readwrite");
+        const store = transaction.objectStore(STORE_NAME);
+        transaction.oncomplete = resolve;
+        transaction.onerror = transaction.onabort = () => reject(transaction.error || new Error("Restore cancelled. No projects were changed."));
+        try { records.forEach((record) => store.put(record)); } catch (error) { transaction.abort(); reject(error); }
+      });
+    } finally { database.close(); }
+    await loadConcepts();
   };
 
   const deleteConceptRecord = async (id) => {
@@ -333,6 +349,7 @@
       title.textContent = concept.title;
       const meta = document.createElement("small");
       meta.textContent = [concept.franchise, concept.character, `Updated ${formatDate(concept.updatedAt)}`].filter(Boolean).join(" · ");
+      if (concept.releaseId) meta.textContent += ` · ${concept.releaseStatus || "Linked release"}`;
       copy.append(title, meta);
       main.append(cover, copy);
 
@@ -341,7 +358,7 @@
       const attach = document.createElement("button");
       attach.type = "button";
       attach.dataset.artworkUse = concept.id;
-      attach.textContent = "Attach MP3";
+      attach.textContent = concept.audioBlob ? "Continue project" : "Attach MP3";
       const edit = document.createElement("button");
       edit.type = "button";
       edit.dataset.artworkEdit = concept.id;
@@ -380,16 +397,18 @@
     const existing = state.concepts.find((entry) => entry.id === $("#artwork-editor-id").value);
     const now = Date.now();
     return {
+      ...existing,
       id: existing?.id || createId(),
       title: cleanText($("#artwork-title").value, 100),
       status: cleanStatus($("#artwork-status").value),
-      franchise: cleanText($("#artwork-franchise").value, 80),
-      character: cleanText($("#artwork-character").value, 80),
+      franchise: cleanText($("#artwork-franchise").value, 500),
+      character: cleanText($("#artwork-character").value, 500),
       mood: cleanText($("#artwork-mood").value, 60),
       performance: cleanText($("#artwork-performance").value, 30),
       tags: cleanText($("#artwork-tags").value, 240),
       notes: cleanText($("#artwork-notes").value, 2000),
       coverBlob: state.editorCover || existing?.coverBlob || null,
+      originalBlob: state.editorOriginal || existing?.originalBlob || state.editorCover || existing?.coverBlob || null,
       coverName: state.editorCoverName || existing?.coverName || "cover.webp",
       coverType: state.editorCoverType || existing?.coverType || state.editorCover?.type || "image/webp",
       coverWidth: state.editorCoverWidth || existing?.coverWidth || 0,
@@ -430,6 +449,7 @@
     $("#artwork-notes").value = concept?.notes || "";
     $("#artwork-notes-count").textContent = String((concept?.notes || "").length);
     state.editorCover = concept?.coverBlob || null;
+    state.editorOriginal = concept?.originalBlob || concept?.coverBlob || null;
     state.editorCoverName = concept?.coverName || "";
     state.editorCoverType = concept?.coverType || "";
     state.editorCoverWidth = Number(concept?.coverWidth) || 0;
@@ -504,16 +524,43 @@
       ? state.concepts.find((entry) => entry.id === conceptOrId)
       : conceptOrId;
     if (!concept) return;
+    if (concept.releaseId) {
+      closeEditor();
+      if (!admin.editRelease(concept.releaseId)) admin.showToast("Refresh Manage music to open this linked release. Its project was kept.", "error");
+      return;
+    }
+    const releaseForm = $("#release-form");
+    if (releaseForm.dataset.projectId !== concept.id && ($("#release-title").value.trim() || admin.getReleaseFiles().audioFile)
+      && !confirm("Load this project and replace the current release form? Save the current project first if needed.")) return;
     state.suppressReleaseReset = true;
     admin.resetReleaseForm();
+    releaseForm.dataset.projectId = concept.id;
     assignValue("#release-title", concept.title);
     assignValue("#release-franchise", concept.franchise);
     assignValue("#release-character", concept.character);
     assignValue("#release-mood", concept.mood);
     assignValue("#release-performance", concept.performance);
     assignValue("#release-tags", concept.tags);
-    if (concept.notes) assignValue("#release-description", concept.notes.slice(0, 280));
+    // Creative notes are private. Never copy them into a public description.
     attachCoverToRelease(concept);
+    if (concept.formFields) {
+      for (const [id, value] of Object.entries(concept.formFields)) {
+        if (!id.startsWith("release-")) continue;
+        const input = document.getElementById(id);
+        if (!input || !releaseForm.contains(input) || !["INPUT","SELECT","TEXTAREA"].includes(input.tagName) || ["file","password","hidden","submit","button"].includes(input.type)) continue;
+        if (input.type === "checkbox" || input.type === "radio") input.checked = Boolean(value); else input.value = String(value);
+        input.dispatchEvent(new Event("input", {bubbles:true}));
+      }
+    }
+    if (concept.releaseMode && ["draft","scheduled","published"].includes(concept.releaseMode)) {
+      const mode = releaseForm.querySelector(`input[name="release-mode"][value="${concept.releaseMode}"]`); if (mode) { mode.checked = true; mode.dispatchEvent(new Event("change", {bubbles:true})); }
+    }
+    admin.setOriginalCover(concept.originalBlob || concept.coverBlob);
+    if (concept.audioBlob instanceof Blob) {
+      const transfer = new DataTransfer(); transfer.items.add(new File([concept.audioBlob], concept.audioName || "song.mp3", {type:"audio/mpeg"}));
+      $("#audio-file").files = transfer.files; $("#audio-file").dispatchEvent(new Event("change", {bubbles:true})); openAudio = false;
+    }
+    document.dispatchEvent(new CustomEvent("xotiic:projectloaded", {detail: {id: concept.id, title: concept.title}}));
     admin.selectPanel("upload");
     setReleaseStep("audio");
     closeEditor();
@@ -544,7 +591,7 @@
   });
 
   const dataUrlToBlob = (value) => {
-    const match = /^data:(image\/(?:jpeg|png|webp));base64,([a-z0-9+/=]+)$/i.exec(String(value || ""));
+    const match = /^data:((?:image\/(?:jpeg|png|webp))|audio\/mpeg);base64,([a-z0-9+/=]+)$/i.exec(String(value || ""));
     if (!match) throw new Error("A restored concept contains an invalid cover.");
     const binary = atob(match[2]);
     const bytes = new Uint8Array(binary.length);
@@ -563,6 +610,10 @@
     setTimeout(() => URL.revokeObjectURL(url), 1000);
   };
 
+  const checkBackupSize = (records) => {
+    const bytes = records.reduce((sum, r) => sum + [r.coverBlob,r.originalBlob,r.audioBlob].reduce((n,b) => n + Math.ceil((b?.size || 0) / 3) * 4, 0) + JSON.stringify({...r,coverBlob:undefined,originalBlob:undefined,audioBlob:undefined}).length * 3 + 1024, 1024);
+    if (bytes > MAX_IMPORT_BYTES) throw new Error("Select fewer projects. Backups must be below 120 MB.");
+  };
   const exportVault = async () => {
     if (!state.concepts.length) {
       admin.showToast("Artwork Vault is empty.", "error");
@@ -570,19 +621,26 @@
     }
     $("#artwork-export").disabled = true;
     try {
+      checkBackupSize(state.concepts);
       const concepts = [];
       for (const concept of state.concepts) {
         concepts.push({
           ...concept,
           coverBlob: undefined,
+          originalBlob: undefined,
+          audioBlob: undefined,
           coverDataUrl: await blobToDataUrl(concept.coverBlob),
+          originalDataUrl: concept.originalBlob ? await blobToDataUrl(concept.originalBlob) : undefined,
+          audioDataUrl: concept.audioBlob ? await blobToDataUrl(concept.audioBlob) : undefined,
         });
       }
       const payload = { app: BACKUP_APP, version: BACKUP_VERSION, exportedAt: new Date().toISOString(), concepts };
       const file = new File([JSON.stringify(payload)], `xotiicduck-artwork-vault-${new Date().toISOString().slice(0, 10)}.json`, { type: "application/json" });
+      if (file.size > MAX_IMPORT_BYTES) throw new Error("This backup exceeds 120 MB. Use Export selected projects in the bulk tools to save smaller groups.");
       if (navigator.canShare?.({ files: [file] }) && navigator.share) {
         try {
           await navigator.share({ title: "XotiicDuck Artwork Vault backup", files: [file] });
+          localStorage.setItem("xotiic-project-backup-at", new Date().toISOString());
           admin.showToast("Artwork Vault backup shared.");
           return;
         } catch (error) {
@@ -590,6 +648,7 @@
         }
       }
       downloadFile(file);
+      localStorage.setItem("xotiic-project-backup-at", new Date().toISOString());
       admin.showToast("Artwork Vault backup downloaded.");
     } catch (error) {
       admin.showToast(error.message || "The Artwork Vault backup failed.", "error");
@@ -606,13 +665,15 @@
     }
     try {
       const payload = JSON.parse(await file.text());
-      if (payload?.app !== BACKUP_APP || payload.version !== BACKUP_VERSION || !Array.isArray(payload.concepts)) {
+      if (payload?.app !== BACKUP_APP || ![1, BACKUP_VERSION].includes(payload.version) || !Array.isArray(payload.concepts)) {
         throw new Error("That is not a valid XotiicDuck Artwork Vault backup.");
       }
-      const entries = payload.concepts.slice(0, 500);
+      const entries = payload.concepts;
+      if (entries.length > 500) throw new Error("Restore at most 500 projects per backup. Nothing was imported.");
       if (!entries.length) throw new Error("That Artwork Vault backup contains no concepts.");
-      if (!confirm(`Restore ${entries.length} artwork concept${entries.length === 1 ? "" : "s"}? Existing concepts with the same IDs will be replaced.`)) return;
-      let restored = 0;
+      const conflicts = entries.filter((entry) => state.concepts.some((r) => r.id === entry.id));
+      if (!confirm(`Restore ${entries.length} projects? ${conflicts.length} existing projects would be replaced: ${conflicts.slice(0, 8).map((r) => r.title).join(", ") || "None"}. Cancel to keep everything unchanged.`)) return;
+      const records = [];
       for (const entry of entries) {
         const source = dataUrlToBlob(entry.coverDataUrl);
         const prepared = await prepareCover(source, cleanText(entry.coverName, 180) || "cover.webp");
@@ -621,12 +682,19 @@
           id: /^[a-z0-9-]{8,100}$/i.test(String(entry.id || "")) ? entry.id : createId(),
           title: cleanText(entry.title, 100),
           status: cleanStatus(entry.status),
-          franchise: cleanText(entry.franchise, 80),
-          character: cleanText(entry.character, 80),
+          franchise: cleanText(entry.franchise, 500),
+          character: cleanText(entry.character, 500),
           mood: cleanText(entry.mood, 60),
           performance: cleanText(entry.performance, 30),
           tags: cleanText(entry.tags, 240),
           notes: cleanText(entry.notes, 2000),
+          originalBlob: entry.originalDataUrl ? dataUrlToBlob(entry.originalDataUrl) : source,
+          audioBlob: entry.audioDataUrl ? dataUrlToBlob(entry.audioDataUrl) : undefined,
+          audioName: cleanText(entry.audioName, 180),
+          releaseMode: ["draft","scheduled","published"].includes(entry.releaseMode) ? entry.releaseMode : "draft",
+          formFields: entry.formFields && typeof entry.formFields === "object" && !Array.isArray(entry.formFields) ? entry.formFields : undefined,
+          releaseId: cleanText(entry.releaseId, 150),
+          releaseStatus: cleanText(entry.releaseStatus, 30),
           coverBlob: prepared.blob,
           coverName: prepared.name,
           coverType: prepared.type,
@@ -635,12 +703,14 @@
           createdAt: Number(entry.createdAt) || now,
           updatedAt: Number(entry.updatedAt) || now,
         };
-        if (!record.title) continue;
-        await saveConceptRecord(record);
-        restored += 1;
+        if (!record.title) throw new Error("A project is missing its title. Nothing was imported.");
+        if (record.audioBlob && (record.audioBlob.type !== "audio/mpeg" || record.audioBlob.size > 40 * 1024 * 1024)) throw new Error("Invalid project audio. Nothing was imported.");
+        if (records.some((r) => r.id === record.id)) throw new Error("Duplicate project IDs in backup. Nothing was imported.");
+        await prepareCover(record.originalBlob, record.coverName);
+        records.push(record);
       }
-      await loadConcepts();
-      admin.showToast(`${restored} artwork concept${restored === 1 ? "" : "s"} restored.`);
+      await saveBatch(records);
+      admin.showToast(`${records.length} projects restored together.`);
     } catch (error) {
       admin.showToast(error.message || "The Artwork Vault backup could not be restored.", "error");
     } finally {
@@ -681,6 +751,7 @@
     try {
       const prepared = await prepareCover(file, file.name);
       state.editorCover = prepared.blob;
+      state.editorOriginal = file;
       state.editorCoverName = prepared.name;
       state.editorCoverType = prepared.type;
       state.editorCoverWidth = prepared.width;
@@ -787,9 +858,25 @@
   });
 
   globalThis.XotiicArtworkVault = Object.freeze({
-    version: "1.0.0",
+    version: "2.0.0",
     database: DB_NAME,
-    list: () => state.concepts.map((entry) => ({ ...entry, coverBlob: undefined })),
+    list: () => state.concepts.map((entry) => ({ ...entry, coverBlob: undefined, audioBlob: undefined, originalBlob: undefined })),
+    get: (id) => state.concepts.find((entry) => entry.id === id),
+    saveBatch,
+    prepareCover,
+    createId,
+    exportSelected: async (ids) => {
+      const selected = state.concepts.filter((r) => ids.includes(r.id));
+      if (!selected.length) throw new Error("Select projects first.");
+      checkBackupSize(selected);
+      const concepts = [];
+      for (const r of selected) concepts.push({...r, coverBlob:undefined, originalBlob:undefined, audioBlob:undefined,
+        coverDataUrl:await blobToDataUrl(r.coverBlob), originalDataUrl:r.originalBlob ? await blobToDataUrl(r.originalBlob) : undefined,
+        audioDataUrl:r.audioBlob ? await blobToDataUrl(r.audioBlob) : undefined});
+      const file = new File([JSON.stringify({app:BACKUP_APP, version:BACKUP_VERSION, exportedAt:new Date().toISOString(), concepts})], "xotiic-selected-projects.json", {type:"application/json"});
+      if (file.size > MAX_IMPORT_BYTES) throw new Error("Select fewer projects. Backups must be below 120 MB.");
+      downloadFile(file);
+    },
     open: (id = "") => openEditor(id),
     refresh: () => loadConcepts(),
     use: (id) => useConcept(id, { openAudio: false }),

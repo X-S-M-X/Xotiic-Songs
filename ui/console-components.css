@@ -1,0 +1,41 @@
+html .dashboard-header h1 { font-size: clamp(1.6rem, 3vw, 2.4rem); }
+html .dashboard-header { padding-block: 1.2rem; }
+html .panel-card, html .artwork-card, html .artwork-inspector { background: var(--ui-surface); border-color: var(--ui-border); border-radius: var(--ui-radius); }
+html .field > span, html .dashboard-nav button, html .release-title, html .artwork-card strong { font-size: .9375rem; }
+html .field input, html .field select, html .field textarea { font-size: 1rem; min-height: 44px; }
+html .field small, html .artwork-card small { font-size: .8125rem; line-height: 1.5; }
+html .primary-action { color: var(--ui-action-ink); }
+#project-current { margin: 0 0 1rem; }
+.u22-bulk-tools { display: grid; gap: 1rem; margin: 1rem 0; }
+.u22-bulk-fields { display: grid; grid-template-columns: 1fr 1fr; gap: 1rem; }
+.u22-project-state { font-size: .8125rem; color: var(--ui-link); margin-top: .5rem; }
+html .artwork-card { position: relative; }
+.artwork-select-bulk { position: absolute; top: .6rem; left: .6rem; z-index: 2; accent-color: var(--ui-accent); width: 24px; height: 24px; }
+#metadata-review { margin: 1rem 0; }
+@media (min-width: 1100px) {
+  html .artwork-workspace { grid-template-columns: minmax(0, 1fr) 320px; }
+  html .edit-release-modal { max-width: 1100px; }
+  html .release-form { max-width: none; }
+}
+@media (max-width: 720px) {
+  html .dashboard-main { padding-inline: .75rem; }
+  html .dashboard-nav button { min-height: 48px; font-size: .8125rem; }
+  html .artwork-workspace { display: block; }
+  html .artwork-inspector { margin-top: 1rem; }
+  html .artwork-editor-modal, html .edit-release-modal { width: 100%; max-width: 100%; max-height: 100dvh; border-radius: 1rem 1rem 0 0; }
+  .u22-bulk-fields { grid-template-columns: 1fr; }
+  .u22-actions button { flex: 1 1 130px; }
+}
+
+html .dashboard-header #dashboard-subtitle { font-size:1rem; line-height:1.6; max-width:65ch; }
+html .artwork-toolbar p, html .artwork-local-notice p, html .u22-note { font-size:.875rem; line-height:1.6; }
+body[data-admin-panel="artwork"] .dashboard-header { padding-block:.5rem; justify-content:flex-end; }
+body[data-admin-panel="artwork"] .dashboard-header > div:first-child { display:none; }
+html .artwork-heading h2 { font-size:clamp(1.5rem,3vw,2rem); }
+@media(max-width:720px) {
+  html .dashboard-header { gap:.75rem; padding-block:.75rem; }
+  html .dashboard-header h1 { margin-block:.25rem; }
+  html .artwork-local-notice { padding:.75rem; }
+  html .artwork-summary { margin-block:.75rem; }
+  html .artwork-heading { gap:.75rem; }
+}

@@ -1,6 +1,7 @@
 window.XOTIIC_ADMIN_CONFIG = Object.freeze({
   owner: "x-s-m-x",
   repository: "Xotiic-Songs",
+  privateRepository: "Xotiic-Songs-Private",
   branch: "main",
   requiredGitHubLogin: "x-s-m-x",
   publicSiteUrl: "../",

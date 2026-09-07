@@ -1,7 +1,7 @@
 (() => {
   "use strict";
 
-  const APP_VERSION = "21.0.0";
+  const APP_VERSION = "22.0.0";
 
   const rawCatalog = Array.isArray(window.XOTIICDUCK_RELEASES)
     ? window.XOTIICDUCK_RELEASES
@@ -96,9 +96,9 @@
         trackNumber: Math.max(0, Math.floor(Number(entry.trackNumber) || 0)),
         discNumber: Math.max(0, Math.floor(Number(entry.discNumber) || 0)),
         genre: text(entry.genre || "Music"),
-        franchise: text(entry.franchise).trim().slice(0, 80),
+        franchise: text(entry.franchise).trim().slice(0, 500),
         mood: text(entry.mood).trim().slice(0, 60),
-        character: text(entry.character).trim().slice(0, 80),
+        character: text(entry.character).trim().slice(0, 500),
         energy: text(entry.energy).trim().slice(0, 24),
         vocalStyle: text(entry.vocalStyle).trim().slice(0, 60),
         performance: text(entry.performance).trim().slice(0, 30),
@@ -114,6 +114,10 @@
         cover: versionedMediaPath(entry.cover, entry, index),
         description: text(entry.description).trim(),
         lyrics: typeof entry.lyrics === "string" ? entry.lyrics.trim().slice(0, 30000) : "",
+        relatedReleaseIds: cleanList(entry.relatedReleaseIds, 20),
+        versionLabel: text(entry.versionLabel).slice(0, 80),
+        spotifyUrl: globalThis.XotiicReleaseModel.safeUrl(entry.spotifyUrl),
+        appleMusicUrl: globalThis.XotiicReleaseModel.safeUrl(entry.appleMusicUrl),
         youtubeUrl: safeYouTubeUrl(entry.youtubeUrl || entry.youtube),
         catalogTimestamp: catalogTimestamp(entry, index),
         catalogOrder: index,
@@ -579,6 +583,10 @@
     const primary = $("#hero-primary");
     if (tracks.length) {
       const latestTrack = latest[0];
+      $("#featured-title").textContent = latestTrack.title;
+      $("#featured-description").textContent = latestTrack.description || `${latestTrack.artist} · ${latestTrack.genre}`;
+      $("#featured-details").hidden = false;
+      $("#featured-details").dataset.releaseOpen = latestTrack.id;
       const heroCover = $("#hero-anime-cover");
       heroCover.src = latestTrack.cover;
       heroCover.hidden = false;
@@ -587,6 +595,9 @@
       $("#hero-track-meta").textContent = `${latestTrack.artist} · ${latestTrack.album}`;
       document.documentElement.style.setProperty("--hero-cover-image", `url(${JSON.stringify(latestTrack.cover)})`);
       const playing = isTrackPlaying(latestTrack.id);
+      primary.setAttribute("role", "button");
+      primary.tabIndex = 0;
+      primary.onkeydown = (event) => { if (event.key === " " || event.key === "Enter") { event.preventDefault(); primary.click(); } };
       primary.removeAttribute("href");
       primary.removeAttribute("target");
       primary.removeAttribute("rel");
@@ -776,6 +787,7 @@
   const currentQueue = () => activeQueueIds.map(byId).filter(Boolean);
 
   const setPlaybackQueue = (ids, label = "All tracks", playlistId = null) => {
+    clearQueueUndo();
     const validIds = [...new Set(ids.filter((id) => byId(id)))];
     activeQueueIds = validIds.length ? validIds : tracks.map((track) => track.id);
     playbackContextLabel = label;
@@ -871,7 +883,7 @@
     $("#queue-list").innerHTML = naturalQueue.map((track, index) => {
       const current = isCurrentTrack(track.id);
       const playing = isTrackPlaying(track.id);
-      return `<article class="queue-row${current ? " active" : ""}">
+      return `<article class="queue-row${current ? " active" : ""}" draggable="${!current}" data-queue-id="${escapeHtml(track.id)}">
         <button class="queue-row-main${trackStateClass(track.id)}" data-queue-play="${escapeHtml(track.id)}" data-track-action="${escapeHtml(track.id)}" aria-label="${escapeHtml(trackActionLabel(track))}">
           <span class="queue-position">${index + 1}</span>${artwork(track, true)}
           <span><strong>${escapeHtml(track.title)}</strong><small>${escapeHtml(track.artist)} · ${formatTime(track.duration)}<span data-track-play-status>${current ? ` · ${playing ? "Playing" : "Paused"}` : ""}</span></small></span>${trackActionIcon(track)}
@@ -939,6 +951,7 @@
     layer.hidden = false;
     document.body.classList.add("modal-open");
     requestAnimationFrame(() => layer.querySelector(focusSelector)?.focus());
+    document.dispatchEvent(new CustomEvent("xotiic:panelchange", { detail: { modal: layer.id } }));
   };
 
   const accentNames = Object.freeze({
@@ -1130,6 +1143,7 @@
     const from = playlist.trackIds.indexOf(trackId);
     const to = Math.min(playlist.trackIds.length - 1, Math.max(0, from + Number(direction)));
     if (from < 0 || from === to) return;
+    rememberQueue();
     [playlist.trackIds[from], playlist.trackIds[to]] = [playlist.trackIds[to], playlist.trackIds[from]];
     playlist.updatedAt = Date.now();
     if (activeQueuePlaylistId === playlist.id) activeQueueIds = playlist.trackIds.filter((id) => byId(id));
@@ -1158,6 +1172,7 @@
 
   const playNext = (trackId) => {
     if (!byId(trackId) || trackId === currentTrack?.id) return;
+    rememberQueue();
     const without = activeQueueIds.filter((id) => id !== trackId);
     const currentIndex = Math.max(0, without.indexOf(currentTrack?.id));
     without.splice(currentIndex + 1, 0, trackId);
@@ -1173,8 +1188,46 @@
     showToast(`${byId(trackId).title} will play next.`);
   };
 
+  let queueUndo = null;
+  const clearQueueUndo = () => {
+    queueUndo = null;
+    document.dispatchEvent(new CustomEvent("xotiic:queueundo", {detail:{available:false}}));
+  };
+  const rememberQueue = () => {
+    queueUndo = { ids: [...activeQueueIds], label: playbackContextLabel, playlist: activeQueuePlaylistId, currentId: currentTrack?.id };
+    document.dispatchEvent(new CustomEvent("xotiic:queueundo", { detail: { available: true } }));
+  };
+  const undoQueue = () => {
+    if (!queueUndo) return false;
+    // Do not restore an obsolete queue after a different song/context was selected.
+    if (queueUndo.currentId !== currentTrack?.id) { queueUndo = null; return false; }
+    activeQueueIds = queueUndo.ids.filter((id) => byId(id));
+    playbackContextLabel = queueUndo.label;
+    activeQueuePlaylistId = queueUndo.playlist;
+    queueUndo = null;
+    shuffleBag = [];
+    shuffleHistory = [];
+    saveSession(true); renderQueue(); renderSideQueue();
+    $("#now-playing-context").textContent = playbackContextLabel;
+    document.dispatchEvent(new CustomEvent("xotiic:queueundo", { detail: { available: false } }));
+    return true;
+  };
+  const reorderQueue = (fromId, toId) => {
+    if (fromId === currentTrack?.id || toId === currentTrack?.id) return false;
+    const from = activeQueueIds.indexOf(fromId), to = activeQueueIds.indexOf(toId);
+    if (from < 0 || to < 0 || from === to) return false;
+    rememberQueue();
+    activeQueueIds.splice(from, 1);
+    activeQueueIds.splice(to, 0, fromId);
+    activeQueuePlaylistId = null; playbackContextLabel = "Custom queue";
+    shuffleBag = []; shuffleHistory = [];
+    saveSession(true); renderQueue(); renderSideQueue();
+    return true;
+  };
+
   const removeQueueItem = (trackId) => {
     if (trackId === currentTrack?.id) return;
+    rememberQueue();
     activeQueueIds = activeQueueIds.filter((id) => id !== trackId);
     shuffleBag = [];
     shuffleHistory = [];
@@ -1187,6 +1240,7 @@
 
   const clearUpcoming = () => {
     if (!currentTrack) return;
+    rememberQueue();
     activeQueueIds = [currentTrack.id];
     shuffleBag = [];
     shuffleHistory = [];
@@ -1303,6 +1357,7 @@
   };
 
   const switchView = (view) => {
+    if (!["home", "discover", "library", "release"].includes(view)) return;
     currentView = view;
     $$('[data-panel]').forEach((panel) => { panel.hidden = panel.dataset.panel !== view; });
     $$('[data-view]').forEach((button) => {
@@ -1313,6 +1368,7 @@
     });
     if (view === "discover") renderDiscover();
     if (view === "library") renderLibrary();
+    document.dispatchEvent(new CustomEvent("xotiic:viewchange", { detail: { view } }));
     window.scrollTo({ top: 0, behavior: window.matchMedia("(prefers-reduced-motion: reduce)").matches ? "auto" : "smooth" });
   };
 
@@ -1452,6 +1508,7 @@
   };
 
   const setTrack = async (track, autoplay = true) => {
+    clearQueueUndo();
     if (!track) return;
     const changed = currentTrack?.id !== track.id || audio.src !== new URL(track.audio, location.href).href;
     currentTrack = track;
@@ -1471,7 +1528,7 @@
       url.searchParams.set("track", track.id);
       if (currentView !== "home") url.searchParams.set("view", currentView);
       else url.searchParams.delete("view");
-      history.replaceState(null, "", `${url.pathname}${url.search}${url.hash}`);
+      history.replaceState(history.state, "", `${url.pathname}${url.search}${url.hash}`);
     } catch { /* Deep-link updates are optional in restricted browser modes. */ }
     if (autoplay) {
       try {
@@ -1624,6 +1681,7 @@
   const closeModals = () => {
     for (const layer of modalLayers()) layer.hidden = true;
     activeModal = null;
+    document.dispatchEvent(new CustomEvent("xotiic:panelchange", { detail: { modal: null } }));
     document.body.classList.remove("modal-open");
     const returnTarget = modalReturnFocus;
     modalReturnFocus = null;
@@ -1636,11 +1694,13 @@
     $("#now-playing-layer").hidden = false;
     document.body.classList.add("now-playing-open");
     $("#now-playing-close").focus();
+    document.dispatchEvent(new CustomEvent("xotiic:panelchange", { detail: { modal: "now-playing-layer" } }));
   };
 
   const closeNowPlaying = () => {
     $("#now-playing-layer").hidden = true;
     document.body.classList.remove("now-playing-open");
+    document.dispatchEvent(new CustomEvent("xotiic:panelchange", { detail: { modal: null } }));
     $("#player-open").focus({ preventScroll: true });
   };
 
@@ -2202,6 +2262,12 @@
   };
   globalThis.XotiicPlayer = Object.freeze({
     version: APP_VERSION,
+    switchView,
+    closePanels: () => { closeModals(); if (!$("#now-playing-layer").hidden) closeNowPlaying(); },
+    openPanel: (id) => { if (id === "queue-layer") renderQueue(); return id === "now-playing-layer" ? openNowPlaying() : openModal(document.getElementById(id)); },
+    getQueue: () => currentQueue().map(copyTrack),
+    undoQueue,
+    reorderQueue,
     getTracks: () => tracks.map(copyTrack),
     getCurrentTrack: () => copyTrack(currentTrack),
     getPlaylists: () => playlists.map(copyPlaylist),

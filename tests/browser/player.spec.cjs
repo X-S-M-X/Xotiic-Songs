@@ -1,0 +1,34 @@
+const {test,expect}=require("@playwright/test");
+test("release routes, settings and queue remain usable",async({page})=>{
+  const errors=[];page.on("pageerror",e=>errors.push(e.message));
+  await page.goto("/");
+  await expect(page.locator("#health-version")).toContainText("22.0.0");
+  await page.locator("#home-catalog [data-release-open]").first().click();
+  await expect(page).toHaveURL(/#release\//);
+  await page.reload();
+  await expect(page.locator('[data-panel="release"] h1')).toBeVisible();
+  await page.getByRole("button",{name:"Back to music",exact:true}).click();
+  await expect(page.locator('[data-panel="discover"]')).toBeVisible();
+  await page.getByRole("button",{name:"Open appearance settings",exact:true}).click();
+  await expect(page.locator("#settings-layer")).toBeVisible();
+  await page.goBack();
+  await expect(page.locator("#settings-layer")).toBeHidden();
+  await page.locator("#player-open").click();
+  await page.locator("#now-playing-queue").click();
+  await expect(page.locator("#queue-layer")).toBeVisible();
+  const before=await page.locator("[data-queue-remove]").count();
+  await page.locator("[data-queue-remove]:not([disabled])").first().click();
+  await page.locator("#queue-undo").click();
+  await expect(page.locator("[data-queue-remove]")).toHaveCount(before);
+  const box=await page.locator("#queue-clear").boundingBox();
+  expect(box.height).toBeGreaterThanOrEqual(44);
+  expect(await page.locator("#queue-list").evaluate(e=>e.scrollWidth<=e.clientWidth+1)).toBe(true);
+  expect(errors).toEqual([]);
+});
+test("console entry loads without horizontal overflow",async({page})=>{
+  const errors=[];page.on("pageerror",e=>errors.push(e.message));
+  await page.goto("/admin/");
+  await expect(page.locator("#setup-view")).toBeVisible();
+  expect(await page.locator("body").evaluate(e=>e.scrollWidth<=document.documentElement.clientWidth+1)).toBe(true);
+  expect(errors).toEqual([]);
+});

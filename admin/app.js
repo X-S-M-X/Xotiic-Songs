@@ -76,13 +76,14 @@
     .toLowerCase()
     .replace(/[^a-z0-9]+/g, "-")
     .replace(/^-+|-+$/g, "")
-    .slice(0, 80);
+    .slice(0, 500);
   const safeAssetUrl = (path) => {
     const clean = text(path).trim().replaceAll("\\", "/").replace(/^\/+/, "");
     if (!/^(music|covers)\/[a-zA-Z0-9._/-]+$/.test(clean) || clean.includes("..")) return "";
     return `../${clean.split("/").map(encodeURIComponent).join("/")}`;
   };
   const releaseAssetUrl = (release, path) => {
+    if (state.publisher?.privateIds?.has(release?.id)) return state.publisher.cachedUrl(release, path);
     const safe = safeAssetUrl(path);
     if (!safe) return "";
     const revision = Date.parse(text(release?.updatedAt || release?.publishedAt || release?.releaseAt));
@@ -116,9 +117,7 @@
     || Date.parse(text(release.releaseAt))
     || (/^\d{4}-\d{2}-\d{2}$/.test(text(release.releaseDate)) ? Date.parse(`${release.releaseDate}T00:00:00`) : 0)
     || index;
-  const effectiveStatus = (release, now = Date.now()) => release?.status === "scheduled" && Date.parse(text(release.releaseAt)) <= now
-    ? "published"
-    : ["published", "scheduled", "draft", "archived"].includes(release?.status) ? release.status : "draft";
+  const effectiveStatus = (release) => ["published", "scheduled", "draft", "archived"].includes(release?.status) ? release.status : "draft";
   const formatReleaseMoment = (release) => {
     if (release?.status === "scheduled" && Number.isFinite(Date.parse(text(release.releaseAt)))) {
       return new Intl.DateTimeFormat(undefined, { dateStyle: "medium", timeStyle: "short" }).format(new Date(release.releaseAt));
@@ -259,9 +258,11 @@
     syncPreviewUi();
   };
 
-  const playCatalogPreview = (id) => {
+  const playCatalogPreview = async (id) => {
     const release = state.releases.find((entry) => entry.id === id);
-    const src = releaseAssetUrl(release, release?.audio);
+    let src = releaseAssetUrl(release, release?.audio);
+    try { if (release && state.publisher?.privateIds.has(id)) src = await state.publisher.previewUrl(release, release.audio); }
+    catch (error) { showToast(error.message, "error"); return; }
     if (!release || !src) {
       showToast("That release does not have a playable MP3 path.", "error");
       return;
@@ -456,10 +457,11 @@
     }
   };
 
-  const makePublisher = (token) => new GitHubPublisher({
+  const makePublisher = (token) => new globalThis.XotiicPrivatePublisher({
     token,
     owner: config.owner,
     repository: config.repository,
+    privateRepository: config.privateRepository,
     branch: config.branch,
     requiredLogin: config.requiredGitHubLogin,
     apiVersion: config.githubApiVersion,
@@ -480,6 +482,7 @@
 
   const lockConsole = (message = "") => {
     closeAdminPreview();
+    state.publisher?.dispose?.();
     state.token = "";
     state.publisher = null;
     state.pendingRelease = null;
@@ -684,6 +687,7 @@
   const selectAdminPanel = (name) => {
     $$('[data-panel]').forEach((panel) => { panel.hidden = panel.dataset.panel !== name; });
     $$('[data-admin-panel]').forEach((button) => button.classList.toggle("active", button.dataset.adminPanel === name));
+    document.body.dataset.adminPanel = name;
     const headings = {
       overview: ["Release overview", "See what is live, scheduled, drafted, and ready for your next move."],
       artwork: ["Artwork Vault", "Store square covers and working song ideas now, then attach the final MP3 later."],
@@ -861,14 +865,14 @@
     const modes = ["published", "scheduled", "draft"];
     state.suppressDraftSave = true;
     $("#release-title").value = text(draft.title).slice(0, 100);
-    $("#release-artist").value = text(draft.artist).slice(0, 80) || "XotiicDuck";
+    $("#release-artist").value = text(draft.artist).slice(0, 500) || "XotiicDuck";
     $("#release-album").value = albums.includes(draft.album) ? draft.album : "Single";
     $("#release-collection").value = text(draft.collection).slice(0, 100);
     $("#release-track-number").value = Number(draft.trackNumber) > 0 ? String(Math.min(999, Math.floor(Number(draft.trackNumber)))) : "";
     $("#release-genre").value = text(draft.genre).slice(0, 60) || "Anime J-Rock";
-    $("#release-franchise").value = text(draft.franchise).slice(0, 80);
+    $("#release-franchise").value = text(draft.franchise).slice(0, 500);
     $("#release-mood").value = text(draft.mood).slice(0, 60);
-    $("#release-character").value = text(draft.character).slice(0, 80);
+    $("#release-character").value = text(draft.character).slice(0, 500);
     $("#release-energy").value = ["Low", "Medium", "High"].includes(draft.energy) ? draft.energy : "";
     $("#release-vocal-style").value = text(draft.vocalStyle).slice(0, 60);
     $("#release-performance").value = ["Solo", "Versus", "Collaboration"].includes(draft.performance) ? draft.performance : "";
@@ -916,6 +920,7 @@
     if (state.coverObjectUrl) URL.revokeObjectURL(state.coverObjectUrl);
     state.audioFile = null;
     state.coverFile = null;
+    state.originalCoverFile = null;
     state.audioDuration = 0;
     state.coverWidth = 0;
     state.coverHeight = 0;
@@ -997,6 +1002,8 @@
     if (similarReleaseIds.length) release.similarReleaseIds = similarReleaseIds;
     if (credits) release.credits = credits;
     if ($("#release-explicit").checked) release.explicit = true;
+    if ($("#release-form").dataset.projectId) release.projectId = $("#release-form").dataset.projectId;
+    document.dispatchEvent(new CustomEvent("xotiic:buildrelease", {detail: {release, prefix: "release"}}));
     return release;
   };
 
@@ -1043,8 +1050,8 @@
     $("#review-visibility").textContent = state.pendingRelease.status === "published"
       ? "This release will become public after GitHub Pages finishes its deployment."
       : state.pendingRelease.status === "scheduled"
-        ? `This release stays hidden until ${formatReleaseMoment(state.pendingRelease)}, then appears automatically.`
-        : "This release will be uploaded as a hidden draft and will not appear in the public player.";
+        ? `Stored privately until ${formatReleaseMoment(state.pendingRelease)}. Publication checks run twice an hour and GitHub may delay them.`
+        : "This release will be stored in your separate private repository.";
     $("#publish-release").querySelector("span").textContent = state.pendingRelease.status === "published" ? "Publish to GitHub" : state.pendingRelease.status === "scheduled" ? "Schedule on GitHub" : "Save draft to GitHub";
     const cover = $("#review-cover");
     cover.style.backgroundImage = `url(${JSON.stringify(state.coverObjectUrl).slice(1, -1)})`;
@@ -1082,9 +1089,10 @@
       renderReleases();
       $("#catalog-health").textContent = `${state.releases.length} release${state.releases.length === 1 ? "" : "s"} connected`;
       await new Promise((resolve) => setTimeout(resolve, 650));
+      document.dispatchEvent(new CustomEvent("xotiic:releasecommitted", {detail: state.pendingRelease}));
       $("#progress-modal").hidden = true;
       resetReleaseForm({ clearDraft: true });
-      showToast(pendingStatus === "scheduled" ? "Release scheduled. It will appear automatically at the chosen time." : pendingStatus === "draft" ? "Draft saved privately in the catalog." : "Release committed. GitHub Pages will update the player shortly.");
+      showToast(pendingStatus === "scheduled" ? "Saved privately. The publisher will check after the chosen time." : pendingStatus === "draft" ? "Draft saved in private storage." : "Release committed. GitHub Pages will update the player shortly.");
     } catch (error) {
       $("#progress-modal").hidden = true;
       showToast(friendlyError(error), "error");
@@ -1146,6 +1154,7 @@
     $("#edit-cover-file").value = "";
     $("#edit-audio-copy").textContent = `Current: ${text(release.audio)} · ${formatDuration(Number(release.duration))}`;
     $("#edit-cover-copy").textContent = `Current: ${text(release.cover)}`;
+    document.dispatchEvent(new CustomEvent("xotiic:editrelease", {detail:release}));
     $("#edit-release-modal").hidden = false;
     document.body.classList.add("modal-open");
     requestAnimationFrame(() => $("#edit-title").focus());
@@ -1239,6 +1248,7 @@
     if ($("#edit-explicit").checked) next.explicit = true; else delete next.explicit;
     delete next.youtube;
     if (youtubeUrl) next.youtubeUrl = youtubeUrl; else delete next.youtubeUrl;
+    document.dispatchEvent(new CustomEvent("xotiic:buildrelease", {detail: {release: next, prefix: "edit"}}));
 
     state.busy = true;
     $("#edit-release-modal").hidden = true;
@@ -1248,6 +1258,7 @@
     try {
       const result = await state.publisher.updateRelease({
         id: previous.id,
+        expectedUpdatedAt: previous.updatedAt || "",
         release: next,
         audioFile: state.editAudioFile,
         coverFile: state.editCoverFile,
@@ -1514,6 +1525,7 @@
   $("#cover-file").addEventListener("change", async (event) => {
     const file = event.target.files?.[0];
     state.coverFile = null;
+    state.originalCoverFile = null;
     if (!file) return updateReleaseSummary();
     if (!/^image\/(jpeg|png|webp)$/.test(file.type) && !/\.(jpe?g|png|webp)$/i.test(file.name)) {
       event.target.value = "";
@@ -1526,6 +1538,7 @@
       return;
     }
     try {
+      state.originalCoverFile = file;
       const prepared = await prepareCoverFile(file);
       if (state.coverObjectUrl) URL.revokeObjectURL(state.coverObjectUrl);
       state.coverFile = prepared.file;
@@ -1752,12 +1765,23 @@
   }
 
   globalThis.XotiicAdmin = Object.freeze({
-    version: "21.0.0",
+    version: "22.0.0",
+    editRelease: (id) => { if (!state.publisher || state.busy) return false; if (!state.releases.some((r) => r.id === id)) return false; selectAdminPanel("releases"); openReleaseEditor(id); return true; },
+    setOriginalCover: (blob) => { state.originalCoverFile = blob; },
+    updateMetadata: async (changes) => {
+      if (!state.publisher || state.busy) throw new Error("Unlock the console and finish the current operation first.");
+      state.busy = true;
+      try { const result = await state.publisher.updateMetadata(changes); state.releases = result.releases; renderReleases(); return result; }
+      catch (error) { if (error.catalog) { state.releases = error.catalog.releases; renderReleases(); } throw error; }
+      finally { state.busy = false; }
+    },
+    privateStatus: () => state.publisher?.privateStatus || "Unlock the console to check private storage.",
     getReleases: () => JSON.parse(JSON.stringify(state.releases)),
     getReleaseFiles: () => ({
       audioFile: state.audioFile,
       coverFile: state.coverFile,
       audioDuration: state.audioDuration,
+      originalCoverFile: state.originalCoverFile,
       coverWidth: state.coverWidth,
       coverHeight: state.coverHeight,
     }),
