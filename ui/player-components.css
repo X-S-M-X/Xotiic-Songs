@@ -85,7 +85,8 @@ html[data-density="compact"] .release-card { padding: .4rem; }
 html .queue-modal { grid-template-rows: auto auto minmax(0,1fr); }
 html #queue-list { grid-row: 3; min-height: 0; }
 html #queue-undo { grid-row: 2; min-height: 44px; margin: .75rem 1rem; }
-html #queue-save, html #queue-clear { min-height: 44px; font-size: .875rem; }
+html .queue-heading-actions #queue-save,
+html .queue-heading-actions #queue-clear { min-height: 44px; height: auto; font-size: .875rem; }
 html .release-meta h3 { font-size: 1rem; line-height: 1.4; }
 html .release-meta p { font-size: .8125rem; }
 @media (max-width:720px) {

@@ -8,7 +8,7 @@ const SHELL = [
   "./",
   "./index.html",
   "./theme.js?v=20.1",
-  "./ui/player.css?v=22.0.0&rev=d058861cbe22",
+  "./ui/player.css?v=22.0.0&rev=755eb6685101",
   "./ui/contrast.js?v=22.0.0&rev=9cf31ddeba2d",
   "./release-model.js?v=22.0.0&rev=b6eb5720a508",
   "./player-experience.js?v=22.0.0&rev=fc529ccc2203",
