@@ -1,19 +1,9 @@
 {
   "name": "xotiicduck-music-portable",
-  "version": "22.0.0",
+  "version": "21.0.0",
   "private": true,
-  "description": "XotiicDuck Music player, song projects and private release publishing.",
+  "description": "Static PWA validation for XotiicDuck Music Update 21 adaptive listener and Artwork Vault.",
   "scripts": {
-    "dev": "vite --host 0.0.0.0 --port 4173 --strictPort",
-    "build:ui": "node scripts/build-ui.cjs",
-    "test": "node scripts/check-syntax.cjs && node scripts/build-ui.cjs --check && node --test tests/*.test.cjs",
-    "test:browser": "playwright test",
-    "build:public": "node scripts/build-public.cjs"
-  },
-  "devDependencies": {
-    "@playwright/test": "^1.63.0",
-    "fake-indexeddb": "^6.2.5",
-    "jsdom": "^26.1.0",
-    "vite": "^8.2.2"
+    "test": "node --check theme.js && node --check app.js && node --check offline.js && node --check download-manager.js && node --check discovery.js && node --check storage-tools.js && node --check online-config.js && node --check online-platform.js && node --check connected-devices.js && node --check range.js && node --check sw.js && node --check admin/theme-sync.js && node --check admin/app.js && node --check admin/studio.js && node --check admin/artwork-vault.js && node --check admin/crypto.js && node --check admin/github.js && node --check admin/sw.js && node --test tests/*.test.cjs"
   }
 }

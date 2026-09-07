@@ -1,6 +1,6 @@
 importScripts("./range.js?v=20");
 
-const CACHE_NAME = "xotiicduck-portable-v22-studio";
+const CACHE_NAME = "xotiicduck-portable-v21-adaptive-ui";
 const MEDIA_CACHE = "xotiic-media-v1";
 const scoped = (file) => new URL(file, self.registration.scope).href;
 const CATALOG_URL = scoped("./catalog.js");
@@ -8,21 +8,27 @@ const SHELL = [
   "./",
   "./index.html",
   "./theme.js?v=20.1",
-  "./ui/player.css?v=22.0.0&rev=755eb6685101",
-  "./ui/contrast.js?v=22.0.0&rev=9cf31ddeba2d",
-  "./release-model.js?v=22.0.0&rev=b6eb5720a508",
-  "./player-experience.js?v=22.0.0&rev=fc529ccc2203",
+  "./styles.css?v=20",
+  "./player-hotfix.css?v=1",
+  "./layout.css?v=20",
+  "./anime-theme.css?v=20",
+  "./update-13-14.css?v=20",
+  "./update-15-16.css?v=20",
+  "./update-17-18.css?v=20",
+  "./update-19-20.css?v=20",
+  "./update-20-1.css?v=20.1.1",
+  "./update-21.css?v=21.0.0",
   "./catalog.js",
   "./range.js?v=20",
   "./offline.js?v=20",
-  "./app.js?v=22.0.0&rev=093a8a1e1f39",
+  "./app.js?v=21.0.0",
   "./download-manager.js?v=20",
   "./discovery.js?v=20",
   "./storage-tools.js?v=20",
   "./online-config.js?v=20",
   "./online-platform.js?v=20",
   "./connected-devices.js?v=20.1",
-  "./manifest.webmanifest?v=22",
+  "./manifest.webmanifest?v=21",
   "./favicon.svg?v=20",
   "./apple-touch-icon.png?v=20",
   "./icon-192.png?v=20",

@@ -14,21 +14,23 @@
     <meta name="format-detection" content="telephone=no" />
     <meta name="robots" content="noindex, nofollow, noarchive" />
     <title>Xotiic Upload | Artist Console</title>
-    <link rel="manifest" href="./manifest.webmanifest?v=22" />
+    <link rel="manifest" href="./manifest.webmanifest?v=21" />
     <link rel="icon" href="../favicon.svg?v=20" />
     <link rel="apple-touch-icon" href="../apple-touch-icon.png?v=20" />
     <script src="./theme-sync.js?v=20.1"></script>
-    <link rel="stylesheet" href="../ui/console.css?v=22.0.0&rev=dd4e0e32286b" />
-    <script src="../release-model.js?v=22.0.0&rev=b6eb5720a508" defer></script>
-    <script src="../ui/contrast.js?v=22.0.0&rev=9cf31ddeba2d" defer></script>
-    <script src="./config.js?v=22.0.0&rev=bbfffba4ca82" defer></script>
+    <link rel="stylesheet" href="./styles.css?v=20" />
+    <link rel="stylesheet" href="./update-12.css?v=20" />
+    <link rel="stylesheet" href="./update-13-14.css?v=20" />
+    <link rel="stylesheet" href="./update-15-16.css?v=20" />
+    <link rel="stylesheet" href="./admin-hotfix.css?v=20.1" />
+    <link rel="stylesheet" href="./admin-player-v2.css?v=20.2" />
+    <link rel="stylesheet" href="./update-21.css?v=21.0.0" />
+    <script src="./config.js?v=20" defer></script>
     <script src="./crypto.js?v=20" defer></script>
-    <script src="./github.js?v=22.0.0&rev=c1ddab36772a" defer></script>
-    <script src="./private-publisher.js?v=22.0.0&rev=54f08b457362" defer></script>
-    <script src="./app.js?v=22.0.0&rev=03a7d63b5f6e" defer></script>
+    <script src="./github.js?v=20" defer></script>
+    <script src="./app.js?v=21.0.0" defer></script>
     <script src="./studio.js?v=20" defer></script>
-    <script src="./artwork-vault.js?v=22.0.0&rev=bd9e7f3d5bfa" defer></script>
-    <script src="./project-workflow.js?v=22.0.0&rev=73bcdedd4ab4" defer></script>
+    <script src="./artwork-vault.js?v=21.0.0" defer></script>
   </head>
   <body>
     <svg class="icon-sprite" aria-hidden="true" focusable="false">
@@ -235,7 +237,7 @@
                       <label class="field field-wide"><span>Collection title</span><input id="studio-collection" maxlength="100" placeholder="Album, EP or soundtrack" /></label>
                       <label class="field"><span>Release type</span><select id="studio-release-type"><option>Album</option><option>EP</option><option>Soundtrack</option><option>Single</option></select></label>
                       <label class="field"><span>Starting track</span><input id="studio-track-start" type="number" min="1" max="999" value="1" /></label>
-                      <label class="field"><span>Franchise</span><input id="studio-franchise" maxlength="500" /></label>
+                      <label class="field"><span>Franchise</span><input id="studio-franchise" maxlength="80" /></label>
                       <label class="field"><span>Genre</span><input id="studio-genre" maxlength="60" value="Anime J-Rock" /></label>
                     </div>
                     <button id="studio-apply-album" class="secondary-action" type="button">Apply to current release</button>
@@ -290,14 +292,14 @@
                     <div class="panel-heading"><div><p class="section-label">02 / METADATA</p><h2>Release details</h2></div><span id="metadata-save-state" class="autosave-note">LOCAL DRAFT READY</span></div>
                     <div class="field-grid">
                       <label class="field field-wide"><span>Song title</span><input id="release-title" required maxlength="100" placeholder="e.g. Monarchs Collide" /></label>
-                      <label class="field"><span>Artist</span><input id="release-artist" required maxlength="500" value="XotiicDuck" /></label>
+                      <label class="field"><span>Artist</span><input id="release-artist" required maxlength="80" value="XotiicDuck" /></label>
                       <label class="field"><span>Release type</span><select id="release-album"><option>Single</option><option>EP</option><option>Album</option><option>Soundtrack</option></select></label>
                       <label class="field field-wide"><span>Album or collection title <small>optional</small></span><input id="release-collection" maxlength="100" placeholder="Leave empty for a standalone single" /><small>Songs with the same title are grouped into one collection page.</small></label>
                       <label class="field"><span>Track number <small>optional</small></span><input id="release-track-number" type="number" inputmode="numeric" min="1" max="999" placeholder="1" /></label>
                       <label class="field"><span>Genre</span><input id="release-genre" required maxlength="60" value="Anime J-Rock" /></label>
-                      <label class="field"><span>Franchise <small>optional</small></span><input id="release-franchise" maxlength="500" placeholder="e.g. Tensura" /></label>
+                      <label class="field"><span>Franchise <small>optional</small></span><input id="release-franchise" maxlength="80" placeholder="e.g. Tensura" /></label>
                       <label class="field"><span>Mood <small>optional</small></span><input id="release-mood" maxlength="60" placeholder="e.g. Cinematic battle" /></label>
-                      <label class="field"><span>Character <small>optional</small></span><input id="release-character" maxlength="500" placeholder="e.g. Rimuru Tempest" /></label>
+                      <label class="field"><span>Character <small>optional</small></span><input id="release-character" maxlength="80" placeholder="e.g. Rimuru Tempest" /></label>
                       <label class="field"><span>Energy <small>optional</small></span><select id="release-energy"><option value="">Not set</option><option>Low</option><option>Medium</option><option>High</option></select></label>
                       <label class="field"><span>Vocal style <small>optional</small></span><input id="release-vocal-style" maxlength="60" placeholder="e.g. Anime rock duet" /></label>
                       <label class="field"><span>Performance <small>optional</small></span><select id="release-performance"><option value="">Not set</option><option>Solo</option><option>Versus</option><option>Collaboration</option></select></label>
@@ -306,7 +308,7 @@
                       <label class="field field-wide"><span>Credits <small>optional</small></span><input id="release-credits" maxlength="500" placeholder="Writing, production or featured vocal credits" /></label>
                       <label class="check-field metadata-check"><input id="release-explicit" type="checkbox" /><span>Mark this release as explicit</span></label>
                       <label class="field"><span>Duration</span><input id="release-duration" inputmode="numeric" readonly placeholder="Detected from MP3" /></label>
-                      <label class="field"><span>Release ID</span><input id="release-id" required pattern="[a-z0-9]+(?:-[a-z0-9]+)*" maxlength="500" placeholder="generated-from-title" /><small>Lowercase letters, numbers and hyphens.</small></label>
+                      <label class="field"><span>Release ID</span><input id="release-id" required pattern="[a-z0-9]+(?:-[a-z0-9]+)*" maxlength="80" placeholder="generated-from-title" /><small>Lowercase letters, numbers and hyphens.</small></label>
                       <label class="field field-wide"><span>YouTube link <small>optional</small></span><input id="release-youtube" type="url" maxlength="500" inputmode="url" placeholder="https://www.youtube.com/watch?v=..." /><small>Only youtube.com and youtu.be links are accepted.</small></label>
                       <label class="field field-wide"><span>Short description <small>optional</small></span><textarea id="release-description" maxlength="280" rows="4" placeholder="A short line about the track or matchup."></textarea><small><span id="description-count">0</span>/280</small></label>
                       <label class="field field-wide"><span>Lyrics <small>optional · can be added later</small></span><textarea id="release-lyrics" maxlength="30000" rows="8" placeholder="Paste the final lyrics here whenever you want them available in Now Playing."></textarea><small><span id="lyrics-count">0</span>/30,000 · Leave empty to hide the Lyrics button.</small></label>
@@ -386,8 +388,8 @@
           <div class="artwork-editor-fields">
             <label class="field field-wide"><span>Working title</span><input id="artwork-title" required maxlength="100" placeholder="e.g. Unfinished Hero Theme" /></label>
             <label class="field"><span>Status</span><select id="artwork-status"><option value="concept">Concept</option><option value="needs-audio">Needs audio</option><option value="ready">Ready for release</option></select></label>
-            <label class="field"><span>Franchise <small>optional</small></span><input id="artwork-franchise" maxlength="500" placeholder="Anime or world" /></label>
-            <label class="field"><span>Character <small>optional</small></span><input id="artwork-character" maxlength="500" placeholder="Character or matchup" /></label>
+            <label class="field"><span>Franchise <small>optional</small></span><input id="artwork-franchise" maxlength="80" placeholder="Anime or world" /></label>
+            <label class="field"><span>Character <small>optional</small></span><input id="artwork-character" maxlength="80" placeholder="Character or matchup" /></label>
             <label class="field"><span>Mood <small>optional</small></span><input id="artwork-mood" maxlength="60" placeholder="Cinematic battle" /></label>
             <label class="field"><span>Performance <small>optional</small></span><select id="artwork-performance"><option value="">Not set</option><option>Solo</option><option>Versus</option><option>Collaboration</option></select></label>
             <label class="field field-wide"><span>Discovery tags <small>optional</small></span><input id="artwork-tags" maxlength="240" placeholder="rivalry, transformation, anime opening" /></label>
@@ -436,14 +438,14 @@
         <p class="section-label">EDIT EXISTING RELEASE</p><h2 id="edit-release-title">Update release</h2><p id="edit-release-id" class="edit-release-id"></p>
         <div class="edit-field-grid">
           <label class="field field-wide"><span>Song title</span><input id="edit-title" required maxlength="100" /></label>
-          <label class="field"><span>Artist</span><input id="edit-artist" required maxlength="500" /></label>
+          <label class="field"><span>Artist</span><input id="edit-artist" required maxlength="80" /></label>
           <label class="field"><span>Release type</span><select id="edit-album"><option>Single</option><option>EP</option><option>Album</option><option>Soundtrack</option></select></label>
           <label class="field field-wide"><span>Album or collection title <small>optional</small></span><input id="edit-collection" maxlength="100" /></label>
           <label class="field"><span>Track number <small>optional</small></span><input id="edit-track-number" type="number" inputmode="numeric" min="1" max="999" /></label>
           <label class="field"><span>Genre</span><input id="edit-genre" required maxlength="60" /></label>
-          <label class="field"><span>Franchise <small>optional</small></span><input id="edit-franchise" maxlength="500" /></label>
+          <label class="field"><span>Franchise <small>optional</small></span><input id="edit-franchise" maxlength="80" /></label>
           <label class="field"><span>Mood <small>optional</small></span><input id="edit-mood" maxlength="60" /></label>
-          <label class="field"><span>Character <small>optional</small></span><input id="edit-character" maxlength="500" /></label>
+          <label class="field"><span>Character <small>optional</small></span><input id="edit-character" maxlength="80" /></label>
           <label class="field"><span>Energy <small>optional</small></span><select id="edit-energy"><option value="">Not set</option><option>Low</option><option>Medium</option><option>High</option></select></label>
           <label class="field"><span>Vocal style <small>optional</small></span><input id="edit-vocal-style" maxlength="60" /></label>
           <label class="field"><span>Performance <small>optional</small></span><select id="edit-performance"><option value="">Not set</option><option>Solo</option><option>Versus</option><option>Collaboration</option></select></label>

@@ -1,9 +1,0 @@
-<!doctype html><meta charset="utf-8"><title>Responsive preview</title>
-<style>body{margin:0;background:#253027;color:white;font:16px system-ui}nav{padding:12px;display:flex;gap:20px;flex-wrap:wrap}a{color:#c9ff90}iframe{display:block;margin:auto;border:0;height:820px;max-width:100%}</style>
-<nav><a href="?width=320">320 px</a><a href="?width=390">390 px</a><a href="?width=834">834 px</a><a href="?width=1280">Desktop</a><a href="?width=390&admin=1">Phone console</a><a href="?width=1280&admin=1">Desktop console</a></nav>
-<iframe title="App preview"></iframe><script>
-const params=new URLSearchParams(location.search),width=Number(params.get("width"))||390;
-document.querySelector("iframe").style.width=Math.max(320,Math.min(width,1440))+"px";
-document.querySelector("iframe").src=params.has("admin")?"/tests/console-preview.html":"/";
-</script>
-

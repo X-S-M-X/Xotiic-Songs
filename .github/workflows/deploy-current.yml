@@ -1,18 +1,17 @@
 name: Deploy current XotiicDuck site
+
 on:
   push:
-    branches: [main]
+    branches:
+      - main
   workflow_dispatch:
+
 concurrency:
   group: xotiicduck-pages
   cancel-in-progress: false
+
 jobs:
-  validate:
-    uses: ./.github/workflows/validate.yml
-    permissions:
-      contents: read
   publish:
-    needs: validate
     runs-on: ubuntu-latest
     permissions:
       contents: read
@@ -22,17 +21,36 @@ jobs:
       name: github-pages
       url: ${{ steps.deployment.outputs.page_url }}
     steps:
-      - uses: actions/checkout@v5
-        with:
-          ref: ${{ github.sha }}
-      - uses: actions/setup-node@v5
-        with:
-          node-version: 22
-      - uses: actions/configure-pages@v5
-      - name: Build public assets from the validated commit
-        run: npm run build:public
-      - uses: actions/upload-pages-artifact@v4
+      - name: Check out the current main branch
+        uses: actions/checkout@v4
+
+      - name: Configure GitHub Pages
+        uses: actions/configure-pages@v5
+
+      - name: Assemble the public static site
+        run: |
+          mkdir _site
+          rsync -a ./ _site/ \
+            --exclude='.git/' \
+            --exclude='.github/' \
+            --exclude='.release-train/' \
+            --exclude='_site/' \
+            --exclude='tests/' \
+            --exclude='analytics-worker/' \
+            --exclude='android-twa/' \
+            --exclude='node_modules/' \
+            --exclude='*.md' \
+            --exclude='package.json' \
+            --exclude='package-lock.json'
+          test -f _site/index.html
+          test -f _site/catalog.js
+          test -f _site/admin/admin-hotfix.css
+
+      - name: Upload GitHub Pages artifact
+        uses: actions/upload-pages-artifact@v4
         with:
           path: _site
-      - id: deployment
+
+      - name: Deploy GitHub Pages
+        id: deployment
         uses: actions/deploy-pages@v4
