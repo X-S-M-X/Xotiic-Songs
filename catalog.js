@@ -333,11 +333,15 @@ window.XOTIICDUCK_RELEASES = [
     "artist": "XotiicDuck",
     "album": "Single",
     "genre": "Anime J-Rock",
-    "releaseDate": "2026-08-10",
+    "releaseDate": "2026-09-10",
     "duration": 286,
     "audio": "music/tiny-fang-thunder.mp3",
     "cover": "covers/tiny-fang-thunder.webp",
-    "status": "draft"
+    "status": "scheduled",
+    "releaseType": "Single",
+    "createdAt": "2026-09-08T23:28:12.331Z",
+    "updatedAt": "2026-09-08T23:28:12.331Z",
+    "releaseAt": "2026-09-09T12:00:00.000Z"
   },
   {
     "id": "monarchs-collide",
