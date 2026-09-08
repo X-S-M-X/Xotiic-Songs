@@ -432,7 +432,9 @@ window.XOTIICDUCK_RELEASES = [
     "duration": 427,
     "audio": "music/crimson-dragon.mp3",
     "cover": "covers/crimson-dragon.webp",
-    "status": "draft"
+    "status": "archived",
+    "archivedAt": "2026-09-08T10:10:46.071Z",
+    "updatedAt": "2026-09-08T10:10:47.950Z"
   },
   {
     "id": "silent-equation",
