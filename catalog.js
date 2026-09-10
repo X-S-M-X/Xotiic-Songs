@@ -566,9 +566,10 @@ window.XOTIICDUCK_RELEASES = [
     "duration": 401,
     "audio": "music/seven-gates-of-illusion.mp3",
     "cover": "covers/seven-gates-of-illusion.webp",
-    "status": "draft",
+    "status": "archived",
     "createdAt": "2026-08-16T01:02:41.083Z",
-    "updatedAt": "2026-08-16T01:02:41.083Z"
+    "updatedAt": "2026-09-10T04:18:08.483Z",
+    "archivedAt": "2026-09-10T04:18:06.293Z"
   },
   {
     "id": "last-light-of-mankind",
