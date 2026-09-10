@@ -925,13 +925,14 @@ window.XOTIICDUCK_RELEASES = [
     "album": "Single",
     "releaseType": "Single",
     "genre": "Anime J-Rock",
-    "releaseDate": "2026-08-28",
+    "releaseDate": "2026-09-11",
     "duration": 291,
     "audio": "music/no-hero-s-crown.mp3",
     "cover": "covers/no-hero-s-crown.webp",
-    "status": "draft",
+    "status": "scheduled",
     "createdAt": "2026-08-28T09:29:42.911Z",
-    "updatedAt": "2026-08-28T09:29:42.911Z"
+    "updatedAt": "2026-09-10T04:09:36.750Z",
+    "releaseAt": "2026-09-11T00:00:00.000Z"
   },
   {
     "id": "a-future-we-erase",
