@@ -689,13 +689,14 @@ window.XOTIICDUCK_RELEASES = [
     "album": "Single",
     "releaseType": "Single",
     "genre": "Anime J-Rock",
-    "releaseDate": "2026-08-23",
+    "releaseDate": "2026-09-11",
     "duration": 391,
     "audio": "music/nothing-ends-today.mp3",
     "cover": "covers/nothing-ends-today.webp",
-    "status": "draft",
+    "status": "scheduled",
     "createdAt": "2026-08-23T09:52:36.949Z",
-    "updatedAt": "2026-08-23T09:52:36.949Z"
+    "updatedAt": "2026-09-10T04:08:32.420Z",
+    "releaseAt": "2026-09-10T12:00:00.000Z"
   },
   {
     "id": "across-two-thousand-years",
