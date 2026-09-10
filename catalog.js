@@ -1029,5 +1029,21 @@ window.XOTIICDUCK_RELEASES = [
     "createdAt": "2026-09-01T09:45:15.208Z",
     "updatedAt": "2026-09-05T06:04:09.865Z",
     "publishedAt": "2026-09-05T06:04:09.865Z"
+  },
+  {
+    "id": "ashes-to-an-empire",
+    "title": "Ashes to an Empire",
+    "artist": "XotiicDuck",
+    "album": "Single",
+    "releaseType": "Single",
+    "genre": "Anime J-Rock",
+    "releaseDate": "2026-09-12",
+    "duration": 323,
+    "audio": "music/ashes-to-an-empire.mp3",
+    "cover": "covers/ashes-to-an-empire.webp",
+    "status": "scheduled",
+    "createdAt": "2026-09-10T06:27:27.076Z",
+    "updatedAt": "2026-09-10T06:27:27.076Z",
+    "releaseAt": "2026-09-11T12:00:00.000Z"
   }
 ];
