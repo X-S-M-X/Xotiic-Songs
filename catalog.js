@@ -1045,5 +1045,21 @@ window.XOTIICDUCK_RELEASES = [
     "createdAt": "2026-09-10T06:27:27.076Z",
     "updatedAt": "2026-09-10T06:27:27.076Z",
     "releaseAt": "2026-09-11T12:00:00.000Z"
+  },
+  {
+    "id": "read-the-field",
+    "title": "Read The Field",
+    "artist": "XotiicDuck",
+    "album": "Single",
+    "releaseType": "Single",
+    "genre": "Anime J-Rock",
+    "releaseDate": "2026-09-12",
+    "duration": 288,
+    "audio": "music/read-the-field.mp3",
+    "cover": "covers/read-the-field.webp",
+    "status": "scheduled",
+    "createdAt": "2026-09-10T11:56:05.344Z",
+    "updatedAt": "2026-09-10T11:56:05.344Z",
+    "releaseAt": "2026-09-12T00:00:00.000Z"
   }
 ];
