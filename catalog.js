@@ -597,9 +597,10 @@ window.XOTIICDUCK_RELEASES = [
     "duration": 455,
     "audio": "music/thrones-above-heaven.mp3",
     "cover": "covers/thrones-above-heaven.webp",
-    "status": "draft",
+    "status": "archived",
     "createdAt": "2026-08-18T04:19:34.547Z",
-    "updatedAt": "2026-08-18T04:19:34.547Z"
+    "updatedAt": "2026-09-10T04:19:33.080Z",
+    "archivedAt": "2026-09-10T04:19:30.995Z"
   },
   {
     "id": "beyond-the-rules",
