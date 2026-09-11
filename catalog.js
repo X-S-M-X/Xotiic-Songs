@@ -1061,5 +1061,20 @@ window.XOTIICDUCK_RELEASES = [
     "createdAt": "2026-09-10T11:56:05.344Z",
     "updatedAt": "2026-09-10T11:56:05.344Z",
     "releaseAt": "2026-09-12T00:00:00.000Z"
+  },
+  {
+    "id": "a-world-worth-protecting",
+    "title": "A World Worth Protecting",
+    "artist": "XotiicDuck",
+    "album": "Single",
+    "releaseType": "Single",
+    "genre": "Anime J-Rock",
+    "releaseDate": "2026-09-12",
+    "duration": 347,
+    "audio": "music/a-world-worth-protecting.mp3",
+    "cover": "covers/a-world-worth-protecting.webp",
+    "status": "draft",
+    "createdAt": "2026-09-11T23:47:51.077Z",
+    "updatedAt": "2026-09-11T23:47:51.077Z"
   }
 ];
