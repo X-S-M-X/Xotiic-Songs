@@ -3,8 +3,9 @@
 
   const config = window.XOTIIC_ADMIN_CONFIG;
   const vaultApi = window.XotiicVault;
+  const audioApi = window.XotiicAudioFiles;
   const { GitHubPublisher, GitHubError } = window.XotiicGitHub || {};
-  if (!config || !vaultApi || !GitHubPublisher) {
+  if (!config || !vaultApi || !audioApi || !GitHubPublisher) {
     document.body.textContent = "Xotiic Upload could not start. Required files are missing.";
     return;
   }
@@ -263,7 +264,7 @@
     const release = state.releases.find((entry) => entry.id === id);
     const src = releaseAssetUrl(release, release?.audio);
     if (!release || !src) {
-      showToast("That release does not have a playable MP3 path.", "error");
+      showToast("That release does not have a playable audio path.", "error");
       return;
     }
     openAdminPreview({
@@ -281,7 +282,7 @@
   const toggleAdminPreview = () => {
     const audio = previewAudio();
     if (!audio.src) return;
-    if (audio.paused) audio.play().catch(() => showToast("This MP3 could not start in the browser.", "error"));
+    if (audio.paused) audio.play().catch(() => showToast("This audio file could not start in the browser.", "error"));
     else audio.pause();
   };
 
@@ -663,7 +664,7 @@
       preview.dataset.releasePreview = text(release.id);
       preview.setAttribute("aria-pressed", "false");
       preview.textContent = "Play test";
-      preview.title = `Privately play the complete ${sourceStatus} MP3`;
+      preview.title = `Privately play the complete ${sourceStatus} audio`;
       const archive = document.createElement("button");
       archive.type = "button";
       archive.className = sourceStatus === "archived" ? "" : "danger";
@@ -686,8 +687,8 @@
     $$('[data-admin-panel]').forEach((button) => button.classList.toggle("active", button.dataset.adminPanel === name));
     const headings = {
       overview: ["Release overview", "See what is live, scheduled, drafted, and ready for your next move."],
-      artwork: ["Artwork Vault", "Store square covers and working song ideas now, then attach the final MP3 later."],
-      upload: ["Publish a new release", "Upload the final MP3 and square artwork from this device."],
+      artwork: ["Artwork Vault", "Store square covers and working song ideas now, then attach the final audio later."],
+      upload: ["Publish a new release", "Upload the final MP3 or lossless WAV and square artwork from this device."],
       releases: ["Manage your catalog", "Privately test any song, then publish, schedule, edit, hide, or archive it."],
       security: ["Security and access", "Maintain the encrypted owner vault on this device."],
     };
@@ -707,10 +708,10 @@
     probe.onloadedmetadata = () => {
       const duration = Number(probe.duration);
       cleanup();
-      if (!Number.isFinite(duration) || duration <= 0) reject(new Error("The MP3 duration could not be detected."));
+      if (!Number.isFinite(duration) || duration <= 0) reject(new Error("The audio duration could not be detected."));
       else resolve(Math.round(duration));
     };
-    probe.onerror = () => { cleanup(); reject(new Error("This MP3 could not be read by the browser.")); };
+    probe.onerror = () => { cleanup(); reject(new Error("This audio file could not be read by the browser.")); };
     probe.src = url;
   });
 
@@ -764,7 +765,7 @@
     $("#summary-title").textContent = title || "Waiting for release details";
     $("#summary-meta").textContent = audioReady && coverReady
       ? `${formatDuration(state.audioDuration)} · ${visibility}`
-      : "MP3 and cover required";
+      : "Audio and cover required";
     const summaryArt = $("#summary-art");
     summaryArt.style.backgroundImage = coverReady ? `url(${JSON.stringify(state.coverObjectUrl).slice(1, -1)})` : "";
     summaryArt.textContent = coverReady ? "" : "XD";
@@ -907,7 +908,7 @@
     $("#release-date").value = localDate();
     $("input[name='release-mode'][value='published']").checked = true;
     $("#release-schedule").value = defaultScheduleValue();
-    $("#audio-file-name").textContent = "Choose the final MP3";
+    $("#audio-file-name").textContent = "Choose the final MP3 or WAV";
     $("#audio-file-meta").textContent = `Tap to open Files · Maximum ${formatBytes(config.maxAudioBytes)}`;
     $("#cover-file-name").textContent = "Choose cover artwork";
     $("#cover-file-meta").textContent = "JPG, PNG or WebP · Square image";
@@ -974,7 +975,7 @@
       genre: $("#release-genre").value.trim(),
       releaseDate: mode === "scheduled" ? scheduleValue.slice(0, 10) : localDate(),
       duration: state.audioDuration,
-      audio: `music/${id}.mp3`,
+      audio: audioApi.path(id, state.audioFile),
       cover: `covers/${id}.${coverExtension(state.coverFile)}`,
       status: mode,
       createdAt: now,
@@ -1004,7 +1005,7 @@
     const form = $("#release-form");
     if (!form.reportValidity()) return false;
     if (!state.audioFile || !state.audioDuration) {
-      showToast("Choose a valid MP3 first.", "error");
+      showToast("Choose a valid MP3 or WAV first.", "error");
       return false;
     }
     if (!state.coverFile || !state.coverObjectUrl) {
@@ -1103,7 +1104,7 @@
     state.editAudioDuration = 0;
     state.editCoverFile = null;
     $("#edit-release-form").reset();
-    $("#edit-audio-copy").textContent = "Keep current MP3";
+    $("#edit-audio-copy").textContent = "Keep current audio";
     $("#edit-cover-copy").textContent = "Keep current cover";
   };
 
@@ -1198,7 +1199,7 @@
           ? localDate()
           : /^\d{4}-\d{2}-\d{2}$/.test(text(previous.releaseDate)) ? previous.releaseDate : localDate(),
       duration: state.editAudioFile ? state.editAudioDuration : Number(previous.duration),
-      audio: state.editAudioFile ? `music/${previous.id}.mp3` : previous.audio,
+      audio: state.editAudioFile ? audioApi.path(previous.id, state.editAudioFile) : previous.audio,
       cover: state.editCoverFile ? `covers/${previous.id}.${coverExtension(state.editCoverFile)}` : previous.cover,
       status: nextStatus,
       createdAt: previous.createdAt || now,
@@ -1441,7 +1442,7 @@
   adminPreviewAudio.addEventListener("error", () => {
     if (!adminPreviewAudio.getAttribute("src")) return;
     $("#admin-preview-status").textContent = "PREVIEW ERROR";
-    showToast("The full MP3 could not be loaded. Check the file path and connection.", "error");
+    showToast("The full audio could not be loaded. Check the file path and connection.", "error");
     syncPreviewUi();
   });
   $("#admin-preview-progress").addEventListener("input", (event) => {
@@ -1477,15 +1478,15 @@
     state.audioDuration = 0;
     syncPreviewUi();
     if (!file) return updateReleaseSummary();
-    const validType = file.type === "audio/mpeg" || file.name.toLowerCase().endsWith(".mp3");
+    const validType = audioApi.isSupported(file);
     if (!validType) {
       event.target.value = "";
-      showToast("Choose an MP3 audio file.", "error");
+      showToast("Choose an MP3 or WAV audio file.", "error");
       return;
     }
     if (file.size > config.maxAudioBytes) {
       event.target.value = "";
-      showToast(`The MP3 must be below ${formatBytes(config.maxAudioBytes)}.`, "error");
+      showToast(`The audio file must be below ${formatBytes(config.maxAudioBytes)}.`, "error");
       return;
     }
     try {
@@ -1494,10 +1495,10 @@
       state.audioDuration = duration;
       $("#release-duration").value = formatDuration(duration);
       $("#audio-file-name").textContent = file.name;
-      $("#audio-file-meta").textContent = `${formatBytes(file.size)} · ${formatDuration(duration)} · MP3 ready`;
+      $("#audio-file-meta").textContent = `${formatBytes(file.size)} · ${formatDuration(duration)} · ${audioApi.label(file)} ready`;
       $("#audio-drop").classList.add("has-file");
       if (!$("#release-title").value.trim()) {
-        const guessedTitle = file.name.replace(/\.mp3$/i, "").replaceAll(/[-_]+/g, " ").replace(/\b\w/g, (character) => character.toUpperCase());
+        const guessedTitle = file.name.replace(/\.(?:mp3|wav)$/i, "").replaceAll(/[-_]+/g, " ").replace(/\b\w/g, (character) => character.toUpperCase());
         $("#release-title").value = guessedTitle;
         if (!state.idTouched) $("#release-id").value = slugify(guessedTitle);
       }
@@ -1549,10 +1550,10 @@
     const file = event.target.files?.[0];
     state.editAudioFile = null;
     state.editAudioDuration = 0;
-    if (!file) { $("#edit-audio-copy").textContent = "Keep current MP3"; return; }
-    if (!(file.type === "audio/mpeg" || file.name.toLowerCase().endsWith(".mp3")) || file.size > config.maxAudioBytes) {
+    if (!file) { $("#edit-audio-copy").textContent = "Keep current audio"; return; }
+    if (!audioApi.isSupported(file) || file.size > config.maxAudioBytes) {
       event.target.value = "";
-      showToast(`Choose an MP3 below ${formatBytes(config.maxAudioBytes)}.`, "error");
+      showToast(`Choose an MP3 or WAV below ${formatBytes(config.maxAudioBytes)}.`, "error");
       return;
     }
     try {
@@ -1674,7 +1675,7 @@
       const release = state.releases.find((entry) => entry.id === id);
       if (!release) return;
       const restoring = Boolean(target.dataset.releaseRestore);
-      if (!window.confirm(restoring ? `Restore “${release.title}” as a hidden draft?` : `Archive “${release.title}”? Its MP3 and cover will remain safely in the repository.`)) return;
+      if (!window.confirm(restoring ? `Restore “${release.title}” as a hidden draft?` : `Archive “${release.title}”? Its audio and cover will remain safely in the repository.`)) return;
       state.busy = true;
       target.disabled = true;
       try {

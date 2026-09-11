@@ -394,7 +394,7 @@
     <div class="empty-state catalog-empty-state">
       <span>${iconMarkup("music")}</span>
       <h2>Official releases are being prepared.</h2>
-      <p>Tracks appear here only after the final MP3 and square cover have been published.</p>
+      <p>Tracks appear here only after the final audio and square cover have been published.</p>
       <a class="primary-button" href="https://www.youtube.com/@XotiicDuck" target="_blank" rel="noreferrer">${iconMarkup("play")}<span>Visit XotiicDuck on YouTube</span></a>
     </div>`;
 

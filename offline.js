@@ -209,7 +209,7 @@
       const coverUrl = absoluteUrl(track.cover);
       const [audioResponse, coverResponse] = await Promise.all([cache.match(audioUrl), cache.match(coverUrl)]);
       if (!audioResponse || !coverResponse) {
-        entries.push({ id, status: "damaged", reason: !audioResponse ? "MP3 missing" : "Cover missing" });
+        entries.push({ id, status: "damaged", reason: !audioResponse ? "Audio missing" : "Cover missing" });
         continue;
       }
       const record = manifest[id];

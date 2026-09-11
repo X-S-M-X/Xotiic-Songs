@@ -1,6 +1,6 @@
 # XotiicDuck Music
 
-An installable, offline-capable web music player for XotiicDuck releases, with a private artist console for publishing MP3 files and square covers to the connected GitHub catalog.
+An installable, offline-capable web music player for XotiicDuck releases, with a private artist console for publishing MP3 or lossless WAV files and square covers to the connected GitHub catalog.
 
 Current player release: Update 21, Adaptive Listener and Artwork Vault.
 
