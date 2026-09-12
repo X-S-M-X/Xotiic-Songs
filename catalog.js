@@ -1166,5 +1166,20 @@ window.XOTIICDUCK_RELEASES = [
     "status": "draft",
     "createdAt": "2026-09-12T01:04:33.087Z",
     "updatedAt": "2026-09-12T01:04:33.087Z"
+  },
+  {
+    "id": "mercy-was-your-warning",
+    "title": "Mercy Was Your Warning",
+    "artist": "XotiicDuck",
+    "album": "Single",
+    "releaseType": "Single",
+    "genre": "Anime J-Rock",
+    "releaseDate": "2026-09-12",
+    "duration": 312,
+    "audio": "music/mercy-was-your-warning.mp3",
+    "cover": "covers/mercy-was-your-warning.webp",
+    "status": "draft",
+    "createdAt": "2026-09-12T01:08:54.063Z",
+    "updatedAt": "2026-09-12T01:08:54.063Z"
   }
 ];
