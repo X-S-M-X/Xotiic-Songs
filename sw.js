@@ -1,6 +1,6 @@
 importScripts("./range.js?v=20");
 
-const CACHE_NAME = "xotiicduck-portable-v21-adaptive-ui-wav";
+const CACHE_NAME = "xotiicduck-portable-v21-adaptive-ui-wav-for-you-fix";
 const MEDIA_CACHE = "xotiic-media-v1";
 const scoped = (file) => new URL(file, self.registration.scope).href;
 const CATALOG_URL = scoped("./catalog.js");
@@ -14,7 +14,7 @@ const SHELL = [
   "./anime-theme.css?v=20",
   "./update-13-14.css?v=20",
   "./update-15-16.css?v=20",
-  "./update-17-18.css?v=20",
+  "./update-17-18.css?v=21.0.1",
   "./update-19-20.css?v=20",
   "./update-20-1.css?v=20.1.1",
   "./update-21.css?v=21.0.0",

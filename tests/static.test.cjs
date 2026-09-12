@@ -227,7 +227,7 @@ test("Updates 17 and 18 add private discovery and offline integrity tools", () =
   assert.match(offline, /const audit = async/);
   assert.match(offline, /const cleanup = async/);
   assert.match(offline, /SHA-256/);
-  assert.match(worker, /update-17-18\.css\?v=20/);
+  assert.match(worker, /update-17-18\.css\?v=21\.0\.1/);
   for (const prefix of ["release", "edit"]) {
     for (const suffix of ["character", "energy", "vocal-style", "performance", "similar"]) {
       assert.match(adminHtml, new RegExp(`id=["']${prefix}-${suffix}["']`));
@@ -333,6 +333,25 @@ test("Update 21 artist console accepts lossless WAV masters without changing exi
   assert.deepEqual(manifest.file_handlers[0].accept["audio/wav"], [".wav"]);
   assert.match(worker, /mp3\|wav/);
   assert.match(adminWorker, /audio-files\.js\?v=21\.0\.1/);
+});
+
+test("For You stays inside the phone viewport without resizing mobile navigation", () => {
+  const html = read("index.html");
+  const styles = read("update-17-18.css");
+  const worker = read("sw.js");
+  const mobileStart = styles.indexOf("@media (max-width: 720px)");
+  const mobileEnd = styles.indexOf("@media (max-width: 430px)");
+  const mobile = styles.slice(mobileStart, mobileEnd);
+
+  assert.ok(mobileStart >= 0 && mobileEnd > mobileStart, "For You mobile rules must exist");
+  assert.match(mobile, /\.for-you-library-section,[\s\S]*?max-width:\s*100%;[\s\S]*?min-width:\s*0;/);
+  assert.match(mobile, /\.personal-mix-grid\s*\{[^}]*display:\s*grid;[^}]*grid-template-columns:\s*minmax\(0,\s*1fr\);[^}]*margin-inline:\s*0;[^}]*overflow:\s*visible;[^}]*scroll-snap-type:\s*none;/s);
+  assert.doesNotMatch(mobile, /overflow-x:\s*auto|84vw|--page-padding/);
+  assert.match(mobile, /\.mobile-nav\s*\{[^}]*width:\s*100%;[^}]*max-width:\s*100%;[^}]*grid-template-columns:\s*repeat\(4,\s*minmax\(0,\s*1fr\)\);[^}]*overflow:\s*hidden;/s);
+  assert.match(mobile, /\.mobile-nav button\s*\{[^}]*width:\s*100%;[^}]*min-width:\s*0;[^}]*transform:\s*none;/s);
+  assert.match(html, /update-17-18\.css\?v=21\.0\.1/);
+  assert.match(worker, /update-17-18\.css\?v=21\.0\.1/);
+  assert.match(worker, /xotiicduck-portable-v21-adaptive-ui-wav-for-you-fix/);
 });
 
 test("Update 20.1.1 queue safeguards remain active in Update 21", () => {
