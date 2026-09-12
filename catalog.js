@@ -1106,5 +1106,20 @@ window.XOTIICDUCK_RELEASES = [
     "status": "draft",
     "createdAt": "2026-09-12T00:53:07.227Z",
     "updatedAt": "2026-09-12T00:53:07.227Z"
+  },
+  {
+    "id": "colors-of-crimson",
+    "title": "Colors of Crimson",
+    "artist": "XotiicDuck",
+    "album": "Single",
+    "releaseType": "Single",
+    "genre": "Anime J-Rock",
+    "releaseDate": "2026-09-12",
+    "duration": 357,
+    "audio": "music/colors-of-crimson.mp3",
+    "cover": "covers/colors-of-crimson.webp",
+    "status": "draft",
+    "createdAt": "2026-09-12T00:58:06.230Z",
+    "updatedAt": "2026-09-12T00:58:06.230Z"
   }
 ];
