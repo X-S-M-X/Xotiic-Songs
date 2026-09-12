@@ -1136,5 +1136,20 @@ window.XOTIICDUCK_RELEASES = [
     "status": "draft",
     "createdAt": "2026-09-12T00:59:50.798Z",
     "updatedAt": "2026-09-12T00:59:50.798Z"
+  },
+  {
+    "id": "the-hero-i-chose",
+    "title": "The Hero I Chose",
+    "artist": "XotiicDuck",
+    "album": "Single",
+    "releaseType": "Single",
+    "genre": "Anime J-Rock",
+    "releaseDate": "2026-09-12",
+    "duration": 346,
+    "audio": "music/the-hero-i-chose.mp3",
+    "cover": "covers/the-hero-i-chose.webp",
+    "status": "draft",
+    "createdAt": "2026-09-12T01:03:03.881Z",
+    "updatedAt": "2026-09-12T01:03:03.881Z"
   }
 ];
