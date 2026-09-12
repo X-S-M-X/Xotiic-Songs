@@ -1090,7 +1090,7 @@ window.XOTIICDUCK_RELEASES = [
     "cover": "covers/who-owns-the-throne.webp",
     "status": "draft",
     "createdAt": "2026-09-12T00:51:24.750Z",
-    "updatedAt": "2026-09-12T00:51:24.750Z"
+    "updatedAt": "2026-09-12T00:54:33.980Z"
   },
   {
     "id": "colors-of-calamity",
