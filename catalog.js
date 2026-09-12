@@ -1075,6 +1075,6 @@ window.XOTIICDUCK_RELEASES = [
     "cover": "covers/a-world-worth-protecting.webp",
     "status": "draft",
     "createdAt": "2026-09-11T23:47:51.077Z",
-    "updatedAt": "2026-09-11T23:47:51.077Z"
+    "updatedAt": "2026-09-12T00:50:24.305Z"
   }
 ];
