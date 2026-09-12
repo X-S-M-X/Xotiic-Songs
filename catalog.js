@@ -1181,5 +1181,20 @@ window.XOTIICDUCK_RELEASES = [
     "status": "draft",
     "createdAt": "2026-09-12T01:08:54.063Z",
     "updatedAt": "2026-09-12T01:08:54.063Z"
+  },
+  {
+    "id": "the-storm-remembers",
+    "title": "The storm Remembers",
+    "artist": "XotiicDuck",
+    "album": "Single",
+    "releaseType": "Single",
+    "genre": "Anime J-Rock",
+    "releaseDate": "2026-09-12",
+    "duration": 412,
+    "audio": "music/the-storm-remembers.mp3",
+    "cover": "covers/the-storm-remembers.webp",
+    "status": "draft",
+    "createdAt": "2026-09-12T01:13:53.778Z",
+    "updatedAt": "2026-09-12T01:13:53.778Z"
   }
 ];
