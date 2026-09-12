@@ -1151,5 +1151,20 @@ window.XOTIICDUCK_RELEASES = [
     "status": "draft",
     "createdAt": "2026-09-12T01:03:03.881Z",
     "updatedAt": "2026-09-12T01:03:03.881Z"
+  },
+  {
+    "id": "against-the-balance",
+    "title": "Against The Balance",
+    "artist": "XotiicDuck",
+    "album": "Single",
+    "releaseType": "Single",
+    "genre": "Anime J-Rock",
+    "releaseDate": "2026-09-12",
+    "duration": 282,
+    "audio": "music/against-the-balance.mp3",
+    "cover": "covers/against-the-balance.webp",
+    "status": "draft",
+    "createdAt": "2026-09-12T01:04:33.087Z",
+    "updatedAt": "2026-09-12T01:04:33.087Z"
   }
 ];
