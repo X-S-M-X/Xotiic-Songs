@@ -293,7 +293,7 @@
     const use = document.createElement("button");
     use.type = "button";
     use.dataset.artworkUse = concept.id;
-    use.textContent = "Attach audio and continue release";
+    use.textContent = "Attach MP3 and continue release";
     actions.append(edit, remove, use);
     copy.append(label, title, description, metadata, actions);
     inspector.append(cover, copy);
@@ -341,7 +341,7 @@
       const attach = document.createElement("button");
       attach.type = "button";
       attach.dataset.artworkUse = concept.id;
-      attach.textContent = "Attach audio";
+      attach.textContent = "Attach MP3";
       const edit = document.createElement("button");
       edit.type = "button";
       edit.dataset.artworkEdit = concept.id;
@@ -519,7 +519,7 @@
     closeEditor();
     if (openAudio) {
       $("#audio-file").click();
-      admin.showToast(`${concept.title} is loaded. Choose the final MP3 or WAV.`);
+      admin.showToast(`${concept.title} is loaded. Choose the final MP3.`);
     } else {
       admin.showToast(`${concept.title} is loaded in New release.`);
     }
@@ -655,7 +655,7 @@
       return false;
     }
     if (state.releaseStep === "audio" && !$("#audio-file").files?.length) {
-      admin.showToast("Choose the final MP3 or WAV first.", "error");
+      admin.showToast("Choose the final MP3 first.", "error");
       $("#audio-file").click();
       return false;
     }

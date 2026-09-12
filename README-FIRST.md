@@ -27,9 +27,9 @@ Each device has its own encrypted vault. Resetting a device vault does not delet
 
 ## Publishing from a phone
 
-Open Xotiic Upload, unlock it, select an MP3 or lossless WAV from Files, select the square cover from Gallery, enter the release information, then choose **Publish now**, **Schedule**, or **Draft**. Publish now uses the current date automatically. Scheduled releases stay hidden until the chosen local date and time, then the player makes them public automatically. The console commits the audio, cover, and `catalog.js` together.
+Open Xotiic Upload, unlock it, select the MP3 from Files, select the square cover from Gallery, enter the release information, then choose **Publish now**, **Schedule**, or **Draft**. Publish now uses the current date automatically. Scheduled releases stay hidden until the chosen local date and time, then the player makes them public automatically. The console commits the MP3, cover, and `catalog.js` together.
 
-If the song is not finished yet, open **Artwork Vault** instead. A concept needs only a square cover and working title. Optional franchise, character, mood, performance, tags, and notes can be saved with it. Later, choose **Attach audio** to preload the real release form and continue from the audio step. Artwork Vault concepts stay in IndexedDB on that device and never enter the public catalog; use the vault's **Back up** command before changing devices, browsers, or clearing site data.
+If the song is not finished yet, open **Artwork Vault** instead. A concept needs only a square cover and working title. Optional franchise, character, mood, performance, tags, and notes can be saved with it. Later, choose **Attach MP3** to preload the real release form and continue from the audio step. Artwork Vault concepts stay in IndexedDB on that device and never enter the public catalog; use the vault's **Back up** command before changing devices, browsers, or clearing site data.
 
 ## Phone and tablet support
 

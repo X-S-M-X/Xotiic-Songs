@@ -311,29 +311,9 @@ test("Update 20.1 rebuilds Devices, Queue, and Settings around the active theme"
   assert.match(adminTheme, /"ember", "royal", "void", "custom"/);
   assert.match(adminTheme, /--admin-custom-primary/);
   assert.match(adminStyles, /data-accent="custom"/);
-  assert.match(adminWorker, /xotiic-upload-v21-wav/);
+  assert.match(adminWorker, /xotiic-upload-v21-artwork-vault/);
 });
 
-test("Update 21 artist console accepts lossless WAV masters without changing existing releases", () => {
-  const adminHtml = read("admin/index.html");
-  const adminApp = read("admin/app.js");
-  const studio = read("admin/studio.js");
-  const config = read("admin/config.js");
-  const manifest = JSON.parse(read("admin/manifest.webmanifest"));
-  const worker = read("sw.js");
-  const adminWorker = read("admin/sw.js");
-
-  assert.match(adminHtml, /id="audio-file"[^>]*accept="[^"]*\.wav/);
-  assert.match(adminHtml, /id="edit-audio-file"[^>]*accept="[^"]*\.wav/);
-  assert.match(adminHtml, /audio-files\.js\?v=21\.0\.1/);
-  assert.match(adminApp, /audioApi\.path\(id, state\.audioFile\)/);
-  assert.match(adminApp, /audioApi\.path\(previous\.id, state\.editAudioFile\)/);
-  assert.match(studio, /audioApi\?\.isSupported\(file\)/);
-  assert.match(config, /maxAudioBytes:\s*90 \* 1024 \* 1024/);
-  assert.deepEqual(manifest.file_handlers[0].accept["audio/wav"], [".wav"]);
-  assert.match(worker, /mp3\|wav/);
-  assert.match(adminWorker, /audio-files\.js\?v=21\.0\.1/);
-});
 
 test("For You stays inside the phone viewport without resizing mobile navigation", () => {
   const html = read("index.html");
@@ -351,7 +331,7 @@ test("For You stays inside the phone viewport without resizing mobile navigation
   assert.match(mobile, /\.mobile-nav button\s*\{[^}]*width:\s*100%;[^}]*min-width:\s*0;[^}]*transform:\s*none;/s);
   assert.match(html, /update-17-18\.css\?v=21\.0\.1/);
   assert.match(worker, /update-17-18\.css\?v=21\.0\.1/);
-  assert.match(worker, /xotiicduck-portable-v21-adaptive-ui-wav-for-you-fix/);
+  assert.match(worker, /xotiicduck-portable-v21-adaptive-ui-for-you-fix/);
 });
 
 test("Update 20.1.1 queue safeguards remain active in Update 21", () => {

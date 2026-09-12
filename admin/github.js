@@ -163,9 +163,9 @@
         throw new GitHubError("A release with this ID already exists.", { code: "DUPLICATE_RELEASE" });
       }
 
-      onStep?.("audio-read", 0.12, "Preparing the audio master");
-      const audioContent = await readFileAsBase64(audioFile, (ratio) => onStep?.("audio-read", 0.12 + ratio * 0.12, "Preparing the audio master"));
-      onStep?.("audio-upload", 0.27, "Uploading the audio master to GitHub");
+      onStep?.("audio-read", 0.12, "Preparing the MP3");
+      const audioContent = await readFileAsBase64(audioFile, (ratio) => onStep?.("audio-read", 0.12 + ratio * 0.12, "Preparing the MP3"));
+      onStep?.("audio-upload", 0.27, "Uploading the MP3 to GitHub");
       const audioSha = await this.createBlob(audioContent, "base64");
 
       onStep?.("cover-read", 0.51, "Preparing the square cover");
@@ -203,9 +203,9 @@
       const entries = [];
 
       if (audioFile) {
-        onStep?.("audio-read", 0.13, "Preparing the replacement audio");
-        const content = await readFileAsBase64(audioFile, (ratio) => onStep?.("audio-read", 0.13 + ratio * 0.13, "Preparing the replacement audio"));
-        onStep?.("audio-upload", 0.3, "Uploading the replacement audio");
+        onStep?.("audio-read", 0.13, "Preparing the replacement MP3");
+        const content = await readFileAsBase64(audioFile, (ratio) => onStep?.("audio-read", 0.13 + ratio * 0.13, "Preparing the replacement MP3"));
+        onStep?.("audio-upload", 0.3, "Uploading the replacement MP3");
         const sha = await this.createBlob(content, "base64");
         entries.push({ path: release.audio, mode: "100644", type: "blob", sha });
         if (previous.audio !== release.audio && /^(music|covers)\/[a-zA-Z0-9._/-]+$/.test(previous.audio || "") && !previous.audio.includes("..")) {

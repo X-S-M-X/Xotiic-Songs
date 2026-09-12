@@ -4,7 +4,7 @@ window.XOTIIC_ADMIN_CONFIG = Object.freeze({
   branch: "main",
   requiredGitHubLogin: "x-s-m-x",
   publicSiteUrl: "../",
-  maxAudioBytes: 90 * 1024 * 1024,
+  maxAudioBytes: 40 * 1024 * 1024,
   maxCoverBytes: 10 * 1024 * 1024,
   sessionMinutes: 30,
   githubApiVersion: "2022-11-28",

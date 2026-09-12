@@ -2,7 +2,6 @@
   "use strict";
 
   const $ = (selector) => document.querySelector(selector);
-  const audioApi = window.XotiicAudioFiles;
   const WORKSPACE_KEY = "xotiic-upload-workspaces-v1";
   const SHARED_DB = "xotiic-upload-share-inbox-v1";
   const SHARED_STORE = "files";
@@ -247,9 +246,9 @@
   };
 
   const addBatchFiles = async (files) => {
-    const audioFiles = [...files].filter((file) => audioApi?.isSupported(file));
+    const audioFiles = [...files].filter((file) => file.type === "audio/mpeg" || /\.mp3$/i.test(file.name));
     if (!audioFiles.length) {
-      toast("Choose one or more MP3 or WAV files.", "error");
+      toast("Choose one or more MP3 files.", "error");
       return;
     }
     const tools = $("#creator-studio-tools");
@@ -294,7 +293,7 @@
     const mode = $("input[name='release-mode']:checked")?.value || "published";
     const scheduled = Date.parse($("#release-schedule")?.value || "");
     const checks = [
-      [Boolean(releaseFiles.audioFile && releaseFiles.audioDuration > 0), "Audio master", releaseFiles.audioFile ? `${audioApi?.label(releaseFiles.audioFile) || "Audio"} · ${Math.round(releaseFiles.audioDuration || 0)} seconds` : "Choose a complete MP3 or WAV"],
+      [Boolean(releaseFiles.audioFile && releaseFiles.audioDuration > 0), "MP3 master", releaseFiles.audioFile ? `Detected ${Math.round(releaseFiles.audioDuration || 0)} seconds` : "Choose a complete MP3"],
       [Boolean(releaseFiles.coverFile && releaseFiles.coverWidth === releaseFiles.coverHeight), "Square cover", releaseFiles.coverFile ? `${releaseFiles.coverWidth} × ${releaseFiles.coverHeight}` : "Choose JPG, PNG or WebP artwork"],
       [Boolean(title && /^[a-z0-9]+(?:-[a-z0-9]+)*$/.test(releaseId)), "Metadata and ID", title ? releaseId || "Release ID missing" : "Song title missing"],
       [mode !== "scheduled" || (Number.isFinite(scheduled) && scheduled > Date.now() + 60000), "Release timing", mode === "scheduled" ? "Scheduled date must be in the future" : `${mode[0].toUpperCase()}${mode.slice(1)} selected`],
@@ -379,7 +378,7 @@
 
   const receiveFiles = async (files) => {
     const list = [...files];
-    const audioFiles = list.filter((file) => audioApi?.isSupported(file));
+    const audioFiles = list.filter((file) => file.type === "audio/mpeg" || /\.mp3$/i.test(file.name || ""));
     const cover = list.find((file) => /^image\/(?:jpeg|png|webp)$/.test(file.type));
     if (cover) assignFile($("#cover-file"), cover);
     if (audioFiles.length) await addBatchFiles(audioFiles);
@@ -433,7 +432,7 @@
       if (workspace) {
         restoreWorkspace(workspace.values);
         $("#workspace-name").value = workspace.name;
-        toast(`Loaded ${workspace.name}. Select its audio and cover before publishing.`);
+        toast(`Loaded ${workspace.name}. Select its MP3 and cover before publishing.`);
       }
     }
     if (target.dataset.workspaceRemove) {

@@ -1,6 +1,6 @@
 importScripts("./range.js?v=20");
 
-const CACHE_NAME = "xotiicduck-portable-v21-adaptive-ui-wav-for-you-fix";
+const CACHE_NAME = "xotiicduck-portable-v21-adaptive-ui-for-you-fix";
 const MEDIA_CACHE = "xotiic-media-v1";
 const scoped = (file) => new URL(file, self.registration.scope).href;
 const CATALOG_URL = scoped("./catalog.js");
@@ -71,7 +71,7 @@ self.addEventListener("fetch", (event) => {
     return;
   }
 
-  const isAudio = url.origin === self.location.origin && /\/music\/[^/]+\.(?:mp3|wav)$/i.test(url.pathname);
+  const isAudio = url.origin === self.location.origin && /\/music\/[^/]+\.mp3$/i.test(url.pathname);
   const isCover = url.origin === self.location.origin && /\/covers\/[^/]+\.(?:jpe?g|png|webp)$/i.test(url.pathname);
   if (isAudio || isCover) {
     event.respondWith((async () => {
