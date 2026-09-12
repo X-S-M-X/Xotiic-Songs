@@ -1076,5 +1076,20 @@ window.XOTIICDUCK_RELEASES = [
     "status": "draft",
     "createdAt": "2026-09-11T23:47:51.077Z",
     "updatedAt": "2026-09-12T00:50:24.305Z"
+  },
+  {
+    "id": "who-owns-the-throne",
+    "title": "Who Owns The Throne?",
+    "artist": "XotiicDuck",
+    "album": "Single",
+    "releaseType": "Single",
+    "genre": "Anime J-Rock",
+    "releaseDate": "2026-09-12",
+    "duration": 300,
+    "audio": "music/who-owns-the-throne.mp3",
+    "cover": "covers/who-owns-the-throne.webp",
+    "status": "draft",
+    "createdAt": "2026-09-12T00:51:24.750Z",
+    "updatedAt": "2026-09-12T00:51:24.750Z"
   }
 ];
