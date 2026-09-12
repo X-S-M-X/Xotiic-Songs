@@ -1121,5 +1121,20 @@ window.XOTIICDUCK_RELEASES = [
     "status": "draft",
     "createdAt": "2026-09-12T00:58:06.230Z",
     "updatedAt": "2026-09-12T00:58:06.230Z"
+  },
+  {
+    "id": "no-world-can-hold-us",
+    "title": "No World Can Hold Us",
+    "artist": "XotiicDuck",
+    "album": "Single",
+    "releaseType": "Single",
+    "genre": "Anime J-Rock",
+    "releaseDate": "2026-09-12",
+    "duration": 309,
+    "audio": "music/no-world-can-hold-us.mp3",
+    "cover": "covers/no-world-can-hold-us.webp",
+    "status": "draft",
+    "createdAt": "2026-09-12T00:59:50.798Z",
+    "updatedAt": "2026-09-12T00:59:50.798Z"
   }
 ];
