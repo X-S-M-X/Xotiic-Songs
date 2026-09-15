@@ -1175,13 +1175,14 @@ window.XOTIICDUCK_RELEASES = [
     "album": "Single",
     "releaseType": "Single",
     "genre": "Anime J-Rock",
-    "releaseDate": "2026-09-12",
+    "releaseDate": "2026-09-16",
     "duration": 312,
     "audio": "music/mercy-was-your-warning.mp3",
     "cover": "covers/mercy-was-your-warning.webp",
-    "status": "draft",
+    "status": "published",
     "createdAt": "2026-09-12T01:08:54.063Z",
-    "updatedAt": "2026-09-12T01:08:54.063Z"
+    "updatedAt": "2026-09-15T20:58:05.404Z",
+    "publishedAt": "2026-09-15T20:58:02.985Z"
   },
   {
     "id": "the-storm-remembers",
