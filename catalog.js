@@ -1069,13 +1069,14 @@ window.XOTIICDUCK_RELEASES = [
     "album": "Single",
     "releaseType": "Single",
     "genre": "Anime J-Rock",
-    "releaseDate": "2026-09-12",
+    "releaseDate": "2026-09-16",
     "duration": 347,
     "audio": "music/a-world-worth-protecting.mp3",
     "cover": "covers/a-world-worth-protecting.webp",
-    "status": "draft",
+    "status": "scheduled",
     "createdAt": "2026-09-11T23:47:51.077Z",
-    "updatedAt": "2026-09-12T00:50:24.305Z"
+    "updatedAt": "2026-09-15T20:55:03.264Z",
+    "releaseAt": "2026-09-16T00:00:00.000Z"
   },
   {
     "id": "who-owns-the-throne",
