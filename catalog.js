@@ -1190,12 +1190,13 @@ window.XOTIICDUCK_RELEASES = [
     "album": "Single",
     "releaseType": "Single",
     "genre": "Anime J-Rock",
-    "releaseDate": "2026-09-12",
+    "releaseDate": "2026-09-16",
     "duration": 412,
     "audio": "music/the-storm-remembers.mp3",
     "cover": "covers/the-storm-remembers.webp",
-    "status": "draft",
+    "status": "published",
     "createdAt": "2026-09-12T01:13:53.778Z",
-    "updatedAt": "2026-09-12T01:13:53.778Z"
+    "updatedAt": "2026-09-15T20:56:10.136Z",
+    "publishedAt": "2026-09-15T20:56:07.796Z"
   }
 ];
