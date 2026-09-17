@@ -1217,5 +1217,20 @@ window.XOTIICDUCK_RELEASES = [
     "similarReleaseIds": [
       "beyond-the-last-tomorrow"
     ]
+  },
+  {
+    "id": "steal-it-back",
+    "title": "Steal It Back",
+    "artist": "XotiicDuck",
+    "album": "Single",
+    "releaseType": "Single",
+    "genre": "Anime J-Rock",
+    "releaseDate": "2026-09-17",
+    "duration": 258,
+    "audio": "music/steal-it-back.mp3",
+    "cover": "covers/steal-it-back.webp",
+    "status": "draft",
+    "createdAt": "2026-09-17T07:42:49.237Z",
+    "updatedAt": "2026-09-17T07:42:49.237Z"
   }
 ];
