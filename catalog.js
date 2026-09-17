@@ -1116,13 +1116,14 @@ window.XOTIICDUCK_RELEASES = [
     "album": "Single",
     "releaseType": "Single",
     "genre": "Anime J-Rock",
-    "releaseDate": "2026-09-12",
+    "releaseDate": "2026-09-19",
     "duration": 357,
     "audio": "music/colors-of-crimson.mp3",
     "cover": "covers/colors-of-crimson.webp",
-    "status": "draft",
+    "status": "scheduled",
     "createdAt": "2026-09-12T00:58:06.230Z",
-    "updatedAt": "2026-09-12T00:58:06.230Z"
+    "updatedAt": "2026-09-17T08:07:00.451Z",
+    "releaseAt": "2026-09-18T12:00:00.000Z"
   },
   {
     "id": "no-world-can-hold-us",
