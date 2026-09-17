@@ -1100,13 +1100,14 @@ window.XOTIICDUCK_RELEASES = [
     "album": "Single",
     "releaseType": "Single",
     "genre": "Anime J-Rock",
-    "releaseDate": "2026-09-12",
+    "releaseDate": "2026-09-18",
     "duration": 336,
     "audio": "music/colors-of-calamity.mp3",
     "cover": "covers/colors-of-calamity.webp",
-    "status": "draft",
+    "status": "scheduled",
     "createdAt": "2026-09-12T00:53:07.227Z",
-    "updatedAt": "2026-09-12T00:53:07.227Z"
+    "updatedAt": "2026-09-17T08:05:37.459Z",
+    "releaseAt": "2026-09-18T00:00:00.000Z"
   },
   {
     "id": "colors-of-crimson",
