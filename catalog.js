@@ -1199,5 +1199,23 @@ window.XOTIICDUCK_RELEASES = [
     "createdAt": "2026-09-12T01:13:53.778Z",
     "updatedAt": "2026-09-15T20:56:10.136Z",
     "publishedAt": "2026-09-15T20:56:07.796Z"
+  },
+  {
+    "id": "beyond-the-last-tomorrow-remake",
+    "title": "Beyond The Last Tomorrow | Remake",
+    "artist": "XotiicDuck",
+    "album": "Single",
+    "releaseType": "Single",
+    "genre": "Anime J-Rock",
+    "releaseDate": "2026-09-17",
+    "duration": 373,
+    "audio": "music/beyond-the-last-tomorrow-remake.mp3",
+    "cover": "covers/beyond-the-last-tomorrow-remake.png",
+    "status": "draft",
+    "createdAt": "2026-09-17T07:41:12.104Z",
+    "updatedAt": "2026-09-17T07:41:12.104Z",
+    "similarReleaseIds": [
+      "beyond-the-last-tomorrow"
+    ]
   }
 ];
