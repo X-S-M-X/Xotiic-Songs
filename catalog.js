@@ -1235,5 +1235,21 @@ window.XOTIICDUCK_RELEASES = [
     "createdAt": "2026-09-17T07:42:49.237Z",
     "updatedAt": "2026-09-20T23:20:44.325Z",
     "releaseAt": "2026-09-23T03:00:00.000Z"
+  },
+  {
+    "id": "defy-the-grave",
+    "title": "Defy The Grave",
+    "artist": "XotiicDuck",
+    "album": "Single",
+    "releaseType": "Single",
+    "genre": "Anime J-Rock",
+    "releaseDate": "2026-09-25",
+    "duration": 281,
+    "audio": "music/defy-the-grave.mp3",
+    "cover": "covers/defy-the-grave.webp",
+    "status": "scheduled",
+    "createdAt": "2026-09-20T23:22:00.561Z",
+    "updatedAt": "2026-09-20T23:22:00.561Z",
+    "releaseAt": "2026-09-25T03:00:00.000Z"
   }
 ];
