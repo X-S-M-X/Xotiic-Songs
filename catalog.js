@@ -1227,12 +1227,13 @@ window.XOTIICDUCK_RELEASES = [
     "album": "Single",
     "releaseType": "Single",
     "genre": "Anime J-Rock",
-    "releaseDate": "2026-09-17",
+    "releaseDate": "2026-09-23",
     "duration": 258,
     "audio": "music/steal-it-back.mp3",
     "cover": "covers/steal-it-back.webp",
-    "status": "draft",
+    "status": "scheduled",
     "createdAt": "2026-09-17T07:42:49.237Z",
-    "updatedAt": "2026-09-17T07:42:49.237Z"
+    "updatedAt": "2026-09-20T23:20:44.325Z",
+    "releaseAt": "2026-09-23T03:00:00.000Z"
   }
 ];
