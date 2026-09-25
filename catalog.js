@@ -1269,5 +1269,20 @@ window.XOTIICDUCK_RELEASES = [
     "status": "draft",
     "createdAt": "2026-09-25T22:34:35.896Z",
     "updatedAt": "2026-09-25T22:34:35.896Z"
+  },
+  {
+    "id": "heirs-to-nothing",
+    "title": "Heirs to Nothing",
+    "artist": "XotiicDuck",
+    "album": "Single",
+    "releaseType": "Single",
+    "genre": "Anime J-Rock",
+    "releaseDate": "2026-09-26",
+    "duration": 315,
+    "audio": "music/heirs-to-nothing.mp3",
+    "cover": "covers/heirs-to-nothing.webp",
+    "status": "draft",
+    "createdAt": "2026-09-25T22:36:12.903Z",
+    "updatedAt": "2026-09-25T22:36:12.903Z"
   }
 ];
