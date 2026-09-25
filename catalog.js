@@ -1254,5 +1254,20 @@ window.XOTIICDUCK_RELEASES = [
     "createdAt": "2026-09-20T23:22:00.561Z",
     "updatedAt": "2026-09-20T23:22:00.561Z",
     "releaseAt": "2026-09-25T03:00:00.000Z"
+  },
+  {
+    "id": "heaven-breaks-where-we-collide",
+    "title": "Heaven Breaks Where We Collide",
+    "artist": "XotiicDuck",
+    "album": "Single",
+    "releaseType": "Single",
+    "genre": "Anime J-Rock",
+    "releaseDate": "2026-09-26",
+    "duration": 272,
+    "audio": "music/heaven-breaks-where-we-collide.mp3",
+    "cover": "covers/heaven-breaks-where-we-collide.webp",
+    "status": "draft",
+    "createdAt": "2026-09-25T22:34:35.896Z",
+    "updatedAt": "2026-09-25T22:34:35.896Z"
   }
 ];
