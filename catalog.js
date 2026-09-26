@@ -1148,14 +1148,14 @@ window.XOTIICDUCK_RELEASES = [
     "album": "Single",
     "releaseType": "Single",
     "genre": "Anime J-Rock",
-    "releaseDate": "2026-09-30",
+    "releaseDate": "2026-10-02",
     "duration": 346,
     "audio": "music/the-hero-i-chose.mp3",
     "cover": "covers/the-hero-i-chose.webp",
     "status": "scheduled",
     "createdAt": "2026-09-12T01:03:03.881Z",
-    "updatedAt": "2026-09-22T10:50:12.571Z",
-    "releaseAt": "2026-09-30T02:00:00.000Z"
+    "updatedAt": "2026-09-26T03:08:33.629Z",
+    "releaseAt": "2026-10-02T02:00:00.000Z"
   },
   {
     "id": "against-the-balance",
