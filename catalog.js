@@ -1212,16 +1212,17 @@ window.XOTIICDUCK_RELEASES = [
     "album": "Single",
     "releaseType": "Single",
     "genre": "Anime J-Rock",
-    "releaseDate": "2026-09-17",
+    "releaseDate": "2026-09-30",
     "duration": 373,
     "audio": "music/beyond-the-last-tomorrow-remake.mp3",
     "cover": "covers/beyond-the-last-tomorrow-remake.png",
-    "status": "draft",
+    "status": "scheduled",
     "createdAt": "2026-09-17T07:41:12.104Z",
-    "updatedAt": "2026-09-17T07:41:12.104Z",
+    "updatedAt": "2026-09-26T03:06:16.609Z",
     "similarReleaseIds": [
       "beyond-the-last-tomorrow"
-    ]
+    ],
+    "releaseAt": "2026-09-30T02:00:00.000Z"
   },
   {
     "id": "steal-it-back",
