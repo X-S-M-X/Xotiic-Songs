@@ -1284,5 +1284,21 @@ window.XOTIICDUCK_RELEASES = [
     "status": "draft",
     "createdAt": "2026-09-25T22:36:12.903Z",
     "updatedAt": "2026-09-25T22:36:12.903Z"
+  },
+  {
+    "id": "broken-chains-of-heaven",
+    "title": "Broken Chains Of Heaven",
+    "artist": "XotiicDuck",
+    "album": "Single",
+    "releaseType": "Single",
+    "genre": "Anime J-Rock",
+    "releaseDate": "2026-09-26",
+    "duration": 303,
+    "audio": "music/broken-chains-of-heaven.mp3",
+    "cover": "covers/broken-chains-of-heaven.webp",
+    "status": "draft",
+    "createdAt": "2026-09-26T02:30:57.812Z",
+    "updatedAt": "2026-09-26T02:30:57.812Z",
+    "lyrics": "[Intro]\nI lost my name in the silence\nBeneath the crown I swore was mine\nA dream left cold in paradise\nStill breathing deep inside\n\n[Verse 1]\nI was the hero born within these lands\nA king who dreamed of joining hands\nYou gave me justice, gave me light\nThen justice buried me alive\n\nAgainst The Red The games were played\nTo build a world beyond the blade\nBut every life I lived again\nLet Michael steal more than my name\n\n[Pre-Chorus]\nThey called it justice, Silencing my voice\nI wore the crown, denied a single choice\nBut every broken fragment thrown aside\nStill kept one last spark of me alive\n\n[Chorus]\nSo I’ll raise my blade where Dimensions Break\nWith broken wings and a stolen past\nIf this world won’t return your light\nThen I’ll defend the world tonight\n\nJustice lied from that hollow throne\nNo chains command these living bones\nHeaven fell but I still rise\nWith no one living through my eyes\n\n[Verse 2]\nI was the blade you trusted long ago\nAn angel sent to watch below\nI burned a kingdom for your death\nBut vengeance never Could Restore your breath\n\nHeaven faded, I slept on\nTo hide the years beneath a yawn\nThey call My Silence Weak\nThey never knew the grief I wouldn't speak\n\n[Pre-Chorus]\nEvery dream is a place to hide\nEvery order is a chain inside\nWithin the depths I found a friend\nThen heaven forced betrayal in the end\n\n[Chorus]\nSo I’ll raise my blade where Dimensions Break\nWith broken wings and a stolen past\nIf this world won’t return your light\nThen I’ll defend the world tonight\n\nJustice lied from that hollow throne\nNo chains command these living bones\nHeaven fell but I still rise\nWith no one living through my eyes\n\n[Bridge]\nVelgrynd crossed through all eternity\nRamiris once believed in me\nlove recovered what was lost\nOne friend paid my betrayal’s cost\n\nWas I devoted or just too afraid\nOf breaking every vow I made?\nIf grief can turn a heart to chains\nI’ll break these locks despite the pain\n\n[Verse 3]\nA hero wakes beneath another name\nAn angel draws swords again\nTwo stolen wills, one final vow\nThose chains will never hold us now\n\nLet my Nova Break tear through your lie\nLet sleeping wings reclaim the sky\nCall me fallen, call me king\nMy soul is not your offering\n\n[Final Chorus]\nSo I’ll raise my blade where the Heavens Bend\nWhere broken wings rise and darkness ends\nThough this world can't return your light\nI’ll defend Your Dream tonight\n\nJustice falls from that hollow throne\nThese scars belong to me alone\nHeaven fell but I still rise\nWith the future within my sight\n\n[Outro]\nEmpty throne, unbroken sky\nIf you are gone, we still must try\nYour world, my will, a new flame\nCreation lives beyond your name"
   }
 ];
