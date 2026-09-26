@@ -980,10 +980,9 @@ window.XOTIICDUCK_RELEASES = [
     "duration": 358,
     "audio": "music/no-crown-above-hell.mp3",
     "cover": "covers/no-crown-above-hell.webp",
-    "status": "scheduled",
+    "status": "draft",
     "createdAt": "2026-09-01T08:36:08.181Z",
-    "updatedAt": "2026-09-22T10:52:04.008Z",
-    "releaseAt": "2026-10-02T02:00:00.000Z"
+    "updatedAt": "2026-09-26T03:07:26.064Z"
   },
   {
     "id": "the-peak-knows-no-king",
