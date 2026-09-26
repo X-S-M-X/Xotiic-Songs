@@ -1283,7 +1283,7 @@ window.XOTIICDUCK_RELEASES = [
     "cover": "covers/heirs-to-nothing.webp",
     "status": "draft",
     "createdAt": "2026-09-25T22:36:12.903Z",
-    "updatedAt": "2026-09-25T22:36:12.903Z"
+    "updatedAt": "2026-09-26T04:03:02.159Z"
   },
   {
     "id": "broken-chains-of-heaven",
