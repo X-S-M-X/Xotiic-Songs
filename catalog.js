@@ -1086,14 +1086,14 @@ window.XOTIICDUCK_RELEASES = [
     "album": "Single",
     "releaseType": "Single",
     "genre": "Anime J-Rock",
-    "releaseDate": "2026-10-09",
+    "releaseDate": "2026-10-14",
     "duration": 300,
     "audio": "music/who-owns-the-throne.mp3",
     "cover": "covers/who-owns-the-throne.webp",
     "status": "scheduled",
     "createdAt": "2026-09-12T00:51:24.750Z",
-    "updatedAt": "2026-09-22T22:34:05.980Z",
-    "releaseAt": "2026-10-09T02:00:00.000Z"
+    "updatedAt": "2026-09-28T23:04:33.900Z",
+    "releaseAt": "2026-10-13T23:00:00.000Z"
   },
   {
     "id": "colors-of-calamity",
