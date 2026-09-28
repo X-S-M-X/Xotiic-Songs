@@ -976,13 +976,14 @@ window.XOTIICDUCK_RELEASES = [
     "album": "Single",
     "releaseType": "Single",
     "genre": "Anime J-Rock",
-    "releaseDate": "2026-10-02",
+    "releaseDate": "2026-10-09",
     "duration": 358,
     "audio": "music/no-crown-above-hell.mp3",
     "cover": "covers/no-crown-above-hell.webp",
-    "status": "draft",
+    "status": "scheduled",
     "createdAt": "2026-09-01T08:36:08.181Z",
-    "updatedAt": "2026-09-26T03:07:26.064Z"
+    "updatedAt": "2026-09-28T23:02:01.486Z",
+    "releaseAt": "2026-10-08T23:00:00.000Z"
   },
   {
     "id": "the-peak-knows-no-king",
