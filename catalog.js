@@ -660,13 +660,13 @@ window.XOTIICDUCK_RELEASES = [
     "releaseType": "Single",
     "genre": "Anime J-Rock",
     "releaseDate": "2026-08-24",
-    "duration": 479,
+    "duration": 476,
     "audio": "music/every-life-finds-you.mp3",
     "cover": "covers/every-life-finds-you.webp",
-    "status": "scheduled",
+    "status": "published",
     "createdAt": "2026-08-23T08:47:53.347Z",
-    "updatedAt": "2026-08-23T13:03:54.467Z",
-    "releaseAt": "2026-08-23T22:00:00.000Z"
+    "updatedAt": "2026-10-02T02:49:04.322Z",
+    "publishedAt": "2026-10-02T02:49:04.322Z"
   },
   {
     "id": "every-life-finds-you-ichigo-kurosaki",
