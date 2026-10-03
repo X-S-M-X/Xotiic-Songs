@@ -1317,5 +1317,20 @@ window.XOTIICDUCK_RELEASES = [
     "status": "draft",
     "createdAt": "2026-10-01T01:12:00.332Z",
     "updatedAt": "2026-10-01T01:12:00.332Z"
+  },
+  {
+    "id": "defiance-is-my-prayer",
+    "title": "Defiance is my Prayer",
+    "artist": "XotiicDuck",
+    "album": "Single",
+    "releaseType": "Single",
+    "genre": "Anime J-Rock",
+    "releaseDate": "2026-10-03",
+    "duration": 252,
+    "audio": "music/defiance-is-my-prayer.mp3",
+    "cover": "covers/defiance-is-my-prayer.webp",
+    "status": "draft",
+    "createdAt": "2026-10-03T07:12:33.371Z",
+    "updatedAt": "2026-10-03T07:12:33.371Z"
   }
 ];
