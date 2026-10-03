@@ -1347,5 +1347,20 @@ window.XOTIICDUCK_RELEASES = [
     "status": "draft",
     "createdAt": "2026-10-03T08:23:17.973Z",
     "updatedAt": "2026-10-03T08:23:17.973Z"
+  },
+  {
+    "id": "besties-till-the-end",
+    "title": "Besties Till The End",
+    "artist": "XotiicDuck",
+    "album": "Single",
+    "releaseType": "Single",
+    "genre": "Anime J-Rock",
+    "releaseDate": "2026-10-03",
+    "duration": 299,
+    "audio": "music/besties-till-the-end.mp3",
+    "cover": "covers/besties-till-the-end.webp",
+    "status": "draft",
+    "createdAt": "2026-10-03T08:56:42.642Z",
+    "updatedAt": "2026-10-03T08:56:42.642Z"
   }
 ];
