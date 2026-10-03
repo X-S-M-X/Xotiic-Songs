@@ -1332,5 +1332,20 @@ window.XOTIICDUCK_RELEASES = [
     "status": "draft",
     "createdAt": "2026-10-03T07:12:33.371Z",
     "updatedAt": "2026-10-03T07:12:33.371Z"
+  },
+  {
+    "id": "bow-to-divinity",
+    "title": "Bow To Divinity",
+    "artist": "XotiicDuck",
+    "album": "Single",
+    "releaseType": "Single",
+    "genre": "Anime J-Rock",
+    "releaseDate": "2026-10-03",
+    "duration": 312,
+    "audio": "music/bow-to-divinity.mp3",
+    "cover": "covers/bow-to-divinity.webp",
+    "status": "draft",
+    "createdAt": "2026-10-03T08:23:17.973Z",
+    "updatedAt": "2026-10-03T08:23:17.973Z"
   }
 ];
