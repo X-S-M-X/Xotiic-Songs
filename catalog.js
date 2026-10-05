@@ -863,13 +863,14 @@ window.XOTIICDUCK_RELEASES = [
     "album": "Single",
     "releaseType": "Single",
     "genre": "Anime J-Rock",
-    "releaseDate": "2026-08-26",
+    "releaseDate": "2026-10-05",
     "duration": 339,
     "audio": "music/no-final-form.mp3",
     "cover": "covers/no-final-form.webp",
-    "status": "draft",
+    "status": "published",
     "createdAt": "2026-08-26T04:41:47.655Z",
-    "updatedAt": "2026-08-26T04:41:47.655Z"
+    "updatedAt": "2026-10-05T10:21:16.673Z",
+    "publishedAt": "2026-10-05T10:21:16.673Z"
   },
   {
     "id": "beyond-calculation",
