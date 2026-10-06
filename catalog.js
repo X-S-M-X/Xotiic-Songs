@@ -1363,5 +1363,20 @@ window.XOTIICDUCK_RELEASES = [
     "status": "draft",
     "createdAt": "2026-10-03T08:56:42.642Z",
     "updatedAt": "2026-10-03T08:56:42.642Z"
+  },
+  {
+    "id": "no-spell-in-my-blood",
+    "title": "No Spell In My Blood",
+    "artist": "XotiicDuck",
+    "album": "Single",
+    "releaseType": "Single",
+    "genre": "Anime J-Rock",
+    "releaseDate": "2026-10-06",
+    "duration": 258,
+    "audio": "music/no-spell-in-my-blood.mp3",
+    "cover": "covers/no-spell-in-my-blood.webp",
+    "status": "draft",
+    "createdAt": "2026-10-06T09:12:03.789Z",
+    "updatedAt": "2026-10-06T09:12:03.789Z"
   }
 ];
