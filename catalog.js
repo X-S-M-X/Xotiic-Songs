@@ -1371,12 +1371,13 @@ window.XOTIICDUCK_RELEASES = [
     "album": "Single",
     "releaseType": "Single",
     "genre": "Anime J-Rock",
-    "releaseDate": "2026-10-06",
+    "releaseDate": "2026-10-11",
     "duration": 258,
     "audio": "music/no-spell-in-my-blood.mp3",
     "cover": "covers/no-spell-in-my-blood.webp",
-    "status": "draft",
+    "status": "published",
     "createdAt": "2026-10-06T09:12:03.789Z",
-    "updatedAt": "2026-10-06T09:12:03.789Z"
+    "updatedAt": "2026-10-10T23:23:28.153Z",
+    "publishedAt": "2026-10-10T23:23:25.685Z"
   }
 ];
