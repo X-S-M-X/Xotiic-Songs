@@ -1379,5 +1379,21 @@ window.XOTIICDUCK_RELEASES = [
     "createdAt": "2026-10-06T09:12:03.789Z",
     "updatedAt": "2026-10-10T23:23:28.153Z",
     "publishedAt": "2026-10-10T23:23:25.685Z"
+  },
+  {
+    "id": "black-wings-beyond-the-heavens",
+    "title": "Black Wings Beyond The Heavens",
+    "artist": "XotiicDuck",
+    "album": "Single",
+    "releaseType": "Single",
+    "genre": "Anime J-Rock",
+    "releaseDate": "2026-10-14",
+    "duration": 327,
+    "audio": "music/black-wings-beyond-the-heavens.mp3",
+    "cover": "covers/black-wings-beyond-the-heavens.webp",
+    "status": "scheduled",
+    "createdAt": "2026-10-12T04:09:01.097Z",
+    "updatedAt": "2026-10-12T04:09:01.097Z",
+    "releaseAt": "2026-10-13T23:00:00.000Z"
   }
 ];
