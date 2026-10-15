@@ -1395,5 +1395,21 @@ window.XOTIICDUCK_RELEASES = [
     "createdAt": "2026-10-12T04:09:01.097Z",
     "updatedAt": "2026-10-12T04:09:01.097Z",
     "releaseAt": "2026-10-13T23:00:00.000Z"
+  },
+  {
+    "id": "onogami-english-cover",
+    "title": "Onogami - ENGLISH COVER",
+    "artist": "XotiicDuck",
+    "album": "Single",
+    "releaseType": "Single",
+    "genre": "Anime J-Rock",
+    "releaseDate": "2026-10-16",
+    "duration": 203,
+    "audio": "music/onogami-english-cover.mp3",
+    "cover": "covers/onogami-english-cover.webp",
+    "status": "published",
+    "createdAt": "2026-10-15T19:33:03.188Z",
+    "updatedAt": "2026-10-15T19:33:03.188Z",
+    "publishedAt": "2026-10-15T19:33:03.188Z"
   }
 ];
