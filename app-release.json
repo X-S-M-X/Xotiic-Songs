@@ -1,11 +1,11 @@
 {
   "schema": 1,
-  "activeVersion": "21.0.0",
+  "activeVersion": "21.1.0",
   "branding": {
     "logo": "classic",
     "banner": "",
     "position": 42
   },
-  "revision": "c4a2696e-15d3-4168-86c8-6c9ec995bfaa",
-  "updatedAt": "2026-10-17T06:31:44.709Z"
+  "revision": "eb698f8d-3130-4af5-8e04-0396cc7fd371",
+  "updatedAt": "2026-10-17T06:36:26.818Z"
 }
