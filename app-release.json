@@ -3,9 +3,9 @@
   "activeVersion": "21.1.0",
   "branding": {
     "logo": "anime",
-    "banner": "",
-    "position": 8
+    "banner": "app-updates/banner.png",
+    "position": 2
   },
-  "revision": "7c1adf26-800b-4eea-9448-4f6fe8f5e8a0",
-  "updatedAt": "2026-10-17T07:37:12.786Z"
+  "revision": "7a503c0f-c419-4628-909e-dfb65dedaf71",
+  "updatedAt": "2026-10-17T08:16:26.639Z"
 }
