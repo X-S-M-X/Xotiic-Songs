@@ -1,0 +1,10 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 164 140" role="img" aria-label="Anime XD">
+  <defs><linearGradient id="energy"><stop stop-color="#db4cff"/><stop offset=".45" stop-color="#9d48ff"/><stop offset=".65" stop-color="#ef8750"/><stop offset="1" stop-color="#ffcb49"/></linearGradient></defs>
+  <rect x="5" y="5" width="154" height="130" rx="28" fill="#070a08" stroke="url(#energy)" stroke-width="2.5"/>
+  <g fill="none" stroke="url(#energy)" opacity=".6"><path d="m9 93 20-31-14-20 23-24M11 112l20-23-9-18M155 28l-22 27 19 22-20 27 20 16M35 132l17-15m68-109-14 16"/><path d="m8 64 28-17m99 47 21-13" opacity=".45"/></g>
+  <g fill="#b8ff3d" transform="translate(10 25) scale(.88)">
+    <path fill-rule="evenodd" d="M84 23h46l27 25-27 26H84Zm18 15v21h21l12-11-12-10Z"/>
+    <path d="M11 9h26l23 21-13 13Z M65 54l27 28H65L51 68Z"/>
+    <path d="M6 82 86 9h28L34 82Z" stroke="#060a05" stroke-width="3" paint-order="stroke fill"/>
+  </g>
+</svg>

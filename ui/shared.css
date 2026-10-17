@@ -1,0 +1,16 @@
+@font-face{font-family:BarlowCondensed;src:url('./assets/heading.ttf') format('truetype');font-weight:700;font-style:italic;font-display:swap}
+:root{--xd-radius:14px;--xd-panel:#0b110e;--xd-line:rgba(184,255,61,.15);--xd-heading:BarlowCondensed,Impact,'Arial Narrow',sans-serif}
+[hidden]{display:none!important}
+html{scrollbar-gutter:stable}
+button,a,input,select,textarea{touch-action:manipulation}
+button,a{ -webkit-tap-highlight-color:transparent }
+button:focus-visible,a:focus-visible,input:focus-visible,select:focus-visible,textarea:focus-visible,summary:focus-visible{outline:2px solid var(--acid,#b8ff3d);outline-offset:4px}
+.brand-mark{background:none!important;box-shadow:none!important;transform:none!important;border:0!important;width:58px!important;height:44px!important;border-radius:0!important;flex-shrink:0}
+.brand-mark img,.owner-avatar img{width:100%;height:100%;object-fit:contain}
+html[data-brand-logo=portrait] .brand-mark img{width:42px;height:42px;border-radius:50%;object-fit:cover;border:1px solid #bc6dff}
+.xd-preview-strip{position:relative;z-index:90;min-height:34px;display:flex;align-items:center;justify-content:center;gap:18px;padding:6px 16px;background:#172215;color:#e2f1da;font:12px/1.5 Arial,sans-serif;border-bottom:1px solid #304126;text-align:center}
+.xd-preview-strip strong{color:#c8ff6a;font-size:10px;letter-spacing:.1em}
+.xd-preview-strip a{color:#d6ff9c;text-decoration:underline;text-underline-offset:3px}
+.xd-preview-strip a:hover{color:#fff}
+@media (max-width:720px){.xd-preview-strip{gap:10px;font-size:11px;padding:7px 10px}.xd-preview-strip .preview-detail{display:none}input,textarea,select{font-size:16px!important}}
+@media (prefers-reduced-motion:reduce){*,*::before,*::after{animation-duration:.01ms!important;transition-duration:.01ms!important;scroll-behavior:auto!important}}

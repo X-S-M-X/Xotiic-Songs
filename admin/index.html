@@ -28,9 +28,15 @@
     <script src="./config.js?v=20" defer></script>
     <script src="./crypto.js?v=20" defer></script>
     <script src="./github.js?v=20" defer></script>
-    <script src="./app.js?v=21.0.0" defer></script>
+    <script src="./app.js?v=21.0.0-controls1" defer></script>
     <script src="./studio.js?v=20" defer></script>
     <script src="./artwork-vault.js?v=21.0.0" defer></script>
+    <link rel="stylesheet" href="../app-updates/controls.css?v=1" />
+    <script src="../app-updates/model.js?v=1" defer></script>
+    <script src="../app-updates/runtime.js?v=1" defer></script>
+    <script src="../app-updates/github-release.js?v=1" defer></script>
+    <script src="../app-updates/controls.js?v=1" defer></script>
+    <script src="../ui/console.js?v=1" defer></script>
   </head>
   <body>
     <svg class="icon-sprite" aria-hidden="true" focusable="false">
@@ -70,7 +76,6 @@
         <div class="topbar-actions">
           <span id="connection-pill" class="connection-pill"><i></i><span>LOCKED</span></span>
           <button class="install-button" type="button" data-install aria-label="Install Xotiic Upload"><span data-install-icon class="icon-frame" aria-hidden="true"><svg class="ui-icon"><use href="#admin-icon-download"></use></svg></span><span data-install-label>Install</span></button>
-          <a class="player-link" href="../" aria-label="Open public music player"><span>Open player</span><span class="icon-frame" aria-hidden="true"><svg class="ui-icon"><use href="#admin-icon-music"></use></svg></span></a>
         </div>
       </header>
 
@@ -142,6 +147,7 @@
               <button type="button" data-admin-panel="artwork"><span class="icon-frame"><svg class="ui-icon" aria-hidden="true"><use href="#admin-icon-image"></use></svg></span><span>Artwork</span><b id="artwork-count-badge">0</b></button>
               <button type="button" data-admin-panel="upload"><span class="icon-frame"><svg class="ui-icon" aria-hidden="true"><use href="#admin-icon-upload"></use></svg></span><span>New release</span></button>
               <button type="button" data-admin-panel="releases"><span class="icon-frame"><svg class="ui-icon" aria-hidden="true"><use href="#admin-icon-music"></use></svg></span><span>Manage music</span><b id="release-count-badge">0</b></button>
+              <button type="button" data-admin-panel="branding" hidden><span class="icon-frame"><svg class="ui-icon" aria-hidden="true"><use href="#admin-icon-refresh"></use></svg></span><span>App updates</span></button>
               <p class="section-label account-label">ACCOUNT</p>
               <button type="button" data-admin-panel="security"><span class="icon-frame"><svg class="ui-icon" aria-hidden="true"><use href="#admin-icon-shield"></use></svg></span><span>Security</span></button>
             </nav>
@@ -153,6 +159,42 @@
             <section class="dashboard-header">
               <div><p class="eyebrow"><span></span> ARTIST CONTROL</p><h1 id="dashboard-title">Release overview</h1><p id="dashboard-subtitle">See what is live, scheduled, drafted, and ready for your next move.</p></div>
               <div class="publish-health"><span><i></i> OWNER VERIFIED</span><strong id="catalog-health">Catalog ready</strong></div>
+            </section>
+
+            <section class="admin-panel" data-panel="branding" hidden>
+              <button class="panel-link xd-updates-back" type="button" data-admin-panel="security" data-legacy-update-control hidden>Back to Security</button>
+              <div class="xd-updates-tabs" role="tablist" aria-label="App update settings">
+                <button id="app-tab-versions" type="button" role="tab" aria-controls="app-updates-versions" aria-selected="true" data-updates-tab="versions">Versions &amp; recovery</button>
+                <button id="app-tab-branding" type="button" role="tab" aria-controls="branding-form" aria-selected="false" data-updates-tab="branding">Branding &amp; logos</button>
+              </div>
+              <section id="app-updates-versions" class="xd-updates-card" role="tabpanel" aria-labelledby="app-tab-versions">
+                <p class="xd-updates-label">OWNER APP CONTROL</p><h2>Versions &amp; recovery</h2>
+                <p>Choose one of the designs installed in this release. The v21 player and music storage stay in place in both designs. Future code releases still require an installer.</p>
+                <dl class="xd-update-summary"><div><dt>Hosted design</dt><dd id="app-update-current">Checking</dd></div><div><dt>GitHub selection</dt><dd id="app-update-git">Not checked</dd></div><div><dt>Player engine</dt><dd>v21.0.0</dd></div></dl>
+                <div class="xd-update-controls"><label for="app-update-target">Choose an app design<select id="app-update-target"><option value="21.0.0">v21.0.0 · Original</option><option value="21.1.0">v21.1.0 · Anime UI</option></select></label><button id="app-update-review" type="button">Review change</button></div>
+                <div id="app-update-plan" class="xd-update-plan" hidden><h3>Publish design selection</h3><p id="app-update-description"></p><ul><li>Only app-release.json is committed for a design switch.</li><li>Songs, covers, all release states and device workspaces stay in place.</li><li>v21.0.0 restores the original XD badge. Your new logo preference stays saved.</li></ul><div class="xd-update-actions"><button id="app-update-publish" type="button">Publish to GitHub</button><button id="app-update-cancel" type="button">Cancel</button></div></div>
+                <p id="app-update-feedback" class="xd-update-feedback" role="status" aria-live="polite">Unlock the console, then review a change.</p>
+                <p><a class="xd-update-recovery-link" href="../app-updates/recovery.html">Open independent recovery page</a> · <a class="xd-update-recovery-link" href="https://github.com/X-S-M-X/Xotiic-Songs/actions" target="_blank" rel="noreferrer">Deployment status</a></p>
+              </section>
+              <form id="branding-form" role="tabpanel" aria-labelledby="app-tab-branding" class="panel-card branding-card">
+                <div class="panel-heading"><div><p class="section-label">YOUR IDENTITY</p><h2>Appearance &amp; branding</h2></div></div>
+                <p class="branding-intro">Choose the XD mark shown in the player and Artist Console. Your channel portrait remains available as a third option.</p>
+                <p id="branding-version-note" class="branding-note" hidden>v21.0.0 uses its original XD badge. Your logo selection below is saved for the new design.</p>
+                <fieldset class="brand-choices"><legend>Logo style</legend>
+                  <label class="brand-choice"><input type="radio" name="brand-logo" value="classic" checked><img width="90" height="76" src="../ui/assets/xd-classic.svg?v=4" alt="Classic green XD"><strong>Classic XD</strong><small>Black. Green. Original.</small></label>
+                  <label class="brand-choice"><input type="radio" name="brand-logo" value="anime"><img width="90" height="76" src="../ui/assets/xd-anime.svg?v=4" alt="XD with purple and gold accents"><strong>Anime XD</strong><small>Purple and gold energy.</small></label>
+                  <label class="brand-choice"><input type="radio" name="brand-logo" value="portrait"><img width="76" height="76" src="../ui/assets/artist.png" alt="Ultima and Carrera portrait"><strong>Channel portrait</strong><small>Ultima &amp; Carrera.</small></label>
+                </fieldset>
+                <div class="branding-previews">
+                  <div class="branding-sample"><p>PLAYER PREVIEW</p><header><img class="brand-preview-logo" alt="Selected logo"><span>XOTIICDUCK<small>MUSIC</small></span></header><div class="branding-sample-hero"><img class="brand-preview-banner" alt="Banner preview"><strong>ANIME WORLDS.<br><em>ORIGINAL SOUND.</em></strong></div></div>
+                  <div class="branding-sample branding-phone"><p>MOBILE CROP</p><header><img class="brand-preview-logo" alt="Selected mobile logo"><span>XOTIICDUCK</span></header><div class="branding-sample-hero"><img class="brand-preview-banner" alt="Mobile banner preview"><strong>ANIME WORLDS.<br><em>ORIGINAL SOUND.</em></strong></div></div>
+                </div>
+                <div class="branding-fields"><label class="field"><span>Optional banner image</span><input id="brand-banner-file" type="file" accept="image/png,image/jpeg,image/webp"><small>PNG, JPEG or WebP under 2 MB. The banner is published only after you review and confirm.</small></label><label class="field"><span>Banner vertical position</span><input id="banner-position" type="range" min="0" max="100" value="42"><small>Check both crops before applying.</small></label></div>
+                <p class="branding-note">Branding is shared through GitHub after confirmation. Installed home-screen and APK icons are a separate release step. Listener colour settings remain independent.</p>
+                <div id="branding-plan" class="xd-update-plan" hidden><p>Publish this logo and banner selection to GitHub? The original v21 design will keep its own logo.</p><div class="xd-update-actions"><button id="branding-publish" type="button">Publish branding</button><button id="branding-cancel" type="button">Cancel</button></div></div><p id="branding-feedback" class="branding-feedback" role="status" aria-live="polite">Choose a logo, then review before publishing.</p>
+                <div class="branding-actions"><button id="branding-reset" class="secondary-action" type="button">Reset draft</button><button class="primary-action" type="submit">Review branding</button></div>
+                <button class="panel-link security-shortcut" type="button" data-admin-panel="security">Security &amp; access</button>
+              </form>
             </section>
 
             <section class="admin-panel" data-panel="overview">
@@ -334,6 +376,7 @@
             </section>
 
             <section class="admin-panel" data-panel="security" hidden>
+              <article class="panel-card xd-security-updates"><div><p class="section-label">APP CONTROL</p><h2>App updates</h2><p>Switch the installed design or change branding while keeping your music and device workspace.</p></div><button class="secondary-action" type="button" data-admin-panel="branding">Open App updates</button></article>
               <div class="security-grid">
                 <article class="panel-card security-overview"><p class="section-label">DEVICE VAULT</p><div class="security-icon"><svg class="ui-icon" aria-hidden="true"><use href="#admin-icon-shield"></use></svg></div><h2>Encrypted on this device</h2><p>The GitHub token is protected with your password and remains encrypted whenever the console is locked.</p><dl><div><dt>Encryption</dt><dd>AES-256-GCM</dd></div><div><dt>Key derivation</dt><dd>PBKDF2-SHA256</dd></div><div><dt>Session</dt><dd>30-minute idle lock</dd></div></dl></article>
                 <article class="panel-card">

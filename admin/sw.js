@@ -1,8 +1,25 @@
-const CACHE_NAME = "xotiic-upload-v21-artwork-vault";
+const CACHE_NAME = "xotiic-upload-v21-artwork-vault-app-controls-1";
 const SHARED_DB = "xotiic-upload-share-inbox-v1";
 const SHARED_STORE = "files";
 const scoped = (file) => new URL(file, self.registration.scope).href;
+const RELEASE_URL = scoped("../app-release.json");
 const SHELL = [
+  "../app-release.json",
+  "../app-updates/model.js?v=1",
+  "../app-updates/runtime.js?v=1",
+  "../ui/shared.css?v=1",
+  "../ui/player.css?v=1",
+  "../ui/console.css?v=1",
+  "../ui/console.js?v=1",
+  "../ui/assets/artist.png",
+  "../ui/assets/xd-classic.svg",
+  "../ui/assets/xd-anime.svg",
+  "../ui/assets/heading.ttf",
+  "../app-updates/notice.css?v=1",
+  "../app-updates/controls.css?v=1",
+  "../app-updates/github-release.js?v=1",
+  "../app-updates/controls.js?v=1",
+
   "./",
   "./index.html",
   "./styles.css?v=20",
@@ -16,7 +33,7 @@ const SHELL = [
   "./config.js?v=20",
   "./crypto.js?v=20",
   "./github.js?v=20",
-  "./app.js?v=21.0.0",
+  "./app.js?v=21.0.0-controls1",
   "./studio.js?v=20",
   "./artwork-vault.js?v=21.0.0",
   "./manifest.webmanifest?v=21",
@@ -83,6 +100,19 @@ self.addEventListener("fetch", (event) => {
     return;
   }
   if (request.method !== "GET" || url.origin !== self.location.origin) return;
+  if (url.origin === self.location.origin && url.href.split("?")[0] === RELEASE_URL) {
+    event.respondWith((async () => {
+      const cache = await caches.open(CACHE_NAME);
+      try { const response = await fetch(new Request(request, {cache:"no-store"}));
+        if (!response.ok) throw new Error("App selection unavailable");
+        await cache.put(RELEASE_URL, response.clone()); return response;
+      } catch { return (await cache.match(RELEASE_URL)) || Response.error(); }
+    })()); return;
+  }
+  if (url.origin === self.location.origin && /\/app-updates\/banner\.(png|jpg|webp)$/.test(url.pathname)) {
+    event.respondWith(fetch(new Request(request, {cache:"no-store"}))); return;
+  }
+
   if (request.mode === "navigate") {
     event.respondWith(fetch(request).catch(() => caches.match(scoped("./index.html"))));
     return;

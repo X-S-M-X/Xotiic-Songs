@@ -480,6 +480,7 @@
 
   const lockConsole = (message = "") => {
     closeAdminPreview();
+    window.dispatchEvent(new Event("xotiic:adminlocked"));
     state.token = "";
     state.publisher = null;
     state.pendingRelease = null;
@@ -508,7 +509,7 @@
     resetIdleTimer();
     await loadCatalog({ silent: false }).catch(() => undefined);
     const requestedPanel = new URLSearchParams(location.search).get("panel");
-    selectAdminPanel(["overview", "artwork", "upload", "releases", "security"].includes(requestedPanel) ? requestedPanel : "overview");
+    selectAdminPanel(["overview", "artwork", "upload", "releases", "security", "branding"].includes(requestedPanel) ? requestedPanel : "overview");
   };
 
   const loadCatalog = async ({ silent = false } = {}) => {
@@ -689,6 +690,7 @@
       artwork: ["Artwork Vault", "Store square covers and working song ideas now, then attach the final MP3 later."],
       upload: ["Publish a new release", "Upload the final MP3 and square artwork from this device."],
       releases: ["Manage your catalog", "Privately test any song, then publish, schedule, edit, hide, or archive it."],
+      branding: ["App updates", "Choose an installed design, review changes and publish through GitHub."],
       security: ["Security and access", "Maintain the encrypted owner vault on this device."],
     };
     $("#dashboard-title").textContent = headings[name][0];
@@ -1753,6 +1755,19 @@
 
   globalThis.XotiicAdmin = Object.freeze({
     version: "21.0.0",
+    isUnlocked: () => Boolean(state.publisher && state.token),
+    withAppUpdateSession: async (action) => {
+      if (!state.publisher || !state.token) throw new Error("Unlock the Artist Console first.");
+      if (state.busy) throw new Error("Wait for the current publishing operation to finish.");
+      state.busy = true;
+      clearTimeout(state.idleTimer);
+      const publisher = state.publisher;
+      try {
+        await publisher.verifyOwner();
+        if (publisher !== state.publisher) throw new Error("The console was locked. Unlock and review again.");
+        return await action(publisher, () => publisher === state.publisher && Boolean(state.token));
+      } finally { state.busy = false; resetIdleTimer(); }
+    },
     getReleases: () => JSON.parse(JSON.stringify(state.releases)),
     getReleaseFiles: () => ({
       audioFile: state.audioFile,

@@ -1,10 +1,24 @@
 importScripts("./range.js?v=20");
 
-const CACHE_NAME = "xotiicduck-portable-v21-adaptive-ui-for-you-fix";
+const CACHE_NAME = "xotiicduck-portable-v21-adaptive-ui-for-you-fix-app-controls-1";
 const MEDIA_CACHE = "xotiic-media-v1";
 const scoped = (file) => new URL(file, self.registration.scope).href;
 const CATALOG_URL = scoped("./catalog.js");
+const RELEASE_URL = scoped("./app-release.json");
 const SHELL = [
+  "./app-release.json",
+  "./app-updates/model.js?v=1",
+  "./app-updates/runtime.js?v=1",
+  "./ui/shared.css?v=1",
+  "./ui/player.css?v=1",
+  "./ui/console.css?v=1",
+  "./ui/console.js?v=1",
+  "./ui/assets/artist.png",
+  "./ui/assets/xd-classic.svg",
+  "./ui/assets/xd-anime.svg",
+  "./ui/assets/heading.ttf",
+  "./app-updates/notice.css?v=1",
+
   "./",
   "./index.html",
   "./theme.js?v=20.1",
@@ -58,6 +72,19 @@ self.addEventListener("fetch", (event) => {
   const request = event.request;
   const url = new URL(request.url);
   if (request.method !== "GET") return;
+  if (url.origin === self.location.origin && url.href.split("?")[0] === RELEASE_URL) {
+    event.respondWith((async () => {
+      const cache = await caches.open(CACHE_NAME);
+      try { const response = await fetch(new Request(request, {cache:"no-store"}));
+        if (!response.ok) throw new Error("App selection unavailable");
+        await cache.put(RELEASE_URL, response.clone()); return response;
+      } catch { return (await cache.match(RELEASE_URL)) || Response.error(); }
+    })()); return;
+  }
+  if (url.origin === self.location.origin && /\/app-updates\/banner\.(png|jpg|webp)$/.test(url.pathname)) {
+    event.respondWith(fetch(new Request(request, {cache:"no-store"}))); return;
+  }
+
 
   if (url.href.split("?")[0] === CATALOG_URL) {
     event.respondWith(
