@@ -2,10 +2,10 @@
   "schema": 1,
   "activeVersion": "21.1.0",
   "branding": {
-    "logo": "classic",
-    "banner": "app-updates/banner.png",
-    "position": 6
+    "logo": "anime",
+    "banner": "",
+    "position": 8
   },
-  "revision": "3cab855b-e7b3-44e3-bf25-659fd290f089",
-  "updatedAt": "2026-10-17T07:35:03.207Z"
+  "revision": "7c1adf26-800b-4eea-9448-4f6fe8f5e8a0",
+  "updatedAt": "2026-10-17T07:37:12.786Z"
 }
