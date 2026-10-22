@@ -1413,5 +1413,21 @@ window.XOTIICDUCK_RELEASES = [
     "createdAt": "2026-10-15T19:33:03.188Z",
     "updatedAt": "2026-10-15T19:33:03.188Z",
     "publishedAt": "2026-10-15T19:33:03.188Z"
+  },
+  {
+    "id": "even-if-i-forget-you",
+    "title": "Even If I Forget You",
+    "artist": "XotiicDuck",
+    "album": "Single",
+    "releaseType": "Single",
+    "genre": "Anime J-Rock",
+    "releaseDate": "2026-10-26",
+    "duration": 302,
+    "audio": "music/even-if-i-forget-you.mp3",
+    "cover": "covers/even-if-i-forget-you.webp",
+    "status": "scheduled",
+    "createdAt": "2026-10-22T06:47:10.404Z",
+    "updatedAt": "2026-10-22T06:47:10.404Z",
+    "releaseAt": "2026-10-25T23:00:00.000Z"
   }
 ];
