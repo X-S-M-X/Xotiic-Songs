@@ -1429,5 +1429,20 @@ window.XOTIICDUCK_RELEASES = [
     "createdAt": "2026-10-22T06:47:10.404Z",
     "updatedAt": "2026-10-22T06:47:10.404Z",
     "releaseAt": "2026-10-25T23:00:00.000Z"
+  },
+  {
+    "id": "the-heart-i-threw-away",
+    "title": "The Heart I Threw Away",
+    "artist": "XotiicDuck",
+    "album": "Single",
+    "releaseType": "Single",
+    "genre": "Anime J-Rock",
+    "releaseDate": "2026-10-22",
+    "duration": 300,
+    "audio": "music/the-heart-i-threw-away.mp3",
+    "cover": "covers/the-heart-i-threw-away.webp",
+    "status": "draft",
+    "createdAt": "2026-10-22T06:52:04.656Z",
+    "updatedAt": "2026-10-22T06:52:04.656Z"
   }
 ];
