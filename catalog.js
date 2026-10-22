@@ -1444,5 +1444,20 @@ window.XOTIICDUCK_RELEASES = [
     "status": "draft",
     "createdAt": "2026-10-22T06:52:04.656Z",
     "updatedAt": "2026-10-22T06:52:04.656Z"
+  },
+  {
+    "id": "when-heaven-learned-to-grieve",
+    "title": "When Heaven Learned To Grieve",
+    "artist": "XotiicDuck",
+    "album": "Single",
+    "releaseType": "Single",
+    "genre": "Anime J-Rock",
+    "releaseDate": "2026-10-23",
+    "duration": 333,
+    "audio": "music/when-heaven-learned-to-grieve.mp3",
+    "cover": "covers/when-heaven-learned-to-grieve.webp",
+    "status": "draft",
+    "createdAt": "2026-10-22T13:51:42.436Z",
+    "updatedAt": "2026-10-22T13:51:42.436Z"
   }
 ];
