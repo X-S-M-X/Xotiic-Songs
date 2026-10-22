@@ -1447,7 +1447,7 @@ window.XOTIICDUCK_RELEASES = [
   },
   {
     "id": "when-heaven-learned-to-grieve",
-    "title": "When Heaven Learned To Grieve",
+    "title": "When Hell Learned To Grieve",
     "artist": "XotiicDuck",
     "album": "Single",
     "releaseType": "Single",
@@ -1458,6 +1458,6 @@ window.XOTIICDUCK_RELEASES = [
     "cover": "covers/when-heaven-learned-to-grieve.webp",
     "status": "draft",
     "createdAt": "2026-10-22T13:51:42.436Z",
-    "updatedAt": "2026-10-22T13:51:42.436Z"
+    "updatedAt": "2026-10-22T13:52:57.144Z"
   }
 ];
