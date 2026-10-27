@@ -1452,12 +1452,13 @@ window.XOTIICDUCK_RELEASES = [
     "album": "Single",
     "releaseType": "Single",
     "genre": "Anime J-Rock",
-    "releaseDate": "2026-10-23",
+    "releaseDate": "2026-10-28",
     "duration": 333,
     "audio": "music/when-heaven-learned-to-grieve.mp3",
     "cover": "covers/when-heaven-learned-to-grieve.webp",
-    "status": "draft",
+    "status": "scheduled",
     "createdAt": "2026-10-22T13:51:42.436Z",
-    "updatedAt": "2026-10-22T13:52:57.144Z"
+    "updatedAt": "2026-10-27T19:40:36.849Z",
+    "releaseAt": "2026-10-27T23:00:00.000Z"
   }
 ];
