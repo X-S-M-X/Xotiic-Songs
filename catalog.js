@@ -1460,5 +1460,21 @@ window.XOTIICDUCK_RELEASES = [
     "createdAt": "2026-10-22T13:51:42.436Z",
     "updatedAt": "2026-10-27T19:40:36.849Z",
     "releaseAt": "2026-10-27T23:00:00.000Z"
+  },
+  {
+    "id": "the-sky-beneath-crimson",
+    "title": "The sky Beneath Crimson",
+    "artist": "XotiicDuck",
+    "album": "Single",
+    "releaseType": "Single",
+    "genre": "Anime J-Rock",
+    "releaseDate": "2026-11-03",
+    "duration": 305,
+    "audio": "music/the-sky-beneath-crimson.mp3",
+    "cover": "covers/the-sky-beneath-crimson.webp",
+    "status": "scheduled",
+    "createdAt": "2026-11-02T04:09:47.419Z",
+    "updatedAt": "2026-11-02T04:09:47.419Z",
+    "releaseAt": "2026-11-02T11:00:00.000Z"
   }
 ];
