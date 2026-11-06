@@ -723,13 +723,14 @@ window.XOTIICDUCK_RELEASES = [
     "album": "Single",
     "releaseType": "Single",
     "genre": "Anime J-Rock",
-    "releaseDate": "2026-08-23",
+    "releaseDate": "2026-11-06",
     "duration": 352,
     "audio": "music/crimson-blades-of-hell.mp3",
     "cover": "covers/crimson-blades-of-hell.webp",
-    "status": "draft",
+    "status": "published",
     "createdAt": "2026-08-23T10:27:03.936Z",
-    "updatedAt": "2026-08-23T10:27:03.936Z"
+    "updatedAt": "2026-11-06T10:55:41.421Z",
+    "publishedAt": "2026-11-06T10:55:39.483Z"
   },
   {
     "id": "the-cages-we-became",
