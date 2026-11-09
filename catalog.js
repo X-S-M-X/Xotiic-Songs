@@ -994,13 +994,14 @@ window.XOTIICDUCK_RELEASES = [
     "album": "Single",
     "releaseType": "Single",
     "genre": "Anime J-Rock",
-    "releaseDate": "2026-09-01",
+    "releaseDate": "2026-11-13",
     "duration": 297,
     "audio": "music/the-peak-knows-no-king.mp3",
     "cover": "covers/the-peak-knows-no-king.webp",
-    "status": "draft",
+    "status": "scheduled",
     "createdAt": "2026-09-01T08:43:16.730Z",
-    "updatedAt": "2026-09-01T08:43:16.730Z"
+    "updatedAt": "2026-11-09T01:54:02.659Z",
+    "releaseAt": "2026-11-12T23:00:00.000Z"
   },
   {
     "id": "no-law-above-the-blade",
