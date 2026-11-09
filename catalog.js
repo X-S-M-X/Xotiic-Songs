@@ -1438,13 +1438,14 @@ window.XOTIICDUCK_RELEASES = [
     "album": "Single",
     "releaseType": "Single",
     "genre": "Anime J-Rock",
-    "releaseDate": "2026-10-22",
+    "releaseDate": "2026-11-10",
     "duration": 300,
     "audio": "music/the-heart-i-threw-away.mp3",
     "cover": "covers/the-heart-i-threw-away.webp",
-    "status": "draft",
+    "status": "scheduled",
     "createdAt": "2026-10-22T06:52:04.656Z",
-    "updatedAt": "2026-10-22T06:52:04.656Z"
+    "updatedAt": "2026-11-09T01:52:48.714Z",
+    "releaseAt": "2026-11-09T23:00:00.000Z"
   },
   {
     "id": "when-heaven-learned-to-grieve",
