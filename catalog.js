@@ -1477,5 +1477,21 @@ window.XOTIICDUCK_RELEASES = [
     "createdAt": "2026-11-02T04:09:47.419Z",
     "updatedAt": "2026-11-02T04:09:47.419Z",
     "releaseAt": "2026-11-02T11:00:00.000Z"
+  },
+  {
+    "id": "all-alone-in-white",
+    "title": "All Alone In White",
+    "artist": "XotiicDuck",
+    "album": "Single",
+    "releaseType": "Single",
+    "genre": "Anime J-Rock",
+    "releaseDate": "2026-11-17",
+    "duration": 293,
+    "audio": "music/all-alone-in-white.mp3",
+    "cover": "covers/all-alone-in-white.webp",
+    "status": "scheduled",
+    "createdAt": "2026-11-09T01:50:37.141Z",
+    "updatedAt": "2026-11-09T01:50:37.141Z",
+    "releaseAt": "2026-11-16T23:00:00.000Z"
   }
 ];
