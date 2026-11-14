@@ -1330,13 +1330,14 @@ window.XOTIICDUCK_RELEASES = [
     "album": "Single",
     "releaseType": "Single",
     "genre": "Anime J-Rock",
-    "releaseDate": "2026-10-03",
+    "releaseDate": "2026-11-20",
     "duration": 252,
     "audio": "music/defiance-is-my-prayer.mp3",
     "cover": "covers/defiance-is-my-prayer.webp",
-    "status": "draft",
+    "status": "scheduled",
     "createdAt": "2026-10-03T07:12:33.371Z",
-    "updatedAt": "2026-10-03T07:12:33.371Z"
+    "updatedAt": "2026-11-14T03:11:14.216Z",
+    "releaseAt": "2026-11-19T23:00:00.000Z"
   },
   {
     "id": "bow-to-divinity",
