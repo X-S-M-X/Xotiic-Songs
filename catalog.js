@@ -1513,5 +1513,20 @@ window.XOTIICDUCK_RELEASES = [
     "createdAt": "2026-11-25T22:42:17.542Z",
     "updatedAt": "2026-11-25T22:42:17.542Z",
     "releaseAt": "2026-11-26T23:00:00.000Z"
+  },
+  {
+    "id": "the-ocean-doesn-t-kneel",
+    "title": "The Ocean Doesn't Kneel",
+    "artist": "XotiicDuck",
+    "album": "Single",
+    "releaseType": "Single",
+    "genre": "Anime J-Rock",
+    "releaseDate": "2026-11-26",
+    "duration": 292,
+    "audio": "music/the-ocean-doesn-t-kneel.mp3",
+    "cover": "covers/the-ocean-doesn-t-kneel.webp",
+    "status": "draft",
+    "createdAt": "2026-11-25T22:44:32.063Z",
+    "updatedAt": "2026-11-25T22:44:32.063Z"
   }
 ];
