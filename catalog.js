@@ -1528,5 +1528,21 @@ window.XOTIICDUCK_RELEASES = [
     "status": "draft",
     "createdAt": "2026-11-25T22:44:32.063Z",
     "updatedAt": "2026-11-25T22:44:32.063Z"
+  },
+  {
+    "id": "the-face-behind-the-lies",
+    "title": "The Face Behind The Lies",
+    "artist": "XotiicDuck",
+    "album": "Single",
+    "releaseType": "Single",
+    "genre": "Anime J-Rock",
+    "releaseDate": "2026-11-26",
+    "duration": 332,
+    "audio": "music/the-face-behind-the-lies.mp3",
+    "cover": "covers/the-face-behind-the-lies.webp",
+    "status": "published",
+    "createdAt": "2026-11-25T22:58:46.054Z",
+    "updatedAt": "2026-11-25T22:58:46.054Z",
+    "publishedAt": "2026-11-25T22:58:46.054Z"
   }
 ];
