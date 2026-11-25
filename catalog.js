@@ -1497,5 +1497,21 @@ window.XOTIICDUCK_RELEASES = [
     "createdAt": "2026-11-09T01:50:37.141Z",
     "updatedAt": "2026-11-09T01:50:37.141Z",
     "releaseAt": "2026-11-16T23:00:00.000Z"
+  },
+  {
+    "id": "no-gods-inside-this-ring",
+    "title": "No Gods Inside This Ring",
+    "artist": "XotiicDuck",
+    "album": "Single",
+    "releaseType": "Single",
+    "genre": "Anime J-Rock",
+    "releaseDate": "2026-11-27",
+    "duration": 262,
+    "audio": "music/no-gods-inside-this-ring.mp3",
+    "cover": "covers/no-gods-inside-this-ring.webp",
+    "status": "scheduled",
+    "createdAt": "2026-11-25T22:42:17.542Z",
+    "updatedAt": "2026-11-25T22:42:17.542Z",
+    "releaseAt": "2026-11-26T23:00:00.000Z"
   }
 ];
