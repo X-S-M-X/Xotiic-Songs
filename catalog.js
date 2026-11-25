@@ -1315,13 +1315,14 @@ window.XOTIICDUCK_RELEASES = [
     "album": "Single",
     "releaseType": "Single",
     "genre": "Anime J-Rock",
-    "releaseDate": "2026-10-01",
+    "releaseDate": "2026-12-01",
     "duration": 313,
     "audio": "music/the-names-i-carry.mp3",
     "cover": "covers/the-names-i-carry.webp",
-    "status": "draft",
+    "status": "scheduled",
     "createdAt": "2026-10-01T01:12:00.332Z",
-    "updatedAt": "2026-10-01T01:12:00.332Z"
+    "updatedAt": "2026-11-25T22:35:49.248Z",
+    "releaseAt": "2026-11-30T23:00:00.000Z"
   },
   {
     "id": "defiance-is-my-prayer",
