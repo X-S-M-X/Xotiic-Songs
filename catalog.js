@@ -1366,13 +1366,14 @@ window.XOTIICDUCK_RELEASES = [
     "album": "Single",
     "releaseType": "Single",
     "genre": "Anime J-Rock",
-    "releaseDate": "2026-10-03",
+    "releaseDate": "2026-12-04",
     "duration": 299,
     "audio": "music/besties-till-the-end.mp3",
     "cover": "covers/besties-till-the-end.webp",
-    "status": "draft",
+    "status": "scheduled",
     "createdAt": "2026-10-03T08:56:42.642Z",
-    "updatedAt": "2026-10-03T08:56:42.642Z"
+    "updatedAt": "2026-11-26T10:20:55.578Z",
+    "releaseAt": "2026-12-03T23:00:00.000Z"
   },
   {
     "id": "no-spell-in-my-blood",
