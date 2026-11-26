@@ -829,7 +829,7 @@ window.XOTIICDUCK_RELEASES = [
     "cover": "covers/who-owns-winter.webp",
     "status": "draft",
     "createdAt": "2026-08-26T04:36:02.817Z",
-    "updatedAt": "2026-08-26T04:36:02.817Z"
+    "updatedAt": "2026-11-26T08:49:27.000Z"
   },
   {
     "id": "tomorrow-has-no-king",
