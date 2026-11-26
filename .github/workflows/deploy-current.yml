@@ -11,15 +11,13 @@ concurrency:
   cancel-in-progress: false
 
 jobs:
-  publish:
+  build:
     runs-on: ubuntu-latest
     permissions:
       contents: read
-      pages: write
-      id-token: write
-    environment:
-      name: github-pages
-      url: ${{ steps.deployment.outputs.page_url }}
+      pages: read
+    outputs:
+      artifact_name: ${{ steps.artifact-name.outputs.name }}
     steps:
       - name: Check out the current main branch
         uses: actions/checkout@v4
@@ -46,11 +44,33 @@ jobs:
           test -f _site/catalog.js
           test -f _site/admin/admin-hotfix.css
 
+      - name: Name this upload attempt
+        id: artifact-name
+        run: echo "name=github-pages-${GITHUB_RUN_ID}-${GITHUB_RUN_ATTEMPT}" >> "$GITHUB_OUTPUT"
+
       - name: Upload GitHub Pages artifact
         uses: actions/upload-pages-artifact@v4
         with:
+          name: ${{ steps.artifact-name.outputs.name }}
           path: _site
+
+  deploy:
+    needs: build
+    runs-on: ubuntu-latest
+    permissions:
+      pages: write
+      id-token: write
+    environment:
+      name: github-pages
+      url: ${{ steps.deployment.outputs.page_url }}
+    steps:
+      # GitHub's artifact service can briefly lag a completed upload.
+      # A separate job and short wait avoid racing that service (deploy-pages#451).
+      - name: Allow the uploaded artifact to become discoverable
+        run: sleep 10
 
       - name: Deploy GitHub Pages
         id: deployment
         uses: actions/deploy-pages@v4
+        with:
+          artifact_name: ${{ needs.build.outputs.artifact_name }}
