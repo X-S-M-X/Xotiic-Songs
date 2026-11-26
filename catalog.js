@@ -240,7 +240,11 @@ window.XOTIICDUCK_RELEASES = [
     "duration": 310,
     "audio": "music/white-crown-scarlet-lake.mp3",
     "cover": "covers/white-crown-scarlet-lake.png",
-    "status": "published"
+    "status": "archived",
+    "releaseType": "Single",
+    "createdAt": "2026-11-26T06:15:46.933Z",
+    "updatedAt": "2026-11-26T06:15:46.933Z",
+    "archivedAt": "2026-11-26T06:15:46.933Z"
   },
   {
     "id": "born-again",
