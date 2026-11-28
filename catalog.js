@@ -391,20 +391,6 @@ window.XOTIICDUCK_RELEASES = [
     "releaseAt": "2026-09-10T00:00:00.000Z"
   },
   {
-    "id": "thunderclap-grin",
-    "title": "Thunderclap Grin",
-    "artist": "XotiicDuck",
-    "album": "Single",
-    "genre": "Anime J-Rock",
-    "releaseDate": "2026-08-05",
-    "duration": 259,
-    "audio": "music/thunderclap-grin.mp3",
-    "cover": "covers/thunderclap-grin.webp",
-    "status": "archived",
-    "archivedAt": "2026-09-07T10:50:26.287Z",
-    "updatedAt": "2026-09-07T10:50:29.078Z"
-  },
-  {
     "id": "black-moon-blade",
     "title": "Black Moon Blade",
     "artist": "XotiicDuck",
@@ -418,21 +404,6 @@ window.XOTIICDUCK_RELEASES = [
     "lyrics": "[Intro]\n\nRain falls over Karakura\nLike the sky remembers her name\nI learned too young that love can vanish\nSo I swore I would stand in the way\n\n[Verse 1]\n\nI saw the souls nobody noticed\nHeard their silence calling me home\nThen a girl dressed in black met a Hollow\nAnd placed tomorrow into my bones\n\nOne borrowed blade became my burden\nOne desperate night rewrote my name\nFrom a kid with fists and anger\nTo the shield standing in the flame\n\n[Pre-Chorus]\n\nIn a drowned-out city inside me\nA voice said, “Rise and know your blade”\nEvery drop became a warning\nEvery wound became my strength\n\n[Chorus]\n\nI carry every world on a black moon blade\nHuman heart with a Soul Reaper name\nHollow in the shadows, Quincy in my veins\nEvery side of me still answers the same\n\nI don’t fight for crowns or glory\nI don’t need the heavens to know\nWhen the ones I love are behind me\nGetsuga Tensho\n\n[Verse 2]\n\nThrough the gates of the Soul Society\nI broke every law in my path\nFaced the petals of Senbonzakura\nWith Tensa Zangetsu drawn in black\n\nI reached the tower where they bound her\nMade the captains hear my resolve\nThen the desert called me onward\nWhere white masks swallowed the stars\n\nFor the girl who said she wasn’t afraid\nI crossed Hueco Mundo alone\nBut against the emptiness of Ulquiorra\nSomething darker took control\n\n[Pre-Chorus]\n\nI feared the teeth behind my heartbeat\nFeared the king beneath my skin\nTill I learned the war inside me\nWas a war I had to win\n\n[Chorus]\n\nI carry every world on a black moon blade\nHuman heart with a Soul Reaper name\nHollow in the shadows, Quincy in my veins\nEvery side of me still answers the same\n\nI don’t fight for crowns or glory\nI don’t need the heavens to know\nWhen the ones I love are behind me\nGetsuga Tensho\n\n[Verse 3]\n\nIn the Dangai I faced the silence\nLet the final moon consume the night\nMugetsu fell across the heavens\nAnd I traded all my strength to win that fight\n\nThen the spirits faded from my vision\nEmpty hands where Zangetsu had been\nFullbring wrapped around my heartbeat\nTill betrayal tore it out again\n\nBut a silver blade came through me\nAnd familiar voices filled the dark\nSoul Society returned my power\nAnd relit the fire in my heart\n\n[Bridge]\n\nEverything but the rain was hidden\nFather’s soul and mother’s blood\nA Quincy light behind the old man\nA white blade born from Hollow love\n\nAll the voices I called strangers\nAll the power I tried to divide\nWere never chains around my spirit\nThey were always part of mine\n\nTwo blades burning in my hands now\nBlack and white beneath one sky\nI stopped asking what I should be\nZangetsu and I are one tonight\n\n[Final Chorus]\n\nI carry every world on a black moon blade\nEvery loss and every name\nSoul Reaper, Hollow, Human, Quincy\nDifferent blood, but one resolve remains\n\nLet the Wandenreich shake the heavens\nLet the future fracture and fold\nI will tear through fate to reach you\nGetsuga Tensho\n\nI don’t fight because I’m fearless\nI fight because I know\nWhat it means to lose the light you love\nAnd still refuse to let it go\n\n[Outro]\n\nRain falls over Karakura\nBut it doesn’t drown me anymore\nWith every world within my blade\nI’ll protect them all",
     "archivedAt": "2026-09-07T10:52:50.810Z",
     "updatedAt": "2026-09-07T10:52:53.274Z"
-  },
-  {
-    "id": "footprints-of-a-hero",
-    "title": "Footprints Of A Hero",
-    "artist": "XotiicDuck",
-    "album": "Single",
-    "genre": "Anime J-Rock",
-    "releaseDate": "2026-08-07",
-    "duration": 479,
-    "audio": "music/footprints-of-a-hero.mp3",
-    "cover": "covers/footprints-of-a-hero.webp",
-    "status": "archived",
-    "lyrics": "[Intro]\n\nAsh upon the skyline\nSirens through the night\nThey looked into my nervous grin\nAnd swore they saw the devil’s eyes\n\nBut when the flames are rising\nAnd everybody runs\nI’ll leave my answer in the road\nTwo footprints burning like the sun\n\n[Verse 1]\n\nTwelve years beneath the smoke\nThat memory never died\nMy mother vanished in the blaze\nMy brother lost inside\n\nThey pointed at the child who smiled\nWhen fear locked up his face\nCalled me a demon born from fire\nA curse they couldn’t erase\n\nBut I remember what I promised\nWith these flames beneath my feet\nI’ll become the kind of hero\nThat the frightened need to see\n\nI joined the Eighth with one ambition\nFind the truth behind the pyre\nIf this city hides its secrets\nI’ll go running through the fire\n\n[Pre Chorus]\n\nTurnout coat and burning soles\nI hear the warning bell\nWhen another soul becomes Infernal\nI will walk through hell\n\n[Chorus]\n\nThese are the footprints of a hero\nBlue flames cutting through the dark\nEvery scar became the fuel\nThat keeps the engine in my heart\n\nCall me devil, call me reckless\nI know what I’m fighting for\nI’ll kick apart the gates of Adolla\nTill despair can breathe no more\n\nI’m faster than the fear behind me\nI’m the hope you couldn’t burn\nWhen the whole world falls to ashes\nI’ll be there when it returns\n\n[Verse 2]\n\nCompany Eight beside me\nObi standing like a wall\nHinawa guides the line of fire\nArthur answers every call\n\nMaki bends the flames around us\nIris offers final prayer\nTamaki fights through every setback\nVulcan builds tomorrow there\n\nWe learned the Holy Sol was hiding\nRot beneath its golden light\nWhite clad shadows fed the embers\nTrying to erase the night\n\nEvery Infernal was a person\nEvery flame once had a name\nSo we carry them with honour\nWe don’t celebrate their pain\n\n[Pre Chorus]\n\nThrough the Nether, through the silence\nWhere the Ashen Knights descend\nI felt a bond beyond this world\nCalling from the other end\n\n[Chorus]\n\nThese are the footprints of a hero\nBlue flames cutting through the dark\nEvery scar became the fuel\nThat keeps the engine in my heart\n\nCall me devil, call me reckless\nI know what I’m fighting for\nI’ll kick apart the gates of Adolla\nTill despair can breathe no more\n\nI’m faster than the fear behind me\nI’m the hope you couldn’t burn\nWhen the whole world falls to ashes\nI’ll be there when it returns\n\n[Verse 3]\n\nShō, I knew that you were living\nEven when they called me mad\nThey stole your memories and your future\nBut they couldn’t break our past\n\nYou froze the seconds all around you\nSevered time with severed grace\nStill I crossed the space between us\nJust to reach my brother’s face\n\nThe Evangelist may command you\nHaumea may invade your mind\nBut the fire that links our spirits\nLeaves their chains behind\n\nMother, I can see the truth now\nThrough the horned and burning form\nYou were never the cruel monster\nThey created in that storm\n\n[Bridge]\n\nAdolla\n\nA world of madness built from thought\nWhere every human fear is caught\nThe Great Cataclysm calls again\nTo drown the earth in flame\n\nBut hope can burn as bright as anguish\nLove can change the shape of fate\nIf humanity created this despair\nThen humanity can recreate\n\nSo synchronize my soul with every\nHand still reaching for the sky\nI’ll become the light they prayed for\nEven if I have to outrun time\n\n[Instrumental Break]\n\nRapid ignition\nPressure rising\nCorna tearing through the night\nAdolla Burst within my heartbeat\nGrace becomes a trail of light\n\n[Final Chorus]\n\nThese are the footprints of a hero\nNot the devil they believed\nI was born beneath a tragedy\nBut tragedy won’t define me\n\nFor my mother, for my brother\nFor the Eighth who gave me home\nFor the people facing fire\nThinking they must stand alone\n\nI’ll run beyond the final second\nThrough the heavens, through the flame\nTurn the world away from sorrow\nGive tomorrow back its name\n\nThese are the footprints of a hero\nSee them blazing through the smoke\nWhere the Evangelist brought despair\nI’ll ignite a road of hope\n\n[Outro]\n\nWhen the sirens fade to silence\nAnd the dawn replaces red\nYou won’t remember some false devil\n\nYou’ll remember the hero instead\n\nMy flames are not destruction\nThey’re the promise that I made\n\nI am Shinra Kusakabe\n\nAnd I came to save the day",
-    "archivedAt": "2026-09-07T13:01:39.012Z",
-    "updatedAt": "2026-09-07T13:01:41.169Z"
   },
   {
     "id": "crimson-dragon",
@@ -494,21 +465,6 @@ window.XOTIICDUCK_RELEASES = [
     "youtubeUrl": "https://youtu.be/sczWGZgUOQM?si=b6opixW1Ox8kG7uD"
   },
   {
-    "id": "sleeping-eclipse",
-    "title": "Sleeping Eclipse",
-    "artist": "XotiicDuck",
-    "album": "Single",
-    "genre": "Anime J-Rock",
-    "releaseDate": "2026-08-22",
-    "duration": 279,
-    "audio": "music/sleeping-eclipse.mp3",
-    "cover": "covers/sleeping-eclipse.webp",
-    "status": "archived",
-    "lyrics": "[Intro]\nMoonlight cracks on a ruined throne\nOne eye burns where the heavens froze\nA lazy king with a blade in hand\nA cursed survivor in a shadowed land\n\n[Verse 1]\nI woke up late, but the sky still knows my name\nFallen from grace, but I never lost the flame\nWings tucked low, yeah, I move like I’m bored\nTill the whole world splits from the edge of my sword\n\nYou chase revenge through a blood-red night\nI’ve slept through wars that could bury your light\nCall it sloth, but the truth cuts deep\nI’m most dangerous when I wake from sleep\n\n[Pre-Chorus]\nBlack fire climbing, heaven falling\nTwo lost legends hear the calling\nOne swings silence, one strikes thunder\nWho breaks first when the stars go under?\n\n[Chorus]\nSleeping eclipse, blade to the storm\nAshes and angels, battle reborn\nRed eye shining through the black flame rain\nKings don’t kneel when they’re born from pain\nSleeping eclipse, fate in the scars\nShadow and lightning tearing the stars\nIf the sky comes down, let it fall tonight\nWe’ll carve our names in the afterlight\n\n[Verse 2]\nI walked alone with my clan in my chest\nEvery step forward was a war with the past\nLightning in my palm, hatred in my bones\nA hawk in the dark, but I fly on my own\n\nYour throne looks soft, your smile looks tired\nBut I can see the monster behind those eyes\nRinnegan shift, now the distance bends\nOne blink and your lazy dream ends\n\n[Pre-Chorus]\nBlack fire climbing, heaven falling\nTwo lost legends hear the calling\nOne swings silence, one strikes thunder\nWho breaks first when the stars go under?\n\n[Chorus]\nSleeping eclipse, blade to the storm\nAshes and angels, battle reborn\nRed eye shining through the black flame rain\nKings don’t kneel when they’re born from pain\nSleeping eclipse, fate in the scars\nShadow and lightning tearing the stars\nIf the sky comes down, let it fall tonight\nWe’ll carve our names in the afterlight\n\n[Bridge]\nSusanoo rising like a ghost in blue\nA fallen halo cuts the moon in two\nAmaterasu paints the clouds in coal\nSloth wakes up and devours the soul\n\nIndra’s echo, heaven’s blade\nTwo old curses in the war they made\nNot for glory, not for peace\nJust two shadows refusing release\n\n[Breakdown]\nStep through space\nCut through fate\nLightning screams\nHeaven breaks\n\nOne more clash\nOne more scar\nWho are we\nWithout our wars?\n\n[Final Chorus]\nSleeping eclipse, blade to the storm\nAshes and angels, battle reborn\nRed eye shining through the black flame rain\nKings don’t kneel when they’re born from pain\nSleeping eclipse, fate in the scars\nShadow and lightning tearing the stars\nIf the sky comes down, let it fall tonight\nWe’ll carve our names in the afterlight\n\n[Outro]\nMoonlight fades on a shattered throne\nOne walks away, but never alone\nA lazy king and a cursed black flame\nTwo legends vanish, but the scars remain",
-    "archivedAt": "2026-09-08T09:18:23.434Z",
-    "updatedAt": "2026-09-08T09:18:25.986Z"
-  },
-  {
     "id": "heat-haze-mirror",
     "title": "Heat Haze Mirror",
     "artist": "XotiicDuck",
@@ -533,18 +489,6 @@ window.XOTIICDUCK_RELEASES = [
     "status": "archived",
     "archivedAt": "2026-09-07T13:00:03.637Z",
     "updatedAt": "2026-09-07T13:00:05.974Z"
-  },
-  {
-    "id": "judgement-of-the-void",
-    "title": "Judgement of the Void",
-    "artist": "XotiicDuck",
-    "album": "Single",
-    "genre": "Anime J-Rock",
-    "releaseDate": "2026-08-14",
-    "duration": 432,
-    "audio": "music/judgement-of-the-void.mp3",
-    "cover": "covers/judgement-of-the-void.webp",
-    "status": "draft"
   },
   {
     "id": "servants-of-the-abyss",
@@ -590,21 +534,6 @@ window.XOTIICDUCK_RELEASES = [
     "updatedAt": "2026-08-26T09:08:10.565Z",
     "releaseType": "Single",
     "releaseAt": "2026-08-26T20:00:00.000Z"
-  },
-  {
-    "id": "thrones-above-heaven",
-    "title": "Thrones Above Heaven",
-    "artist": "XotiicDuck",
-    "album": "Single",
-    "genre": "Anime J-Rock",
-    "releaseDate": "2026-08-18",
-    "duration": 455,
-    "audio": "music/thrones-above-heaven.mp3",
-    "cover": "covers/thrones-above-heaven.webp",
-    "status": "archived",
-    "createdAt": "2026-08-18T04:19:34.547Z",
-    "updatedAt": "2026-09-10T04:19:33.080Z",
-    "archivedAt": "2026-09-10T04:19:30.995Z"
   },
   {
     "id": "beyond-the-rules",
